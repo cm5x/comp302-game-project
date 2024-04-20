@@ -4,6 +4,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.List;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+
 
 
     public class MapDesigner extends JFrame {
@@ -25,7 +35,7 @@ import java.util.Iterator;
 
             // Block chooser panel
             this.blockChooserPanel = new JPanel();
-            this.blockChooserPanel.setPreferredSize(new Dimension(250, 600));
+            this.blockChooserPanel.setPreferredSize(new Dimension(230, 600));
             this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
             initializeBlockChooser();
             this.add(blockChooserPanel, BorderLayout.WEST);
@@ -52,6 +62,28 @@ import java.util.Iterator;
                 });
                 blockChooserPanel.add(button);
             }
+
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setLayout(new GridLayout(0, 1));  // Arrange buttons vertically
+
+            // JButton saveButton = new JButton("Save Map");
+            // saveButton.addActionListener(e -> mapPanel.saveMap("map_data.dat"));
+            // buttonPanel.add(saveButton);
+
+            // JButton loadButton = new JButton("Load Map");
+            // loadButton.addActionListener(e -> mapPanel.loadMap("map_data.dat"));
+            // buttonPanel.add(loadButton);
+
+            
+            JButton saveButton = new JButton("Save Map");
+            saveButton.addActionListener(e -> mapPanel.saveMap());
+            buttonPanel.add(saveButton);
+
+            JButton loadButton = new JButton("Load Map");
+            loadButton.addActionListener(e -> mapPanel.loadMap());
+            buttonPanel.add(loadButton);
+
+            blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
         }
 
         public void appendInfoText(String text) {
@@ -65,7 +97,7 @@ import java.util.Iterator;
 
 
     class MapPanel extends JPanel {
-        private final ArrayList<ColoredBlock> blocks;
+        private ArrayList<ColoredBlock> blocks;
         private String selectedColor = "red";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
@@ -97,7 +129,7 @@ import java.util.Iterator;
                 }
             });
         }
-        
+
         private void showContextMenu(int x, int y, MouseEvent e) {
             for (ColoredBlock block : blocks) {
                 if (block.rectangle.contains(x, y)) {
@@ -159,13 +191,67 @@ import java.util.Iterator;
             g.drawString("Designable area boundary", 5, maxY - 5); // Display text just above the line
         }
 
-        private static class ColoredBlock {
+        private static class ColoredBlock implements Serializable {
             Rectangle rectangle;
             String color;
-
+    
             ColoredBlock(Rectangle rectangle, String color) {
                 this.rectangle = rectangle;
                 this.color = color;
+            }
+        }
+
+        // public void saveMap(String filePath) {
+        //     try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+        //         oos.writeObject(blocks);
+        //         frame.appendInfoText("Map saved successfully.");
+        //     } catch (IOException e) {
+        //         frame.appendInfoText("Error saving map: " + e.getMessage());
+        //         e.printStackTrace();
+        //     }
+        // }
+
+        // public void loadMap(String filePath) {
+        //     try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+        //         blocks = (ArrayList<ColoredBlock>) ois.readObject();
+        //         repaint();
+        //         frame.appendInfoText("Map loaded successfully.");
+        //     } catch (IOException | ClassNotFoundException e) {
+        //         frame.appendInfoText("Error loading map: " + e.getMessage());
+        //         e.printStackTrace();
+        //     }
+        // }
+
+        public void saveMap() {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Specify a file to save");
+            int userSelection = fileChooser.showSaveDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
+                    oos.writeObject(blocks);
+                    frame.appendInfoText("Map saved successfully to " + fileToSave.getAbsolutePath());
+                } catch (IOException e) {
+                    frame.appendInfoText("Error saving map: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+    
+        public void loadMap() {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Select a file to load");
+            int userSelection = fileChooser.showOpenDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToLoad = fileChooser.getSelectedFile();
+                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+                    blocks = (ArrayList<ColoredBlock>) ois.readObject();
+                    repaint();
+                    frame.appendInfoText("Map loaded successfully from " + fileToLoad.getAbsolutePath());
+                } catch (IOException | ClassNotFoundException e) {
+                    frame.appendInfoText("Error loading map: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
         }
     }
