@@ -1,8 +1,10 @@
-    import javax.swing.*;
-    import java.awt.*;
-    import java.awt.event.MouseAdapter;
-    import java.awt.event.MouseEvent;
-    import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
     public class MapDesigner extends JFrame {
         private final MapPanel mapPanel;
@@ -81,7 +83,9 @@
                     //     addBlock(e.getX(), e.getY());
                     //     repaint();
                     // }
-                    if (e.getY() < getHeight() / 1.2) {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        showContextMenu(e.getX(), e.getY(), e);
+                    } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < getHeight() / 1.2) {
                         if (addBlock(e.getX(), e.getY())) {
                             frame.appendInfoText("Placed " + selectedColor + " block at (" + e.getX() + ", " + e.getY() + ")");
                         } else {
@@ -89,12 +93,26 @@
                         }
                         repaint();
                     }
-                    else{
 
-                        frame.appendInfoText("Placing Failed, please stay in restricted area.");
-                    }
                 }
             });
+        }
+        
+        private void showContextMenu(int x, int y, MouseEvent e) {
+            for (ColoredBlock block : blocks) {
+                if (block.rectangle.contains(x, y)) {
+                    JPopupMenu contextMenu = new JPopupMenu();
+                    JMenuItem deleteItem = new JMenuItem("Delete");
+                    deleteItem.addActionListener(ev -> {
+                        blocks.remove(block);
+                        repaint();
+                        frame.appendInfoText("Deleted " + block.color + " block at (" + block.rectangle.x + ", " + block.rectangle.y + ")");
+                    });
+                    contextMenu.add(deleteItem);
+                    contextMenu.show(this, x, y);
+                    break;
+                }
+            }
         }
 
         public void setSelectedColor(String color) {
