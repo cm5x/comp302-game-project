@@ -1,6 +1,11 @@
 package gameComponents;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 public class SimpleBarrier implements Barrier {
 
@@ -14,7 +19,7 @@ public class SimpleBarrier implements Barrier {
     private int direction;
     private int coordinateArray[];
     private Boolean isMoving;
-    
+    private BufferedImage barrierImage;
 
     private static Random random = new Random();
     
@@ -38,6 +43,19 @@ public class SimpleBarrier implements Barrier {
         coordinateArray[1] = x2Coordinate;
         coordinateArray[2] = y1Coordinate;
         coordinateArray[3] = y2Coordinate;
+
+        // Change the apperance of the barrier
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/BlueGem.png");
+            if (inputStream != null) {
+                barrierImage = ImageIO.read(inputStream);
+                inputStream.close();
+            } else {
+                throw new IOException("Cannot find the game resource for barrier appereance.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
