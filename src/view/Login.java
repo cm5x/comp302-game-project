@@ -16,7 +16,7 @@ public class Login extends JFrame{
     private HashMap<String,String> userPasswordHashMap;
 
     //Constructor
-    private Login(){
+    public Login(){
 
         //Set the GUI
         setTitle("Login Page");
