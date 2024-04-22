@@ -15,7 +15,7 @@ public class BuildGameMode extends JFrame {
     private List<JLabel> barrierCountLabel;
     private List<JTextField> barrierCountTextField;
     //private List<Barrier> barriers; 
-    private List<Integer> minBarrierCount;
+    // private List<Integer> minBarrierCount;
 
 
     // Constructor
@@ -24,10 +24,10 @@ public class BuildGameMode extends JFrame {
         setSize(800,800);
         
         // Add minimum numbers for corresponding barriers
-        minBarrierCount.add(75); // 0 for simple
+/*         minBarrierCount.add(75); // 0 for simple
         minBarrierCount.add(10); // 1 for firm
         minBarrierCount.add(5); // 2 for explosive
-        minBarrierCount.add(10); // 3 for gift 
+        minBarrierCount.add(10); // 3 for gift  */
 
 
         // constructor for barrier
@@ -46,13 +46,12 @@ public class BuildGameMode extends JFrame {
         };
         */
 
-
-        gamePanel.setLayout(null); 
+        //gamePanel.setLayout(null); 
 
         // creating labels for barrier displaying barrier types
-        barrierCountLabel = new ArrayList<>();
+        //barrierCountLabel = new ArrayList<>();
 
-        // create label for basic barrier
+/*         // create label for basic barrier
         JLabel label1 = new JLabel("Number Of Simple Obsticles");
         label1.setBounds(600, 10, 86, 34); // Position and size of the label
         gamePanel.add(label1); // Add label to game panel
@@ -71,7 +70,7 @@ public class BuildGameMode extends JFrame {
         JLabel label4 = new JLabel("Number Of Gift Obsticles");
         label4.setBounds(600, 130, 86, 34); // Position and size of the label
         gamePanel.add(label4); // Add label to game panel
-        barrierCountLabel.add(label4);
+        barrierCountLabel.add(label4); */
 
         // creating text fields to edit barrier counts
 /*         barrierCountFields = new ArrayList<>();
@@ -101,14 +100,6 @@ public class BuildGameMode extends JFrame {
         } */
 
 
-    }
-
-    // a main here to test the code
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            BuildGameMode buildGameMode = new BuildGameMode(); 
-            buildGameMode.setVisible(true);
-        });
     }
 }
 
