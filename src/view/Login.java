@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
+import view.Homepage;
 
 public class Login extends JFrame{
 
@@ -22,6 +23,9 @@ public class Login extends JFrame{
         setTitle("Login Page");
         setSize(500,250);
         setLayout(new GridLayout(3,2));
+
+        //Open the frame in the center
+        setLocationRelativeTo(null);
 
         //close automatically
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,12 +51,6 @@ public class Login extends JFrame{
         JButton loginButton = new JButton("Login");
         add(loginButton);
 
-        // Initiallize the hashmap to store all users
-        HashMap<String, String> userPasswordHashMap = new HashMap<>();
-
-        // Create the admin
-        userPasswordHashMap.put("admin","adamin");
-
         // Add action listener for buttons
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -60,9 +58,14 @@ public class Login extends JFrame{
                 String password = new String(passwordField.getPassword());
 
                 // Check login ccredentials 
-                if (authenticate(username,password)){
+                if (username.matches("admin") && password.matches("admin")){
                     // If the user is authenticated show a new panel and then dispose it
                     JOptionPane.showMessageDialog(Login.this, "Login Successfull");
+
+                    //Open HomePage
+                    Homepage homepage = new Homepage(username);
+                    homepage.setVisible(true);
+
                     dispose();
                 } 
                 else {
@@ -78,13 +81,13 @@ public class Login extends JFrame{
     }
 
 
-    // Write a method to authenticate the user
+/*     // Write a method to authenticate the user
     private boolean authenticate(String username, String password){
         if (userPasswordHashMap.containsKey(username)){
             if (userPasswordHashMap.get(username) == password) return true;
             else return false;
         }
         return false;
-    }
+    } */
 
 }

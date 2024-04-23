@@ -5,7 +5,13 @@ import java.awt.event.*;
 
 public class Homepage extends JFrame {
 
-    public Homepage() {
+    private String username;
+
+
+    public Homepage(String username) {
+
+        // Save username data
+        this.username = username;
 
         setTitle("Homepage");
 
@@ -52,14 +58,6 @@ public class Homepage extends JFrame {
         add(panel);
         setVisible(true);
 
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new Homepage();
-            }
-        });
     }
 
 }
