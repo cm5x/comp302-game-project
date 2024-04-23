@@ -2,6 +2,7 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import view.Helppage;
 
 public class Homepage extends JFrame {
 
@@ -18,6 +19,8 @@ public class Homepage extends JFrame {
         setSize(500,600);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 rows, 1 column
@@ -42,6 +45,11 @@ public class Homepage extends JFrame {
         helpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Code to handle help button action
+
+                // initiallize help page but dont dispose the homepage
+                Helppage helppage = new Helppage();
+                helppage.setVisible(true);
+
             }
         });
         panel.add(helpButton);
