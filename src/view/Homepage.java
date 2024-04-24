@@ -7,6 +7,7 @@ import view.Helppage;
 public class Homepage extends JFrame {
 
     private String username;
+    private static Homepage instance = null;
 
 
     public Homepage(String username) {
@@ -68,4 +69,11 @@ public class Homepage extends JFrame {
 
     }
 
+    public static Homepage getInstance() {
+        // Create the instance if it's not already created
+        if (instance == null) {
+            instance = new Homepage("username");
+        }
+        return instance;
+    }
 }
