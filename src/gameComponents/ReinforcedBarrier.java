@@ -1,15 +1,38 @@
 package gameComponents;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+
 public class ReinforcedBarrier implements Barrier {
 
     private int hitsNeeded; // Number of hits required to destroy the barrier
     private boolean destroyed; // Indicates if the barrier is destroyed
     private int[] coordinates; // Coordinates of the barrier
+    private BufferedImage barrierImage;
+
 
     public ReinforcedBarrier(int hitsNeeded, int startX, int startY) {
         this.hitsNeeded = hitsNeeded;
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 40, startY, startY + 20}; // Assuming fixed size for reinforced barriers
+
+        // Change appereance of barrier
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/Firm.png");
+            if (inputStream != null) {
+                barrierImage = ImageIO.read(inputStream);
+                inputStream.close();
+            } else {
+                throw new IOException("Resource not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle image loading error
+        }
+
     }
 
     @Override

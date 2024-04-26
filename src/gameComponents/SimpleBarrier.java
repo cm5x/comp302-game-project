@@ -1,6 +1,10 @@
 package gameComponents;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class SimpleBarrier implements Barrier {
 
@@ -12,6 +16,7 @@ public class SimpleBarrier implements Barrier {
     private int y2Coordinate;
     private int direction;
     private boolean isMoving;
+    private BufferedImage barrierImage;
 
     private static final Random random = new Random();
 
@@ -29,6 +34,20 @@ public class SimpleBarrier implements Barrier {
 
         // Set initial movement direction
         this.direction = isMoving ? 1 : 0; // 1 for right, -1 for left (if moving)
+
+        // Setting barrier view
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/BlueGem.png");
+            if (inputStream != null) {
+                barrierImage = ImageIO.read(inputStream);
+                inputStream.close();
+            } else {
+                throw new IOException("Resource not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle image loading error
+        }
     }
 
     @Override
