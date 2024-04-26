@@ -3,10 +3,13 @@ package gameComponents;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 
-public class SimpleBarrier implements Barrier {
+public class SimpleBarrier extends JComponent implements Barrier {
 
     private int length;
     private int health;
@@ -37,7 +40,7 @@ public class SimpleBarrier implements Barrier {
 
         // Setting barrier view
         try {
-            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/BlueGem.png");
+            InputStream inputStream = getClass().getResourceAsStream("BlueGem.png");
             if (inputStream != null) {
                 barrierImage = ImageIO.read(inputStream);
                 inputStream.close();
@@ -48,6 +51,14 @@ public class SimpleBarrier implements Barrier {
             e.printStackTrace();
             // Handle image loading error
         }
+    }
+
+    // to display barriers
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Draw the barrier image at the specified coordinates
+        g.drawImage(barrierImage, x1Coordinate+length/2, y1Coordinate+10, this);
     }
 
     @Override

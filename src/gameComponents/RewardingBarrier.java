@@ -1,11 +1,14 @@
 package gameComponents;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
-public class RewardingBarrier implements Barrier {
+import javax.swing.JComponent;
+
+public class RewardingBarrier extends JComponent implements Barrier {
 
     private boolean destroyed; // Indicates if the barrier is destroyed
     private int[] coordinates; // Coordinates of the barrier
@@ -30,6 +33,15 @@ public class RewardingBarrier implements Barrier {
         }
     }
 
+    // to display barriers
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Draw the barrier image at the specified coordinates
+        g.drawImage(barrierImage, coordinates[0]+25,coordinates[2]+10 , this);
+    }
+
+    
     @Override
     public int getHealth() {
         return 1; // Rewarding barriers are destroyed immediately upon hitting

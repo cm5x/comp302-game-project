@@ -1,5 +1,7 @@
 package gameComponents;
 
+import java.awt.Graphics;
+
 public interface Barrier {
 
     public int getHealth();
@@ -14,7 +16,7 @@ public interface Barrier {
     public int getDirection();
     public int[] getCoordinates();
     public boolean checkIfMoving();
- 
+    public void paintComponent(Graphics g);
 
 
 

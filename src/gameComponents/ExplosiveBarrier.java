@@ -1,10 +1,12 @@
 package gameComponents;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
-public class ExplosiveBarrier implements Barrier {
+import javax.swing.JComponent;
+public class ExplosiveBarrier extends JComponent implements Barrier {
 
     private boolean exploded; // Indicates if the barrier has exploded
     private int[] coordinates; // Coordinates of the barrier
@@ -27,6 +29,14 @@ public class ExplosiveBarrier implements Barrier {
                 e.printStackTrace();
                 
         }
+    }
+
+    // to display barriers
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Draw the barrier image at the specified coordinates
+        g.drawImage(barrierImage, coordinates[0]+25,coordinates[2]+10 , this);
     }
 
     @Override
