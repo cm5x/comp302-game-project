@@ -1,13 +1,33 @@
 package gameComponents;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 public class RewardingBarrier implements Barrier {
 
     private boolean destroyed; // Indicates if the barrier is destroyed
     private int[] coordinates; // Coordinates of the barrier
+    private BufferedImage barrierImage;
 
     public RewardingBarrier(int startX, int startY) {
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 20, startY, startY + 20}; // Assuming fixed size for rewarding barriers
+
+        // Change appereance of barrier
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/GreenGem.png");
+            if (inputStream != null) {
+            barrierImage = ImageIO.read(inputStream);
+            inputStream.close();
+            } else {
+                throw new IOException("Resource not found.");
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+                
+        }
     }
 
     @Override

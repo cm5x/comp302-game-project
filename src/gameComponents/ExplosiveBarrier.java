@@ -1,13 +1,32 @@
 package gameComponents;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 public class ExplosiveBarrier implements Barrier {
 
     private boolean exploded; // Indicates if the barrier has exploded
     private int[] coordinates; // Coordinates of the barrier
+    private BufferedImage barrierImage;
 
     public ExplosiveBarrier(int startX, int startY) {
         this.exploded = false;
         this.coordinates = new int[]{startX, startX + 30, startY, startY + 30}; // Assuming fixed size for explosive barriers
+
+        // Change appereance of barrier
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/RedGem.png");
+            if (inputStream != null) {
+            barrierImage = ImageIO.read(inputStream);
+            inputStream.close();
+            } else {
+                throw new IOException("Resource not found.");
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+                
+        }
     }
 
     @Override
