@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import view.Helppage;
+import view.MapDesigner;
 
 public class Homepage extends JFrame {
 
@@ -50,15 +51,17 @@ public class Homepage extends JFrame {
                 // initiallize help page but dont dispose the homepage
                 Helppage helppage = new Helppage();
                 helppage.setVisible(true);
-
             }
         });
         panel.add(helpButton);
         
+        // Add path to build mode
         JButton buildingButton = new JButton("Building Mode");
         buildingButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println();
+                MapDesigner mapdesigner = new MapDesigner();
+                mapdesigner.setVisible(true);
+                
             }
         });
         
