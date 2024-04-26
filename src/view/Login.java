@@ -1,5 +1,8 @@
 package view;
 import javax.swing.*;
+
+import gameMechanics.GameController;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
@@ -14,7 +17,9 @@ public class Login extends JFrame{
     private JPasswordField passwordField;
 
     // HashMap that stores all usernames and password combos
-    private HashMap<String,String> userPasswordHashMap;
+    //bunu gamecontrollerda defineladım
+    //private HashMap<String,String> userPasswordHashMap;
+    GameController controller = new GameController();
 
     //Constructor
     public Login(){
@@ -67,11 +72,19 @@ public class Login extends JFrame{
                     homepage.setVisible(true);
 
                     dispose();
-                } 
+                }
+                /*  
                 else {
                     JOptionPane.showMessageDialog(Login.this, "Login Failed. Please try again.");
                 }
-                
+                */
+                if (controller.verifyPlayer(username, password)){
+                    Homepage homepage = new Homepage(username);
+                    homepage.setVisible(true);
+                }
+                else{
+                    JOptionPane.showMessageDialog(Login.this, "Login Failed. Please try again.");
+                }
 
             }
         });
@@ -82,6 +95,7 @@ public class Login extends JFrame{
 
 
 /*     // Write a method to authenticate the user
+       //controllerda verifyPlayer yazdım
     private boolean authenticate(String username, String password){
         if (userPasswordHashMap.containsKey(username)){
             if (userPasswordHashMap.get(username) == password) return true;

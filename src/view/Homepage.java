@@ -39,6 +39,7 @@ public class Homepage extends JFrame {
         settingsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Code to handle settings button action
+                settingsPage settingsp = new settingsPage();
             }
         });
         panel.add(settingsButton);
