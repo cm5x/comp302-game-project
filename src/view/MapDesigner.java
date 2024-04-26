@@ -146,6 +146,8 @@ import java.io.Serializable;
             buttonPanel.add(loadButton);
 
             blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
+
+
         }
 
         public void appendInfoText(String text) {
@@ -168,8 +170,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 1201); 
-                        int y = (int) (Math.random() * 701); 
+                        int x = (int) (Math.random() * 900)+60; 
+                        int y = (int) (Math.random() * 500); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
@@ -178,8 +180,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 1201); 
-                        int y = (int) (Math.random() * 701); 
+                        int x = (int) (Math.random() * 900) + 60; 
+                        int y = (int) (Math.random() * 500); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
@@ -188,8 +190,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 1201); 
-                        int y = (int) (Math.random() * 701); 
+                        int x = (int) (Math.random() * 900)+60; 
+                        int y = (int) (Math.random() * 500); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
