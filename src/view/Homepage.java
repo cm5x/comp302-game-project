@@ -2,16 +2,26 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import view.Helppage;
 
 public class Homepage extends JFrame {
 
-    public Homepage() {
+    private String username;
+    private static Homepage instance = null;
+
+
+    public Homepage(String username) {
+
+        // Save username data
+        this.username = username;
 
         setTitle("Homepage");
 
         setSize(500,600);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 rows, 1 column
@@ -36,6 +46,11 @@ public class Homepage extends JFrame {
         helpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Code to handle help button action
+
+                // initiallize help page but dont dispose the homepage
+                Helppage helppage = new Helppage();
+                helppage.setVisible(true);
+
             }
         });
         panel.add(helpButton);
@@ -54,12 +69,11 @@ public class Homepage extends JFrame {
 
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new Homepage();
-            }
-        });
+    public static Homepage getInstance() {
+        // Create the instance if it's not already created
+        if (instance == null) {
+            instance = new Homepage("username");
+        }
+        return instance;
     }
-
 }
