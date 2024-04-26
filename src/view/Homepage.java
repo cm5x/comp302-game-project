@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import view.Helppage;
 import view.MapDesigner;
+import view.settingsPage;
 
 public class Homepage extends JFrame {
 

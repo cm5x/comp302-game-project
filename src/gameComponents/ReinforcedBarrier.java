@@ -1,12 +1,14 @@
 package gameComponents;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
 
-public class ReinforcedBarrier implements Barrier {
+public class ReinforcedBarrier extends JComponent implements Barrier {
 
     private int hitsNeeded; // Number of hits required to destroy the barrier
     private boolean destroyed; // Indicates if the barrier is destroyed
@@ -33,6 +35,14 @@ public class ReinforcedBarrier implements Barrier {
             // Handle image loading error
         }
 
+    }
+
+    // to display barriers
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Draw the barrier image at the specified coordinates
+        g.drawImage(barrierImage, coordinates[0] + 25, coordinates[2]+10, this);
     }
 
     @Override
