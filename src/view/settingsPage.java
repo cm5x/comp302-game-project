@@ -15,6 +15,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import gameComponents.Player;
+import gameMechanics.GameController;
+
 
 public class settingsPage extends JFrame implements ActionListener{
 
@@ -123,19 +126,41 @@ public class settingsPage extends JFrame implements ActionListener{
             String updatename = newname.getText();
             //update the username of player with username oldname to updatename
             //if success,
-            //JOptionPane.showMessageDialog(null, "Username successfully changed!", "Message", JOptionPane.PLAIN_MESSAGE);
-            //else,
-            //JOptionPane.showMessageDialog(null, "An error occured, please try again.", "Message", JOptionPane.PLAIN_MESSAGE);
+            boolean success = false;
+            for (Player p : GameController.plist){
+                if (p.getName().equals(oldname)){
+                    p.setName(updatename);
+                    success = true;
+                }
+            }
+            if (success){
+                JOptionPane.showMessageDialog(null, "Username successfully changed!", "Message", JOptionPane.PLAIN_MESSAGE);
+            }
+
+            else{
+                JOptionPane.showMessageDialog(null, "An error occured, please try again.", "Message", JOptionPane.PLAIN_MESSAGE);
+            }
+            
         }
 
         if (e.getSource() == submitpass){
             String username = name2.getText();
             String passw = newpass.getText();
-            //update the password of player with given username
-            //if success,
-            //JOptionPane.showMessageDialog(null, "Password successfully changed!", "Message", JOptionPane.PLAIN_MESSAGE);
-            //else,
-            //JOptionPane.showMessageDialog(null, "An error occured, please try again.", "Message", JOptionPane.PLAIN_MESSAGE); 
+            boolean success1 = false;
+            for (Player p : GameController.plist){
+                if (p.getName().equals(username)){
+                    p.setpass(passw);
+                    success1 = true;
+                }
+            }
+            if (success1){
+                JOptionPane.showMessageDialog(null, "Password successfully changed!", "Message", JOptionPane.PLAIN_MESSAGE);
+            }
+
+            else{
+                JOptionPane.showMessageDialog(null, "An error occured, please try again.", "Message", JOptionPane.PLAIN_MESSAGE);
+            }
+            
         }
     }
 
