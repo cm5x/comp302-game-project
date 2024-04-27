@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class ReinforcedBarrier extends JComponent implements Barrier {
 
@@ -14,12 +15,17 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
     private boolean destroyed; // Indicates if the barrier is destroyed
     private int[] coordinates; // Coordinates of the barrier
     private BufferedImage barrierImage;
+    int x1Coordinate;
+    int y1Coordinate;
+    private String imgpath = "assets/images/200iconfirm.png";
 
 
     public ReinforcedBarrier(int hitsNeeded, int startX, int startY) {
         this.hitsNeeded = hitsNeeded;
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 40, startY, startY + 20}; // Assuming fixed size for reinforced barriers
+        this.x1Coordinate = startX;
+        this.y1Coordinate = startY;
 
         // Change appereance of barrier
         try {
@@ -111,5 +117,10 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
     @Override
     public boolean checkIfMoving() {
         return false; // Reinforced barriers do not move
+    }
+
+    public JPanel getJPanel(){
+        BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
+        return panel;
     }
 }

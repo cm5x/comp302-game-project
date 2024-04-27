@@ -7,17 +7,22 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class RewardingBarrier extends JComponent implements Barrier {
 
     private boolean destroyed; // Indicates if the barrier is destroyed
     private int[] coordinates; // Coordinates of the barrier
     private BufferedImage barrierImage;
+    private String imgpath = "assets/images/200icongreengem.png";
+    private int x1Coordinate;
+    private int y1Coordinate;
 
     public RewardingBarrier(int startX, int startY) {
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 20, startY, startY + 20}; // Assuming fixed size for rewarding barriers
-
+        this.x1Coordinate = startX;
+        this.y1Coordinate = startY;
         // Change appereance of barrier
         try {
             InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/GreenGem.png");
@@ -105,5 +110,10 @@ public class RewardingBarrier extends JComponent implements Barrier {
     @Override
     public boolean checkIfMoving() {
         return false; // Rewarding barriers do not move
+    }
+
+    public JPanel getJPanel(){
+        BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
+        return panel;
     }
 }

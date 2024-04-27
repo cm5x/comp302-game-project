@@ -95,7 +95,7 @@ public class Login extends JFrame{
 
 
 /*     // Write a method to authenticate the user
-       //controllerda verifyPlayer yazdım
+       //controllerda verifyPlayer
     private boolean authenticate(String username, String password){
         if (userPasswordHashMap.containsKey(username)){
             if (userPasswordHashMap.get(username) == password) return true;

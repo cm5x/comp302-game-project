@@ -6,15 +6,21 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 public class ExplosiveBarrier extends JComponent implements Barrier {
 
     private boolean exploded; // Indicates if the barrier has exploded
     private int[] coordinates; // Coordinates of the barrier
     private BufferedImage barrierImage;
+    private String imgpath = "assets/images/200iconredgem.png";
+    private int x1Coordinate;
+    private int y1Coordinate;
 
     public ExplosiveBarrier(int startX, int startY) {
         this.exploded = false;
         this.coordinates = new int[]{startX, startX + 30, startY, startY + 30}; // Assuming fixed size for explosive barriers
+        this.x1Coordinate = startX;
+        this.y1Coordinate = startY;
 
         // Change appereance of barrier
         try {
@@ -103,5 +109,10 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     @Override
     public boolean checkIfMoving() {
         return false; // Explosive barriers do not move
+    }
+
+    public JPanel getJPanel(){
+        BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
+        return panel;
     }
 }

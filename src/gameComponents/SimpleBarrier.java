@@ -19,8 +19,8 @@ public class SimpleBarrier extends JComponent implements Barrier {
     private int y2Coordinate;
     private int direction;
     private boolean isMoving;
-    private BufferedImage barrierImage;
-
+    //private BufferedImage barrierImage;
+    private String imgpath = "assets/images/200iconbluegem.png";
     private static final Random random = new Random();
 
     public SimpleBarrier(int length, int startX, int startY) {
@@ -39,6 +39,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
         this.direction = isMoving ? 1 : 0; // 1 for right, -1 for left (if moving)
 
         // Setting barrier view
+        /* 
         try {
             InputStream inputStream = getClass().getResourceAsStream("BlueGem.png");
             if (inputStream != null) {
@@ -51,6 +52,10 @@ public class SimpleBarrier extends JComponent implements Barrier {
             e.printStackTrace();
             // Handle image loading error
         }
+        */
+        
+        
+
     }
 
     // to display barriers
@@ -58,8 +63,8 @@ public class SimpleBarrier extends JComponent implements Barrier {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Draw the barrier image at the specified coordinates
-        g.drawImage(barrierImage, x1Coordinate+length/2, y1Coordinate+10, this);
-    }
+        //g.drawImage(img, 0, 0, imgPanel);
+    }   
 
     @Override
     public int getHealth() {
@@ -127,4 +132,12 @@ public class SimpleBarrier extends JComponent implements Barrier {
     public boolean checkIfMoving() {
         return isMoving;
     }
+
+    public JPanel getJPanel(){
+        BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
+        return panel;
+    }
+
+    
+    
 }

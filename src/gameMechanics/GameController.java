@@ -31,7 +31,7 @@ public class GameController {
             Player newp = new Player(username, password);
             plist.add(newp);
         }
-
+        
         catch(Exception e){
             System.out.println(e);
         }
