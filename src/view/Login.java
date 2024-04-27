@@ -82,7 +82,7 @@ public class Login extends JFrame{
                     Homepage homepage = new Homepage(username);
                     homepage.setVisible(true);
                 }
-                else{
+                else if (password == "admin"){
                     JOptionPane.showMessageDialog(Login.this, "Login Failed. Please try again.");
                 }
 

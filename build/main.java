@@ -10,8 +10,5 @@ public class main {
         Login loginScreen = new Login();
         loginScreen.setVisible(true);
 
-
-
-
     }
 }
