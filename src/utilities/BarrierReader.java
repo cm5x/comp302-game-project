@@ -47,7 +47,7 @@ public class BarrierReader {
             }
 
             // Create barrier instances to add to the barrier class
-
+            
             
         }
 
