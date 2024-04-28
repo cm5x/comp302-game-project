@@ -46,9 +46,8 @@ public class RunningMode extends JFrame{
 
     public RunningMode() {
         setTitle("Play Game");
-        setSize(1920,1080);
+        setSize(1080,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
 
         // Creating the map panel where game objects will interact
@@ -62,7 +61,6 @@ public class RunningMode extends JFrame{
         this.blockChooserPanel.setPreferredSize(new Dimension(230, 600));
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(new GridLayout(4,1));
-
 
         // Create buttons 
         saveButton = new JButton("Save");
@@ -105,6 +103,8 @@ public class RunningMode extends JFrame{
             }
         });
 
+
+        add(blockChooserPanel, BorderLayout.WEST);
         this.setVisible(true);
     }    
     
