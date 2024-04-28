@@ -26,7 +26,6 @@ public class PauseMenu extends JFrame {
         
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add vertical space between game paused line and user info
 
-
      
         //Add buttons
         
@@ -35,7 +34,6 @@ public class PauseMenu extends JFrame {
         resumeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                //buraya resumebuttonun işlevi eklenecek
             }
         });
         panel.add(resumeButton);
@@ -44,7 +42,8 @@ public class PauseMenu extends JFrame {
         saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	//buraya save etme kısmı eklenecek
+                RunningMode runningModePage = new RunningMode();
+                runningModePage.saveMap();
             }
         });
         panel.add(saveButton);
@@ -53,8 +52,8 @@ public class PauseMenu extends JFrame {
         helpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         helpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // buraya helpscreeni açma kısmı eklenmeli
-            }
+                Helppage helpPage = new Helppage();
+                helpPage.setVisible(true);            }
         });
         panel.add(helpButton);
 
@@ -77,7 +76,7 @@ public class PauseMenu extends JFrame {
     }
     
     // for testing
-    public static void main(String[] args) {
-    	new PauseMenu();
-    }
+//    public static void main(String[] args) {
+//       new PauseMenu();
+//    }
 }

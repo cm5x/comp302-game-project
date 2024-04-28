@@ -43,6 +43,8 @@ public class RunningMode extends JFrame{
     private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
     JButton pauseButton;
+    JButton saveButton;
+    JButton loadButton;
 
     public RunningMode() {
         setTitle("Play Game");
@@ -69,9 +71,14 @@ public class RunningMode extends JFrame{
 
         // Create buttons 
         pauseButton = new JButton("Pause");
+        saveButton = new JButton("Save");
+        loadButton = new JButton("Load");
+
 
         // Add buttons to the left pannel
         blockChooserPanel.add(pauseButton);
+        blockChooserPanel.add(saveButton);
+        blockChooserPanel.add(loadButton);
 
         //Adding action listeners to buttons
 
@@ -80,6 +87,19 @@ public class RunningMode extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 PauseMenu pauseMenu = new PauseMenu();
                 pauseMenu.setVisible(true);
+            }
+        });
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveMap();
+            }
+        });
+
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadMap();
             }
         });
 
