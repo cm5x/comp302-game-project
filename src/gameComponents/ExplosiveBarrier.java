@@ -115,4 +115,14 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
         BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
         return panel;
     }
+
+    @Override
+    public int getXCoordinate() {
+        return x1Coordinate;
+    }
+
+    @Override
+    public int getYCoordinate() {
+        return y1Coordinate;
+    }
 }

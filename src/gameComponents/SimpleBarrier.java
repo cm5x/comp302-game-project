@@ -101,6 +101,16 @@ public class SimpleBarrier extends JComponent implements Barrier {
     }
 
     @Override
+    public int getXCoordinate() {
+        return x1Coordinate;
+    }
+
+    @Override
+    public int getYCoordinate() {
+        return y1Coordinate;
+    }
+
+    @Override
     public int getDirection() {
         return direction;
     }
