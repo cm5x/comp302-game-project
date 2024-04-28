@@ -1,5 +1,4 @@
 
-
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -27,8 +26,8 @@ public class MagicalStaff implements KeyListener {
         this.thickness = 20.0;
         this.rotationAngle = 0.0;
         this.rotationRate = 45.0;
-        this.movementSpeed = length;
-        this.xPos = screenSize.getWidth() /2 ; // Start at the center of the screen
+        this.movementSpeed = 5.0; // Adjust movement speed as needed
+        this.xPos = screenSize.getWidth() / 2; // Start at the center of the screen
         this.expanded = false;
         this.expansionStartTime = 0;
         this.hexActivated = false;
@@ -51,74 +50,20 @@ public class MagicalStaff implements KeyListener {
         return rotationAngle;
     }
 
-    public double getMovementSpeed() {
-        return movementSpeed;
-    }
-
     public void moveHorizontally() {
         if (moveLeft) {
-            xPos -= movementSpeed * 0.02; // Move left
+            xPos -= movementSpeed; // Move left
         } else if (moveRight) {
-            xPos += movementSpeed * 0.02; // Move right
+            xPos += movementSpeed; // Move right
         }
     }
 
-    
-    
-    
-    
-    
     public void updateRotation() {
         if (rotateLeft && rotationAngle > -ROTATION_LIMIT) {
             rotationAngle -= rotationRate * 0.02;
         } else if (rotateRight && rotationAngle < ROTATION_LIMIT) {
             rotationAngle += rotationRate * 0.02;
-        } else {
-            rotationRate = 45.0; // Reset rotation rate
         }
-    }
-
-    public void expand() {
-        this.length *= 2.0;
-        expanded = true;
-        expansionStartTime = System.currentTimeMillis();
-    }
-
-    public boolean isExpansionDurationElapsed(int duration) {
-        if (!expanded) return true;
-
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - expansionStartTime;
-        return elapsedTime >= duration * 1000;
-    }
-
-    public void shorten() {
-        this.length /= 2.0;
-        expanded = false;
-    }
-
-    public void activateHex() {
-        hexActivated = true;
-        hexStartTime = System.currentTimeMillis();
-    }
-
-    public boolean isExpanded() {
-        return expanded;
-    }
-
-    public boolean isHexActivated() {
-        return hexActivated;
-    }
-
-    public boolean isHexDurationElapsed(int duration) {
-        if (!hexActivated) return true;
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - hexStartTime;
-        return elapsedTime >= duration * 1000;
-    }
-
-    public void deactivateHex() {
-        hexActivated = false;
     }
 
     @Override
@@ -158,5 +103,10 @@ public class MagicalStaff implements KeyListener {
     public void update() {
         moveHorizontally();
         updateRotation();
+    }
+
+    // Getter for the current x position of the staff
+    public double getXPos() {
+        return xPos;
     }
 }
