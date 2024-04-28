@@ -286,12 +286,15 @@ import java.io.Serializable;
                 case "red":
                     int[] simpleBarrierArray = new int[]{gridX,gridY,1,1}; //simpleBarrier
                     barrierList.add(simpleBarrierArray);
+                    break;
                 case "blue":
                     int[] explosiveBarrierArray = new int[]{gridX,gridY,2,1}; //explosive barrier
                     barrierList.add(explosiveBarrierArray);
+                    break;
                 case "green":
                     int[] rewardingBarrierArray = new int[]{gridX,gridY,3,1}; //explosive barrier
                     barrierList.add(rewardingBarrierArray);
+                    break;
                     
                 default:
                     break;
