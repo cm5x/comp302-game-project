@@ -255,7 +255,7 @@ class MapPanel extends JPanel {
 
     // public void loadMap(String filePath) {
     //     try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-    //         blocks = (ArrayList<ColoredBlock>) ois.readObject();
+    //         blocks = (ArrayList<ColoredBlock>) ois.readObject();S
     //         repaint();
     //         frame.appendInfoText("Map loaded successfully.");
     //     } catch (IOException | ClassNotFoundException e) {
@@ -296,20 +296,14 @@ class MapPanel extends JPanel {
             }
         }
     }
-
-
 }
 
 
 class GamePanel extends JPanel implements KeyListener {
-    private List<MapPanel.ColoredBlock> barriers; // Use ColoredBlock from MapPanel
-
-    private Rectangle paddle;
-    private Point ballPosition;
-    private int ballSpeedX = 2;
-    private int ballSpeedY = 2;
-    private Timer timer;
-    
+    private ArrayList<ColoredBlock> blocks;
+    private String selectedColor = "red";  // Default color
+    private static final int BLOCK_WIDTH = 100; // Width of the block
+    private static final int BLOCK_HEIGHT = 20; // Height of the block
     private final MapDesigner frame;
 
     // public GamePanel() {
@@ -373,14 +367,55 @@ class GamePanel extends JPanel implements KeyListener {
             ballPosition.y = paddle.y - 10; // Adjust ball position to avoid sticking
         }
 
-        // Check collision with barriers
+        // // Check collision with barriers
+        // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
+        // while (it.hasNext()) {
+        //     MapPanel.ColoredBlock block = it.next();
+        //     if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(block.rectangle)) {
+        //         ballSpeedY = -ballSpeedY; // Reflect the ball
+
+        //         it.remove(); // Remove the barrier on hit
+        //         break;
+        //     }
+        // }
+
+        //ALTERNATIVE
+
+        // Collision with barriers
+        Rectangle ballRect = new Rectangle(ballPosition.x, ballPosition.y, 10, 10);
         Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
         while (it.hasNext()) {
             MapPanel.ColoredBlock block = it.next();
-            if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(block.rectangle)) {
-                ballSpeedY = -ballSpeedY; // Reflect the ball
+            if (ballRect.intersects(block.rectangle)) {
+                // Determine the collision direction
+                int ballCenterX = ballPosition.x + 5;
+                int ballCenterY = ballPosition.y + 5;
+                int blockCenterX = block.rectangle.x + block.rectangle.width / 2;
+                int blockCenterY = block.rectangle.y + block.rectangle.height / 2;
+
+                int deltaX = ballCenterX - blockCenterX;
+                int deltaY = ballCenterY - blockCenterY;
+
+                // Check which side (top, bottom, left, right) of the block the ball has hit
+                boolean collisionFromTopOrBottom = Math.abs(deltaY) > Math.abs(deltaX);
+                if (collisionFromTopOrBottom) {
+                    ballSpeedY = -ballSpeedY; // Vertical bounce
+                    if (deltaY > 0) { // Ball is below the block
+                        ballPosition.y = block.rectangle.y + block.rectangle.height;
+                    } else { // Ball is above the block
+                        ballPosition.y = block.rectangle.y - 10;
+                    }
+                } else {
+                    ballSpeedX = -ballSpeedX; // Horizontal bounce
+                    if (deltaX > 0) { // Ball is to the right of the block
+                        ballPosition.x = block.rectangle.x + block.rectangle.width;
+                    } else { // Ball is to the left of the block
+                        ballPosition.x = block.rectangle.x - 10;
+                    }
+                }
+
                 it.remove(); // Remove the barrier on hit
-                break;
+                break; // Assuming only one collision can occur per frame
             }
         }
 
@@ -393,6 +428,8 @@ class GamePanel extends JPanel implements KeyListener {
     //     g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
     //     g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
     // }
+
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
