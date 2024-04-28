@@ -118,7 +118,7 @@ public class RunningMode extends JFrame{
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
-        private String filePath = "/Users/idenizalan/Desktop/testBarr.dat";
+        private String filePath = "src/utilities/exampleMap1.dat";
         // private Rectangle paddle;
         // private Point ballPosition;
         // private int ballSpeedX = 2;
