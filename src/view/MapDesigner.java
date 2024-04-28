@@ -1,6 +1,10 @@
 package view;
 
 import javax.swing.*;
+
+import gameComponents.Barrier;
+import gameComponents.SimpleBarrier;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +28,7 @@ import java.io.Serializable;
         private final MapPanel mapPanel;
         private final JPanel blockChooserPanel;
         private final JTextArea infoTextArea;
+
         JButton randomButton;
         JTextField redinput;
         JTextField blueinput;
@@ -209,6 +214,7 @@ import java.io.Serializable;
 
     class MapPanel extends JPanel {
         private ArrayList<ColoredBlock> blocks;
+        private ArrayList<Barrier> barrierList;
         private String selectedColor = "red";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
@@ -270,6 +276,22 @@ import java.io.Serializable;
                     return false; // Block already exists or overlaps in this area
                 }
             }
+
+            switch (selectedColor) {
+                case "red":
+                    barrierList.add(new SimpleBarrier(BLOCK_WIDTH,gridX,gridY));
+                    break;
+                case "blue":
+                    
+                    break;
+
+                case "green":
+
+                    break;
+                default:
+                    break;
+            }
+
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
             return true;
         }
