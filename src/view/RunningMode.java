@@ -40,24 +40,24 @@ import utilities.BarrierReader;
 public class RunningMode extends JFrame{
 
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
-    private final MapPanel mapPanel;
+    // private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
     JButton saveButton;
     JButton loadButton;
     JButton resumeButton;
     JButton pauseButton;
 
-    public RunningMode(){
+    public RunningMode() {
         setTitle("Play Game");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Creating the map panel where game objects will interact
-        this.mapPanel = new MapPanel(this);
-        this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
-        this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
-        this.add(mapPanel, BorderLayout.CENTER);
+        //this.mapPanel = new MapPanel();
+        //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
+        //this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
+        //this.add(mapPanel, BorderLayout.CENTER);
 
         // Panel on the left that will include the buttons to load, resume, save and load game
         this.blockChooserPanel = new JPanel();
@@ -110,7 +110,7 @@ public class RunningMode extends JFrame{
         this.setVisible(true);
     }    
     
-    class MapPanel extends JPanel {
+ /*    class MapPanel extends JPanel {
         // Initialize Magic staff 
         paddle = new Rectangle(100, 450, 100, 20);  // Initial position and size of the paddle
         ballPosition = new Point(150, 435);  // Initial position of the ball
@@ -130,7 +130,7 @@ public class RunningMode extends JFrame{
 
 
 
-    }
+    } */
 
     
     // Load map and save map for the game
@@ -159,12 +159,12 @@ public class RunningMode extends JFrame{
                     String file = fileToLoad.getAbsolutePath();
                     BarrierReader reader = new BarrierReader();
                     barriers = reader.readBarriers(file);
-                } catch (IOException | ClassNotFoundException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-
+/* 
     private void moveBall() {
 
         ballPosition.x += ballSpeedX;
@@ -240,7 +240,7 @@ public class RunningMode extends JFrame{
 
         repaint();
     }
-
+ */
     // @Override
     // public void paintComponent(Graphics g) {
     //     super.paintComponent(g);
@@ -249,7 +249,7 @@ public class RunningMode extends JFrame{
     // }
 
 
-    @Override
+/*     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
@@ -261,7 +261,7 @@ public class RunningMode extends JFrame{
             g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
         }
     }
-
+ */
     // @Override
     // public void keyPressed(KeyEvent e) {
     //     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -307,5 +307,4 @@ public class RunningMode extends JFrame{
         run.setVisible(true);
     }
 
-}
 }
