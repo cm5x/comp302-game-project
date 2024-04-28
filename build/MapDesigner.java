@@ -82,7 +82,7 @@ public class MapDesigner extends JFrame {
         // loadButton.addActionListener(e -> mapPanel.loadMap("map_data.dat"));
         // buttonPanel.add(loadButton);
 
-        
+
         JButton saveButton = new JButton("Save Map");
         saveButton.addActionListener(e -> mapPanel.saveMap());
         buttonPanel.add(saveButton);
@@ -95,10 +95,10 @@ public class MapDesigner extends JFrame {
         startGameButton.addActionListener(e -> switchToGameMode());
         blockChooserPanel.add(startGameButton, BorderLayout.NORTH);
 
-        
+
         blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
 
-        
+
 
     }
 
@@ -106,7 +106,7 @@ public class MapDesigner extends JFrame {
         infoTextArea.append(text + "\n");
     }
 
-    
+
 
     // public void switchToGameMode() {
     //     remove(mapPanel);
@@ -162,7 +162,7 @@ class MapPanel extends JPanel {
         });
 
 
-        
+
 
 
     }
@@ -255,7 +255,7 @@ class MapPanel extends JPanel {
 
     // public void loadMap(String filePath) {
     //     try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-    //         blocks = (ArrayList<ColoredBlock>) ois.readObject();S
+    //         blocks = (ArrayList<ColoredBlock>) ois.readObject();
     //         repaint();
     //         frame.appendInfoText("Map loaded successfully.");
     //     } catch (IOException | ClassNotFoundException e) {
@@ -296,14 +296,20 @@ class MapPanel extends JPanel {
             }
         }
     }
+
+
 }
 
 
 class GamePanel extends JPanel implements KeyListener {
-    private ArrayList<ColoredBlock> blocks;
-    private String selectedColor = "red";  // Default color
-    private static final int BLOCK_WIDTH = 100; // Width of the block
-    private static final int BLOCK_HEIGHT = 20; // Height of the block
+    private List<MapPanel.ColoredBlock> barriers; // Use ColoredBlock from MapPanel
+
+    private Rectangle paddle;
+    private Point ballPosition;
+    private int ballSpeedX = 2;
+    private int ballSpeedY = 2;
+    private Timer timer;
+
     private final MapDesigner frame;
 
     // public GamePanel() {
@@ -318,8 +324,8 @@ class GamePanel extends JPanel implements KeyListener {
     public GamePanel(MapDesigner frame, List<MapPanel.ColoredBlock> barriers) {
         this.frame = frame;
         this.barriers = new ArrayList<>(barriers); // Copy barriers from the map
-        paddle = new Rectangle(100, 450, 100, 20);  // Initial position and size of the paddle
-        ballPosition = new Point(150, 435);  // Initial position of the ball
+        paddle = new Rectangle(600, 150, 100, 20);  // Initial position and size of the paddle
+        ballPosition = new Point(650, 135);  // Initial position of the ball
         setFocusable(true);
         addKeyListener(this);
         timer = new Timer(10, e -> moveBall());
@@ -346,6 +352,41 @@ class GamePanel extends JPanel implements KeyListener {
 
 
     //This is checkCollision function, I named it as moveBall
+    // private void moveBall() {
+
+    //     ballPosition.x += ballSpeedX;
+    //     ballPosition.y += ballSpeedY;
+    //     if (ballPosition.x < 0 || ballPosition.x > getWidth()) {
+    //         ballSpeedX = -ballSpeedX;
+    //     }
+    //     if (ballPosition.y < 0) {
+    //         ballSpeedY = -ballSpeedY;
+    //     }
+    //     if (ballPosition.y > getHeight()) { // Ball goes below the paddle
+    //         timer.stop();
+    //         JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
+    //     }
+
+    //     // Check collision with the paddle
+    //     if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(paddle)) {
+    //         ballSpeedY = -ballSpeedY;
+    //         ballPosition.y = paddle.y - 10; // Adjust ball position to avoid sticking
+    //     }
+
+    //     // Check collision with barriers
+    //     Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
+    //     while (it.hasNext()) {
+    //         MapPanel.ColoredBlock block = it.next();
+    //         if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(block.rectangle)) {
+    //             ballSpeedY = -ballSpeedY; // Reflect the ball
+    //             it.remove(); // Remove the barrier on hit
+    //             break;
+    //         }
+    //     }
+
+    //     repaint();
+    // }
+
     private void moveBall() {
 
         ballPosition.x += ballSpeedX;
@@ -428,8 +469,6 @@ class GamePanel extends JPanel implements KeyListener {
     //     g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
     //     g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
     // }
-
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -484,6 +523,5 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
 }
-
 
 
