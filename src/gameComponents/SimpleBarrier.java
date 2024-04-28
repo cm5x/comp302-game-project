@@ -14,9 +14,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
     private int length;
     private int health;
     private int x1Coordinate;
-    private int x2Coordinate;
     private int y1Coordinate;
-    private int y2Coordinate;
     private int direction;
     private boolean isMoving;
     //private BufferedImage barrierImage;
@@ -27,9 +25,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
         this.length = length;
         this.health = 1; // Simple barriers can be destroyed in one hit
         this.x1Coordinate = startX;
-        this.x2Coordinate = startX + length;
         this.y1Coordinate = startY;
-        this.y2Coordinate = startY + 20; // Assuming height of 20px for all barriers
 
         // Determine if the barrier will be moving
         double probability = 0.8; // 80% chance of being stationary
@@ -101,7 +97,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
 
     @Override
     public int[] getCoordinates() {
-        return new int[]{x1Coordinate, x2Coordinate, y1Coordinate, y2Coordinate};
+        return new int[]{x1Coordinate, y1Coordinate};
     }
 
     @Override
@@ -112,9 +108,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
     @Override
     public void updatePosition(int newX1, int newX2, int newY1, int newY2) {
         this.x1Coordinate = newX1;
-        this.x2Coordinate = newX2;
         this.y1Coordinate = newY1;
-        this.y2Coordinate = newY2;
     }
 
     @Override
