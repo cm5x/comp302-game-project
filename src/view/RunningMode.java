@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -16,7 +17,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import utilities.*;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,35 +27,31 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-
 import org.w3c.dom.events.MouseEvent;
-
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
+import utilities.BarrierReader;
 
-public class RunningMode extends JFrame implements ActionListener{
+public class RunningMode extends JFrame{
 
-    private List<List<Barrier>> barriers; // list that will store all barriers
-    private final MapPanel mapPanel;
+    private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
+    // private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
-    JButton saveButton;
-    JButton loadButton;
-    JButton resumeButton;
     JButton pauseButton;
 
-    public RunningMode(){
+    public RunningMode() {
         setTitle("Play Game");
-        setSize(1920,1080);
+        setSize(1080,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+
 
         // Creating the map panel where game objects will interact
-        this.mapPanel = new MapPanel();
-        this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
-        this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
-        this.add(mapPanel, BorderLayout.CENTER);
+        //this.mapPanel = new MapPanel();
+        //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
+        //this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
+        //this.add(mapPanel, BorderLayout.CENTER);
 
         // Panel on the left that will include the buttons to load, resume, save and load game
         this.blockChooserPanel = new JPanel();
@@ -63,63 +59,48 @@ public class RunningMode extends JFrame implements ActionListener{
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(new GridLayout(4,1));
 
-
         // Create buttons 
-        saveButton = new JButton("Save");
-        loadButton = new JButton("Load");
-        resumeButton = new JButton("Resume");
         pauseButton = new JButton("Pause");
 
         // Add buttons to the left pannel
-        blockChooserPanel.add(saveButton);
-        blockChooserPanel.add(loadButton);
-        blockChooserPanel.add(resumeButton);
         blockChooserPanel.add(pauseButton);
 
         //Adding action listeners to buttons
-        saveButton.addActionListener(new ActionListener() {
+
+        pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mapPanel.saveMap();
+                PauseMenu pauseMenu = new PauseMenu();
+                pauseMenu.setVisible(true);
             }
         });
 
-        loadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mapPanel.loadMap();
-            }
-        });
 
-        resumeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Melike buraya eklersin
-            }
-        });
-
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Melike buraya eklersin
-            }
-        });
-
+        add(blockChooserPanel, BorderLayout.WEST);
+        this.setVisible(true);
     }    
     
-    class MapPanel extends JPanel {
-        // Create barrier arraylists to store the barriers
-        this.frame = frame;
-        this.barriers = new ArrayList<>(barriers); // Copy barriers from the map
+ /*    class MapPanel extends JPanel {
+        // Initialize Magic staff 
         paddle = new Rectangle(100, 450, 100, 20);  // Initial position and size of the paddle
         ballPosition = new Point(150, 435);  // Initial position of the ball
-        setFocusable(true);
-        addKeyListener(this);
+
+        this.setFocusable(true);
+        this.addKeyListener(this);
         timer = new Timer(10, e -> moveBall());
         timer.start();
 
-        publşc MapPanel()
-    }
+        public MapPanel(RunningMode frame){
+            List<Barrier> simpleBarriers = barriers.get(0);
+            List<Barrier> firmBarriers = barriers.get(1);
+            List<Barrier> explosiveBarriers = barriers.get(2);
+            List<Barrier> rewardingBarriers = barriers.get(3);
+            this.frame = frame;
+        }
+
+
+
+    } */
 
     
     // Load map and save map for the game
@@ -130,10 +111,8 @@ public class RunningMode extends JFrame implements ActionListener{
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                    oos.writeObject(barrierList);
-                    frame.appendInfoText("Map saved successfully to " + fileToSave.getAbsolutePath());
+                    oos.writeObject(barriers);
                 } catch (IOException e) {
-                    frame.appendInfoText("Error saving map: " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -147,16 +126,15 @@ public class RunningMode extends JFrame implements ActionListener{
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToLoad = fileChooser.getSelectedFile();
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
-                    blocks = (ArrayList<ColoredBlock>) ois.readObject();
-                    repaint();
-                    frame.appendInfoText("Map loaded successfully from " + fileToLoad.getAbsolutePath());
-                } catch (IOException | ClassNotFoundException e) {
-                    frame.appendInfoText("Error loading map: " + e.getMessage());
+                    String file = fileToLoad.getAbsolutePath();
+                    BarrierReader reader = new BarrierReader();
+                    barriers = reader.readBarriers(file);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-
+/* 
     private void moveBall() {
 
         ballPosition.x += ballSpeedX;
@@ -232,7 +210,7 @@ public class RunningMode extends JFrame implements ActionListener{
 
         repaint();
     }
-
+ */
     // @Override
     // public void paintComponent(Graphics g) {
     //     super.paintComponent(g);
@@ -241,7 +219,7 @@ public class RunningMode extends JFrame implements ActionListener{
     // }
 
 
-    @Override
+/*     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLACK);
@@ -253,7 +231,7 @@ public class RunningMode extends JFrame implements ActionListener{
             g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
         }
     }
-
+ */
     // @Override
     // public void keyPressed(KeyEvent e) {
     //     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
