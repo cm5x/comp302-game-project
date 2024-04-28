@@ -3,6 +3,8 @@ package view;
 import javax.swing.*;
 
 import gameComponents.Barrier;
+import gameComponents.ExplosiveBarrier;
+import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
 
 import java.awt.*;
@@ -224,6 +226,7 @@ import java.io.Serializable;
         public MapPanel(MapDesigner frame) {
             this.frame = frame; 
             this.blocks = new ArrayList<>();
+            this.barrierList = new ArrayList<>();
             this.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -276,18 +279,14 @@ import java.io.Serializable;
                     return false; // Block already exists or overlaps in this area
                 }
             }
-
+            
             switch (selectedColor) {
                 case "red":
                     barrierList.add(new SimpleBarrier(BLOCK_WIDTH,gridX,gridY));
-                    break;
                 case "blue":
-                    
-                    break;
-
+                    barrierList.add(new ExplosiveBarrier(gridX,gridY));
                 case "green":
-
-                    break;
+                    barrierList.add(new RewardingBarrier(gridX,gridY));
                 default:
                     break;
             }
@@ -362,7 +361,7 @@ import java.io.Serializable;
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                    oos.writeObject(blocks);
+                    oos.writeObject(barrierList);
                     frame.appendInfoText("Map saved successfully to " + fileToSave.getAbsolutePath());
                 } catch (IOException e) {
                     frame.appendInfoText("Error saving map: " + e.getMessage());
