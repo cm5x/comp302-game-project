@@ -1,6 +1,12 @@
 package view;
 
 import javax.swing.*;
+
+import gameComponents.Barrier;
+import gameComponents.ExplosiveBarrier;
+import gameComponents.RewardingBarrier;
+import gameComponents.SimpleBarrier;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +30,7 @@ import java.io.Serializable;
         private final MapPanel mapPanel;
         private final JPanel blockChooserPanel;
         private final JTextArea infoTextArea;
+
         JButton randomButton;
         JTextField redinput;
         JTextField blueinput;
@@ -209,6 +216,7 @@ import java.io.Serializable;
 
     class MapPanel extends JPanel {
         private ArrayList<ColoredBlock> blocks;
+        private ArrayList<Barrier> barrierList;
         private String selectedColor = "red";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
@@ -218,6 +226,7 @@ import java.io.Serializable;
         public MapPanel(MapDesigner frame) {
             this.frame = frame; 
             this.blocks = new ArrayList<>();
+            this.barrierList = new ArrayList<>();
             this.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -270,6 +279,18 @@ import java.io.Serializable;
                     return false; // Block already exists or overlaps in this area
                 }
             }
+            
+            switch (selectedColor) {
+                case "red":
+                    barrierList.add(new SimpleBarrier(BLOCK_WIDTH,gridX,gridY));
+                case "blue":
+                    barrierList.add(new ExplosiveBarrier(gridX,gridY));
+                case "green":
+                    barrierList.add(new RewardingBarrier(gridX,gridY));
+                default:
+                    break;
+            }
+
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
             return true;
         }
@@ -340,7 +361,7 @@ import java.io.Serializable;
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                    oos.writeObject(blocks);
+                    oos.writeObject(barrierList);
                     frame.appendInfoText("Map saved successfully to " + fileToSave.getAbsolutePath());
                 } catch (IOException e) {
                     frame.appendInfoText("Error saving map: " + e.getMessage());
