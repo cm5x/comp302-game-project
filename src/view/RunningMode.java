@@ -3,6 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
+
 import utilities.*;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -37,13 +40,13 @@ import utilities.BarrierReader;
 public class RunningMode extends JFrame{
 
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
-    // private final MapPanel mapPanel;
+    private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
     JButton pauseButton;
 
     public RunningMode() {
         setTitle("Play Game");
-        setSize(1080,1080);
+        setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -58,6 +61,11 @@ public class RunningMode extends JFrame{
         this.blockChooserPanel.setPreferredSize(new Dimension(230, 600));
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(new GridLayout(4,1));
+
+        this.mapPanel = new MapPanel(this);
+        this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
+        this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
+        this.add(mapPanel);
 
         // Create buttons 
         pauseButton = new JButton("Pause");
@@ -77,30 +85,90 @@ public class RunningMode extends JFrame{
 
 
         add(blockChooserPanel, BorderLayout.WEST);
+        //add(mapPanel,BorderLayout.EAST);
         this.setVisible(true);
     }    
     
- /*    class MapPanel extends JPanel {
+    class MapPanel extends JPanel {
         // Initialize Magic staff 
-        paddle = new Rectangle(100, 450, 100, 20);  // Initial position and size of the paddle
-        ballPosition = new Point(150, 435);  // Initial position of the ball
+        private ArrayList<ColoredBlock> blocks;
+        private ArrayList<int[]> barrierList;
+        private String selectedColor = "red";  // Default color
+        private static final int BLOCK_WIDTH = 100; // Width of the block
+        private static final int BLOCK_HEIGHT = 20; // Height of the block
+        private final RunningMode frame;
+        private String filePath = "/Users/idenizalan/Desktop/testBar.dat";
 
-        this.setFocusable(true);
-        this.addKeyListener(this);
-        timer = new Timer(10, e -> moveBall());
-        timer.start();
 
-        public MapPanel(RunningMode frame){
-            List<Barrier> simpleBarriers = barriers.get(0);
-            List<Barrier> firmBarriers = barriers.get(1);
-            List<Barrier> explosiveBarriers = barriers.get(2);
-            List<Barrier> rewardingBarriers = barriers.get(3);
+        public MapPanel(RunningMode frame) {
             this.frame = frame;
+            this.blocks = new ArrayList<>();
+            this.barrierList = new ArrayList<int[]>();
+
+            File file = new File(filePath); // File path should be in String data
+            System.out.println("dadada");
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+
+                barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                
+                
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+            for (int[] i : barrierList) {
+                
+                addBlock(i[0], i[1]);
+                repaint();
+
+            }
+            
+        }
+
+        public boolean addBlock(int x, int y) {
+            int gridX = x - (x % BLOCK_WIDTH);
+            int gridY = y - (y % BLOCK_HEIGHT);
+
+            blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
+            
+            return true;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            for (ColoredBlock block : blocks) {
+                switch (block.color) {
+                    case "red":
+                        g.setColor(Color.RED);
+                        break;
+                    case "blue":
+                        g.setColor(Color.BLUE);
+                        break;
+                    case "green":
+                        g.setColor(Color.GREEN);
+                        break;
+                    default:
+                        g.setColor(Color.BLACK); // Default case
+                }
+                g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+            }
+            
+        }
+
+        private static class ColoredBlock implements Serializable {
+            Rectangle rectangle;
+            String color;
+    
+            ColoredBlock(Rectangle rectangle, String color) {
+                this.rectangle = rectangle;
+                this.color = color;
+            }
         }
 
 
-
-    } */
+    }
 
     
     // Load map and save map for the game
