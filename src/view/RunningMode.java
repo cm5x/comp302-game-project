@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import utilities.*;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,9 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-
 import org.w3c.dom.events.MouseEvent;
-
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.RewardingBarrier;
