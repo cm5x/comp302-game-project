@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.RewardingBarrier;
@@ -216,7 +218,7 @@ import java.io.Serializable;
 
     class MapPanel extends JPanel {
         private ArrayList<ColoredBlock> blocks;
-        private ArrayList<Barrier> barrierList;
+        private ArrayList<int[]> barrierList;
         private String selectedColor = "red";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
@@ -226,7 +228,7 @@ import java.io.Serializable;
         public MapPanel(MapDesigner frame) {
             this.frame = frame; 
             this.blocks = new ArrayList<>();
-            this.barrierList = new ArrayList<>();
+            this.barrierList = new ArrayList<int[]>();
             this.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -279,14 +281,18 @@ import java.io.Serializable;
                     return false; // Block already exists or overlaps in this area
                 }
             }
-            
+
             switch (selectedColor) {
                 case "red":
-                    barrierList.add(new SimpleBarrier(BLOCK_WIDTH,gridX,gridY));
+                    int[] simpleBarrierArray = new int[]{gridX,gridY,1,1}; //simpleBarrier
+                    barrierList.add(simpleBarrierArray);
                 case "blue":
-                    barrierList.add(new ExplosiveBarrier(gridX,gridY));
+                    int[] explosiveBarrierArray = new int[]{gridX,gridY,2,1}; //explosive barrier
+                    barrierList.add(explosiveBarrierArray);
                 case "green":
-                    barrierList.add(new RewardingBarrier(gridX,gridY));
+                    int[] rewardingBarrierArray = new int[]{gridX,gridY,3,1}; //explosive barrier
+                    barrierList.add(rewardingBarrierArray);
+                    
                 default:
                     break;
             }
@@ -378,6 +384,14 @@ import java.io.Serializable;
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToLoad = fileChooser.getSelectedFile();
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+
+                    ArrayList<int[]> intArray = (ArrayList<int[]>) ois.readObject();
+
+                    for (int[] i : intArray) {
+                        System.out.println(i[0]);
+                        
+                    }
+
                     blocks = (ArrayList<ColoredBlock>) ois.readObject();
                     repaint();
                     frame.appendInfoText("Map loaded successfully from " + fileToLoad.getAbsolutePath());

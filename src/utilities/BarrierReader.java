@@ -1,37 +1,45 @@
 package utilities;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
+
 import gameComponents.*;
+import view.MapDesigner;
 
 // Class to read a txt file and get x and y data.
 public class BarrierReader {
 
-    public static List<List<Barrier>> readBarriers(String filePath) throws FileNotFoundException {
+    public static ArrayList<ArrayList<Barrier>> readBarriers(String filePath) throws FileNotFoundException {
 
         // Create list barrier
-        List<Barrier> simpleBarriers = new ArrayList<>(); // Simple Barriers
-        List<Barrier> firmBarriers = new ArrayList<>(); // Frim Barrierss
-        List<Barrier> explosiveBarriers = new ArrayList<>(); // Explosive Barriers
-        List<Barrier> rewardingBarriers = new ArrayList<>(); // Rewarding Barriers
-        List<List<Barrier>> allBarriers = new ArrayList<>(); // List for keeping all barriers
+        ArrayList<Barrier> simpleBarriers = new ArrayList<>(); // Simple Barriers
+        ArrayList<Barrier> firmBarriers = new ArrayList<>(); // Frim Barrierss
+        ArrayList<Barrier> explosiveBarriers = new ArrayList<>(); // Explosive Barriers
+        ArrayList<Barrier> rewardingBarriers = new ArrayList<>(); // Rewarding Barriers
+        ArrayList<ArrayList<Barrier>> allBarriers = new ArrayList<ArrayList<Barrier>>(); // List for keeping all barriers
+
+        ArrayList<int[]> barrierList = new ArrayList<int[]>();
 
         File file = new File(filePath); // File path should be in String data
         Scanner scanner = new Scanner(file); // scan the file
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            String[] parts = line.split(","); // Split by comma (",")
+            barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
 
-            // Check for valid format (x,y,id,life)
-            if (parts.length != 4) {
-                System.err.println("Invalid line format in file: " + line);
-                continue;
-            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (int[] i : barrierList) {
 
             int x; // x and y should be converted to integers.
             int y;
@@ -39,12 +47,12 @@ public class BarrierReader {
             int hit; //life of barrier
 
             try {
-                x = Integer.parseInt(parts[0]);
-                y = Integer.parseInt(parts[1]);
-                id = Integer.parseInt(parts[2]);
-                hit = Integer.parseInt(parts[3]);
+                x = i[0];
+                y = i[1];
+                id = i[2];
+                hit = i[3];
             } catch (NumberFormatException e) {
-                System.err.println("Invalid number format in line: " + line);
+                System.err.println("Invalid number format in line: ");
                 continue;
             }
 
@@ -75,7 +83,6 @@ public class BarrierReader {
         }
 
         scanner.close();
-
         // Add each list to the main list
         allBarriers.add(simpleBarriers); 
         allBarriers.add(firmBarriers);
@@ -83,5 +90,11 @@ public class BarrierReader {
         allBarriers.add(rewardingBarriers);
 
         return allBarriers;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+            ArrayList<ArrayList<Barrier>> barrierList = readBarriers("/Users/idenizalan/Desktop/test.dat"); //give saved file path
+            System.out.println(barrierList.get(1).size());
+            
     }
 }
