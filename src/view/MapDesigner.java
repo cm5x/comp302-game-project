@@ -2,8 +2,6 @@ package view;
 
 import javax.swing.*;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
-
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.RewardingBarrier;
