@@ -27,8 +27,8 @@ public class BarrierReader {
             String line = scanner.nextLine();
             String[] parts = line.split(","); // Split by comma (",")
 
-            // Check for valid format (x,y)
-            if (parts.length != 3) {
+            // Check for valid format (x,y,id,life)
+            if (parts.length != 4) {
                 System.err.println("Invalid line format in file: " + line);
                 continue;
             }
@@ -36,18 +36,41 @@ public class BarrierReader {
             int x; // x and y should be converted to integers.
             int y;
             int id; // ID to distinguish barriers.
+            int hit; //life of barrier
 
             try {
                 x = Integer.parseInt(parts[0]);
                 y = Integer.parseInt(parts[1]);
                 id = Integer.parseInt(parts[2]);
+                hit = Integer.parseInt(parts[3]);
             } catch (NumberFormatException e) {
                 System.err.println("Invalid number format in line: " + line);
                 continue;
             }
 
             // Create barrier instances to add to the barrier class
-            
+            switch (id) { 
+                case 1:
+                    SimpleBarrier bar1 = new SimpleBarrier(86, x, y);
+                    simpleBarriers.add(bar1);
+                    break;
+                case 2:
+                    ReinforcedBarrier bar2 = new ReinforcedBarrier(hit, x, y);
+                    firmBarriers.add(bar2);
+                    break;
+                case 3:
+                    ExplosiveBarrier bar3 = new ExplosiveBarrier(x, y);
+                    explosiveBarriers.add(bar3);
+                    break;
+                case 4:
+                    RewardingBarrier bar4 = new RewardingBarrier(x, y);
+                    rewardingBarriers.add(bar4);
+                    break;
+                default:
+                    System.err.println("Invalid barrier ID: " + id);
+                    // Handle invalid IDs (optional)
+            }
+
             
         }
 

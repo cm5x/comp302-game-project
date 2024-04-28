@@ -17,9 +17,9 @@ public interface Barrier {
     public int[] getCoordinates();
     public boolean checkIfMoving();
     public void paintComponent(Graphics g);
+    
 
 
 
    
-
 }
