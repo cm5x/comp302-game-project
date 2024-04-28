@@ -48,7 +48,7 @@ public class RunningMode extends JFrame{
     JButton loadButton;
 
     public RunningMode() {
-        setTitle("Play Game");
+        setTitle("Running Mode");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -132,7 +132,7 @@ public class RunningMode extends JFrame{
             this.barrierList = new ArrayList<int[]>();
 
             File file = new File(filePath); // File path should be in String data
-            System.out.println("dadada");
+            
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
                 barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
@@ -163,6 +163,7 @@ public class RunningMode extends JFrame{
                 repaint();
 
             }
+
             
         }
 
