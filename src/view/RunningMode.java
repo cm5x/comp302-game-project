@@ -39,9 +39,6 @@ public class RunningMode extends JFrame{
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
     // private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
-    JButton saveButton;
-    JButton loadButton;
-    JButton resumeButton;
     JButton pauseButton;
 
     public RunningMode() {
@@ -63,43 +60,18 @@ public class RunningMode extends JFrame{
         this.blockChooserPanel.setLayout(new GridLayout(4,1));
 
         // Create buttons 
-        saveButton = new JButton("Save");
-        loadButton = new JButton("Load");
-        resumeButton = new JButton("Resume");
         pauseButton = new JButton("Pause");
 
         // Add buttons to the left pannel
-        blockChooserPanel.add(saveButton);
-        blockChooserPanel.add(loadButton);
-        blockChooserPanel.add(resumeButton);
         blockChooserPanel.add(pauseButton);
 
         //Adding action listeners to buttons
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveMap();
-            }
-        });
 
-        loadButton.addActionListener(new ActionListener() {
+        pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loadMap();
-            }
-        });
-
-        resumeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Melike buraya eklersin eklersin
-            }
-        });
-
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Melike buraya eklersin :(((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))
+                PauseMenu pauseMenu = new PauseMenu();
+                pauseMenu.setVisible(true);
             }
         });
 

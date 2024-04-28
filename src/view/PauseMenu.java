@@ -5,15 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class PauseMenu extends JFrame {
-    private String username;
-    private int currentScore;
-    private int remainingChances;
 
-    public PauseMenu(String username, int currentScore, int remainingChances) {
-        this.username = username;
-        this.currentScore = currentScore;
-        this.remainingChances = remainingChances;
-        //burası player classı yazılınca yeniden düzenlenecek
+    public PauseMenu() {
         
         //JFrame properties
         setTitle("Pause Menu");        
@@ -33,21 +26,8 @@ public class PauseMenu extends JFrame {
         
         panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add vertical space between game paused line and user info
 
-        //Add labels for user's current info
-        JLabel usernameLabel = new JLabel("Username: " + username);
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(usernameLabel);
 
-        JLabel scoreLabel = new JLabel("Score: " + currentScore);
-        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(scoreLabel);
-
-        JLabel chancesLabel = new JLabel("Remaining Chances: " + remainingChances);
-        chancesLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(chancesLabel);
-
-        panel.add(Box.createRigidArea(new Dimension(0, 20))); //Add vertical space between buttons and user info
-
+     
         //Add buttons
         
         JButton resumeButton = new JButton("Resume");
@@ -97,7 +77,7 @@ public class PauseMenu extends JFrame {
     }
     
     // for testing
-//    public static void main(String[] args) {
-//    	new PauseMenu("Player1", 1000, 3);
-//    }
+    public static void main(String[] args) {
+    	new PauseMenu();
+    }
 }
