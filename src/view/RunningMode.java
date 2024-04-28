@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
 
 import utilities.*;
 import javax.swing.BorderFactory;
@@ -117,7 +118,12 @@ public class RunningMode extends JFrame{
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
-        private String filePath = "/Users/idenizalan/Desktop/testBar.dat";
+        private String filePath = "/Users/idenizalan/Desktop/testBarr.dat";
+        // private Rectangle paddle;
+        // private Point ballPosition;
+        // private int ballSpeedX = 2;
+        // private int ballSpeedY = 2;
+        // private Timer timer;
 
 
         public MapPanel(RunningMode frame) {
@@ -138,20 +144,33 @@ public class RunningMode extends JFrame{
 
 
             for (int[] i : barrierList) {
-                
-                addBlock(i[0], i[1]);
+                System.out.println(i[2]);
+                switch (i[2]) {
+                    case 1:
+                        addBlock(i[0], i[1],"red");
+                        break;
+                    case 2:
+                        addBlock(i[0], i[1],"blue");
+                        break;
+                    case 3:
+                        addBlock(i[0], i[1],"green");
+                        break;
+                        
+                    default:
+                        break;
+                }
+
                 repaint();
 
             }
             
         }
 
-        public boolean addBlock(int x, int y) {
+        public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
-
+            System.out.println(selectedColor);
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
-            
             return true;
         }
 
