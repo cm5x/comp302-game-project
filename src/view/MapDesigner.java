@@ -226,7 +226,7 @@ import java.io.Serializable;
 
 
         public MapPanel(MapDesigner frame) {
-            this.frame = frame; 
+            this.frame = frame;
             this.blocks = new ArrayList<>();
             this.barrierList = new ArrayList<int[]>();
             this.addMouseListener(new MouseAdapter() {
