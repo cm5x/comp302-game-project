@@ -79,10 +79,11 @@ public class Login extends JFrame{
                 }
                 */
                 if (controller.verifyPlayer(username, password)){
+                    JOptionPane.showMessageDialog(Login.this, "Login Successfull");
                     Homepage homepage = new Homepage(username);
                     homepage.setVisible(true);
                 }
-                else if (password == "admin"){
+                else if (!controller.verifyPlayer(username, password)){
                     JOptionPane.showMessageDialog(Login.this, "Login Failed. Please try again.");
                 }
 

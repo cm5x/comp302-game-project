@@ -1,91 +1,110 @@
 package gameMechanics;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import gameComponents.Player;
 
 public class GameController {
-    public static ArrayList<Player> plist = new ArrayList<>();
     
-    //database info
-    String url = "jdbc:mysql://localhost:3306/sys";
-    String usernamedb = "root";
-    String passworddb = "ABC123*.";
+    public HashMap<String, String> getDataFromText(){
+        HashMap<String, String> userdata = new HashMap<>();
+        try {
+            
+            FileReader fread = new FileReader("GameSaves/players.txt");
+            BufferedReader reader = new BufferedReader(fread);
 
+            String line;
+         
+            while ((line = reader.readLine()) != null) {
+                String[] splitted = line.split(",");
+                String username = splitted[0];
+                String password = splitted[1];
+                userdata.put(username, password);
+            }
+            reader.close();
+        } 
+        catch (IOException e) {
+            System.out.println(e);
+        }
+
+        return userdata;
+    }
+    
+   
+    public ArrayList<Player> getPlayerList(){
+        ArrayList<Player> plist = new ArrayList<>();
+        HashMap<String, String> dlist = this.getDataFromText();
+        for (Map.Entry<String, String> entry : dlist.entrySet()){
+            Player player = new Player(entry.getKey(), entry.getValue());
+            plist.add(player);
+        }
+
+        return plist;
+
+        
+    }
 
     public void addPlayer(String username, String password){
-        try{
+        try {
             
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, usernamedb, passworddb);
-
-            //yeni player ekleme
-            String insertSql = "INSERT INTO PLAYER (username, pass) VALUES ('" + username + "', '" + password + "')";
-            Statement insertStatement = connection.createStatement();
-            insertStatement.executeUpdate(insertSql);
-            Player newp = new Player(username, password);
-            plist.add(newp);
+            FileWriter fw = new FileWriter("GameSaves/players.txt", true);
+            BufferedWriter writer = new BufferedWriter(fw);
+            writer.write(username + "," + password);
+            writer.newLine();          
+            writer.close();
+        } 
+        catch (IOException e) {
+            System.out.println(e);
         }
-        
-        catch(Exception e){
+
+    }
+
+    public void update(ArrayList<Player> updatedplayers){
+        try {
+            
+            FileWriter fw = new FileWriter("GameSaves/players.txt");
+            BufferedWriter writer = new BufferedWriter(fw);
+            for (Player p : updatedplayers){
+                writer.write(p.getName() + "," + p.getPass());
+                writer.newLine();
+            }
+          
+            writer.close();
+        } 
+        catch (IOException e) {
             System.out.println(e);
         }
     }
 
     public boolean verifyPlayer(String username, String password){
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, usernamedb, passworddb);
-
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PLAYER");
        
-
-            while (resultSet.next()){
-                if (resultSet.getString("username").equals(username)){
-                    if (resultSet.getString("pass").equals(password)){
-                        return true;
-                    }
+        HashMap<String, String> plist = this.getDataFromText();
+        for (Map.Entry<String, String> entry : plist.entrySet()){
+            if (entry.getKey().equals(username)){
+                if (entry.getValue().equals(password)){
+                    return true;
                 }
+                break;
+                
                 
             }
 
-            return false;
+            
         }
-
-        catch(Exception e){
-            System.out.println(e);
-        }
+        
         return false;
     }
 
-    public void removePlayer(Player p){
-        try{
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection = DriverManager.getConnection(url, usernamedb, passworddb);
-
-        String deleteSql = "DELETE FROM PLAYER WHERE username = " + p.getName();
-        PreparedStatement deleteStatement = connection.prepareStatement(deleteSql);
-        deleteStatement.setString(1, p.getName());
-        deleteStatement.executeUpdate();
-
-        }
-
-        catch(Exception e){
-            System.out.println(e);
-        }
-
-        for(int i = 0; i < plist.size(); i++){
-            Player player = plist.get(i);
-            if(player.getName().equals(p.getName())){
-                plist.remove(i);
-                break; 
-            }
-        }
-    }
 }

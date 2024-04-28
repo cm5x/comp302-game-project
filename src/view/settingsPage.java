@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -32,7 +33,7 @@ public class settingsPage extends JFrame implements ActionListener{
     JLabel changename;
     JButton submitpass;
     JLabel passwordchanger;
-    
+    GameController gc = new GameController();
     settingsPage(){
 
         back = new JButton("BACK");
@@ -127,10 +128,14 @@ public class settingsPage extends JFrame implements ActionListener{
             //update the username of player with username oldname to updatename
             //if success,
             boolean success = false;
-            for (Player p : GameController.plist){
+            ArrayList<Player> players = gc.getPlayerList();
+            for (Player p : players){
                 if (p.getName().equals(oldname)){
                     p.setName(updatename);
                     success = true;
+                    gc.update(players);
+                    break;
+
                 }
             }
             if (success){
@@ -147,10 +152,14 @@ public class settingsPage extends JFrame implements ActionListener{
             String username = name2.getText();
             String passw = newpass.getText();
             boolean success1 = false;
-            for (Player p : GameController.plist){
+            ArrayList<Player> players = gc.getPlayerList();
+            for (Player p : players){
                 if (p.getName().equals(username)){
                     p.setpass(passw);
                     success1 = true;
+                    gc.update(players);
+                    break;
+                    
                 }
             }
             if (success1){
