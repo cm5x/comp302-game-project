@@ -50,6 +50,7 @@ public class RunningMode extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
         //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
