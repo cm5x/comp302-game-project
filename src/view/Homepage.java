@@ -31,7 +31,8 @@ public class Homepage extends JFrame {
         JButton playButton = new JButton("Play Game");
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("play game clicked");
+                RunningMode run = new RunningMode();
+                run.setVisible(true);
             }
         });
         panel.add(playButton);
