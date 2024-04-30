@@ -35,10 +35,12 @@ import java.io.Serializable;
         JTextField redinput;
         JTextField blueinput;
         JTextField greeninput;
+        JTextField rewardingb;
 
         JLabel redlab;
         JLabel bluelab;
         JLabel greenlab;
+        JLabel rewlab;
 
         JPanel randomPanel;
 
@@ -75,10 +77,13 @@ import java.io.Serializable;
             redinput = new JTextField();
             greeninput = new JTextField();
             blueinput = new JTextField();
+            rewardingb = new JTextField();
+
             randomButton = new JButton("Build");
-            redlab = new JLabel("Enter red block number");
-            greenlab = new JLabel("Enter green block number");
-            bluelab = new JLabel("Enter blue block number");
+            redlab = new JLabel("Simple barrier");
+            greenlab = new JLabel("Reinforced barrier");
+            bluelab = new JLabel("Explosive barrier");
+            rewlab = new JLabel("Rewarding barrier");
             randomPanel = new JPanel();
 
             redlab.setSize(170, 40);
@@ -87,47 +92,53 @@ import java.io.Serializable;
             greenlab.setLocation(10, 50);
             bluelab.setSize(170, 40);
             bluelab.setLocation(10, 100);
+            rewlab.setSize(170, 40);
+            rewlab.setLocation(10, 150);
 
             redinput.setSize(50,40);
             greeninput.setSize(50,40);
             blueinput.setSize(50,40);
+            rewardingb.setSize(50, 40);
         
             redinput.setLocation(180, 0);
             greeninput.setLocation(180, 50);
             blueinput.setLocation(180, 100);
+            rewardingb.setLocation(180, 150);
 
             randomPanel.setLayout(null);
-            randomPanel.setPreferredSize(new Dimension(230, 200));;
+            randomPanel.setPreferredSize(new Dimension(230, 400));;
             randomPanel.setBackground(Color.LIGHT_GRAY);
             randomPanel.setOpaque(true);
             randomPanel.setLocation(0, 700);
 
             randomButton.setSize(50,50);  
-            randomButton.setLocation(90, 140); 
+            randomButton.setLocation(90, 200); 
             randomButton.addActionListener(this);
 
             randomPanel.add(redlab);
             randomPanel.add(greenlab);
             randomPanel.add(bluelab);
+            randomPanel.add(rewlab);
 
             randomPanel.add(randomButton);
 
             randomPanel.add(redinput);
             randomPanel.add(greeninput);
             randomPanel.add(blueinput);
+            randomPanel.add(rewardingb);
     
             blockChooserPanel.add(randomPanel);
             this.setVisible(true);
         }
 
         private void initializeBlockChooser() {
-            String[] colors = {"Red", "Blue", "Green"};
-            for (String color : colors) {
-                JButton button = new JButton("Place " + color + " Block");
+            String[] barrs = {"simple", "reinforced", "explosive", "rewarding"};
+            for (String barrier : barrs) {
+                JButton button = new JButton("Place " + barrier + " Block");
                 // button.addActionListener(e -> mapPanel.setSelectedColor(color.toLowerCase()));
                 button.addActionListener(e -> {
-                    mapPanel.setSelectedColor(color.toLowerCase());
-                    infoTextArea.append("Selected " + color + " block.\n");  // Update text area
+                    mapPanel.setSelectedColor(barrier.toLowerCase());
+                    infoTextArea.append("Selected " + barrier + " block.\n");  // Update text area
                 });
                 blockChooserPanel.add(button);
             }
@@ -172,7 +183,8 @@ import java.io.Serializable;
                 int rednum = Integer.parseInt(redinput.getText());
                 int greennum = Integer.parseInt(greeninput.getText());
                 int bluenum = Integer.parseInt(blueinput.getText());
-                mapPanel.setSelectedColor("red");
+                int rewnum = Integer.parseInt(rewardingb.getText());
+                mapPanel.setSelectedColor("simple");
                 for (int i = 0; i < rednum; i++) {
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
@@ -182,7 +194,7 @@ import java.io.Serializable;
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
-                mapPanel.setSelectedColor("green");
+                mapPanel.setSelectedColor("reinforced");
                 for (int i = 0; i < greennum; i++) {
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
@@ -192,8 +204,19 @@ import java.io.Serializable;
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
-                mapPanel.setSelectedColor("blue");
+                mapPanel.setSelectedColor("explosive");
                 for (int i = 0; i < bluenum; i++) {
+                    boolean blockPlaced = false;
+                    while (!blockPlaced) {
+                    
+                        int x = (int) (Math.random() * 900)+60; 
+                        int y = (int) (Math.random() * 500); 
+                        blockPlaced = mapPanel.addBlock(x, y);
+                    }
+                }
+
+                mapPanel.setSelectedColor("rewarding");
+                for (int i = 0; i < rewnum; i++) {
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
@@ -218,10 +241,19 @@ import java.io.Serializable;
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
         private String selectedColor = "red";  // Default color
-        private static final int BLOCK_WIDTH = 100; // Width of the block
-        private static final int BLOCK_HEIGHT = 20; // Height of the block
+        private static final int BLOCK_WIDTH = 86; // Width of the block
+        private static final int BLOCK_HEIGHT = 26; // Height of the block
         private final MapDesigner frame;
 
+        String imgpath1 = "assets/images/200iconbluegem.png";
+        String imgpath2 = "assets/images/200iconfirm.png";
+        String imgpath3 = "assets/images/200iconredgem.png";
+        String imgpath4 = "assets/images/200icongreengem.png";
+
+        Image img1 = new ImageIcon(imgpath1).getImage();
+        Image img2 = new ImageIcon(imgpath2).getImage();
+        Image img3 = new ImageIcon(imgpath3).getImage();
+        Image img4 = new ImageIcon(imgpath4).getImage();
 
         public MapPanel(MapDesigner frame) {
             this.frame = frame;
@@ -239,9 +271,9 @@ import java.io.Serializable;
                         showContextMenu(e.getX(), e.getY(), e);
                     } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < getHeight() / 1.2) {
                         if (addBlock(e.getX(), e.getY())) {
-                            frame.appendInfoText("Placed " + selectedColor + " block at (" + e.getX() + ", " + e.getY() + ")");
+                            frame.appendInfoText("Placed " + selectedColor + " barrier at (" + e.getX() + ", " + e.getY() + ")");
                         } else {
-                            frame.appendInfoText("Failed to place block at (" + e.getX() + ", " + e.getY() + ") - Overlap");
+                            frame.appendInfoText("Failed to place barrier at (" + e.getX() + ", " + e.getY() + ") - Overlap");
                         }
                         repaint();
                     }
@@ -258,7 +290,7 @@ import java.io.Serializable;
                     deleteItem.addActionListener(ev -> {
                         blocks.remove(block);
                         repaint();
-                        frame.appendInfoText("Deleted " + block.color + " block at (" + block.rectangle.x + ", " + block.rectangle.y + ")");
+                        frame.appendInfoText("Deleted " + block.color + " barrier at (" + block.rectangle.x + ", " + block.rectangle.y + ")");
                     });
                     contextMenu.add(deleteItem);
                     contextMenu.show(this, x, y);
@@ -290,7 +322,7 @@ import java.io.Serializable;
                     barrierList.add(explosiveBarrierArray);
                     break;
                 case "green":
-                    int[] rewardingBarrierArray = new int[]{gridX,gridY,3,1}; //explosive barrier
+                    int[] rewardingBarrierArray = new int[]{gridX,gridY,3,1}; //rewarding barrier
                     barrierList.add(rewardingBarrierArray);
                     break;
                     
@@ -304,22 +336,28 @@ import java.io.Serializable;
 
         @Override
         protected void paintComponent(Graphics g) {
+
             super.paintComponent(g);
             for (ColoredBlock block : blocks) {
                 switch (block.color) {
-                    case "red":
-                        g.setColor(Color.RED);
+                    case "simple":
+                        //g.setColor(Color.RED);
+                        g.drawImage(img1, block.rectangle.x, block.rectangle.y, null);
                         break;
-                    case "blue":
-                        g.setColor(Color.BLUE);
+                    case "reinforced":
+                        //g.setColor(Color.BLUE);
+                        g.drawImage(img2, block.rectangle.x, block.rectangle.y, null);
                         break;
-                    case "green":
-                        g.setColor(Color.GREEN);
+                    case "explosive":
+                        //g.setColor(Color.GREEN);
+                        g.drawImage(img3, block.rectangle.x, block.rectangle.y, null);
                         break;
+                    case "rewarding":
+                        g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
                     default:
                         g.setColor(Color.BLACK); // Default case
                 }
-                g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
             }
             // Draw a line indicating the maximum Y value for placing blocks
             int maxY = (int)(getHeight() / 1.2);
