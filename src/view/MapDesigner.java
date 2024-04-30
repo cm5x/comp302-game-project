@@ -184,6 +184,24 @@ import java.io.Serializable;
                 int greennum = Integer.parseInt(greeninput.getText());
                 int bluenum = Integer.parseInt(blueinput.getText());
                 int rewnum = Integer.parseInt(rewardingb.getText());
+                if (rednum < 75){
+                    JOptionPane.showMessageDialog(null, "Simple barriers should be more than or equal to 75", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+                if (greennum < 10){
+                    JOptionPane.showMessageDialog(null, "Reinforced barriers should be more than or equal to 10", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+
+                if (bluenum < 5){
+                    JOptionPane.showMessageDialog(null, "Explosive barriers should be more than or equal to 5", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+
+                if (rewnum < 10){
+                    JOptionPane.showMessageDialog(null, "Rewarding barriers should be more than or equal to 10", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
                 mapPanel.setSelectedColor("simple");
                 for (int i = 0; i < rednum; i++) {
                     boolean blockPlaced = false;
@@ -240,7 +258,7 @@ import java.io.Serializable;
     class MapPanel extends JPanel {
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
-        private String selectedColor = "red";  // Default color
+        private String selectedColor = "simple";  // Default color
         private static final int BLOCK_WIDTH = 86; // Width of the block
         private static final int BLOCK_HEIGHT = 26; // Height of the block
         private final MapDesigner frame;
@@ -354,8 +372,9 @@ import java.io.Serializable;
                         break;
                     case "rewarding":
                         g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
+
                     default:
-                        g.setColor(Color.BLACK); // Default case
+                        // Default case
                 }
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
             }
