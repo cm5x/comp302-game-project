@@ -267,11 +267,13 @@ import java.io.Serializable;
         String imgpath2 = "assets/images/200iconfirm.png";
         String imgpath3 = "assets/images/200iconredgem.png";
         String imgpath4 = "assets/images/200icongreengem.png";
+        String backgroundpath = "assets/images/200background.png";
 
         Image img1 = new ImageIcon(imgpath1).getImage();
         Image img2 = new ImageIcon(imgpath2).getImage();
         Image img3 = new ImageIcon(imgpath3).getImage();
         Image img4 = new ImageIcon(imgpath4).getImage();
+        Image backimg = new ImageIcon(backgroundpath).getImage();
 
         public MapPanel(MapDesigner frame) {
             this.frame = frame;
@@ -354,8 +356,9 @@ import java.io.Serializable;
 
         @Override
         protected void paintComponent(Graphics g) {
-
+            
             super.paintComponent(g);
+            g.drawImage(backimg, 0, 0, this.getWidth(), this.getHeight(), this);
             for (ColoredBlock block : blocks) {
                 switch (block.color) {
                     case "simple":
