@@ -10,6 +10,7 @@ import gameComponents.SimpleBarrier;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -320,6 +321,7 @@ import java.io.Serializable;
                         g.setColor(Color.BLACK); // Default case
                 }
                 g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                
             }
             // Draw a line indicating the maximum Y value for placing blocks
             int maxY = (int)(getHeight() / 1.2);
@@ -362,19 +364,10 @@ import java.io.Serializable;
         // }
 
         public void saveMap() {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Specify a file to save");
-            int userSelection = fileChooser.showSaveDialog(this);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToSave = fileChooser.getSelectedFile();
-                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                    oos.writeObject(barrierList);
-                    frame.appendInfoText("Map saved successfully to " + fileToSave.getAbsolutePath());
-                } catch (IOException e) {
-                    frame.appendInfoText("Error saving map: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
+
+            MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(barrierList);
+            mapSlotsFrame.setVisible(true);
+        
         }
     
         @SuppressWarnings("unchecked")
