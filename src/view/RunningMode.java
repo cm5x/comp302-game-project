@@ -1,14 +1,8 @@
-package view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
+package view;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,42 +14,48 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Timer;
+// import java.util.Timer;
+import javax.swing.*;
+// import javax.swing.Timer;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.List;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import utilities.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import org.w3c.dom.events.MouseEvent;
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
 import utilities.BarrierReader;
 
+import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 public class RunningMode extends JFrame{
 
-    private ArrayList<ArrayList<Barrier>> barrierList; // list that will store all barriers
+    private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
     private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
-    private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
 
-    public RunningMode(int selectedMap) {
+    public RunningMode() {
         setTitle("Running Mode");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.selectedMap = selectedMap;
+
 
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
@@ -114,32 +114,44 @@ public class RunningMode extends JFrame{
         this.setVisible(true);
     }    
     
-    class MapPanel extends JPanel {
+    class MapPanel extends JPanel implements KeyListener {
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
-        private ArrayList<int[]> barrierIndexList;
+        private ArrayList<int[]> barrierList;
         private String selectedColor = "red";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
-        private String filePath = "src/gameMapSaves/exampleMap" + selectedMap + ".dat";
-        // private Rectangle paddle;
-        // private Point ballPosition;
-        // private int ballSpeedX = 2;
-        // private int ballSpeedY = 2;
-        // private Timer timer;
+        private String filePath = "src/utilities/exampleMap1.dat";
+        
+        private Rectangle paddle;
+        private Point ballPosition;
+        private int ballSpeedX = 3;
+        private int ballSpeedY = 3;
+        private Timer timer;
+        private int paddleSpeed = 10; // Speed of paddle movement
+        private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
+        private double paddleAngle = 0; // Paddle's rotation angle in degrees
+
+
 
 
         public MapPanel(RunningMode frame) {
             this.frame = frame;
             this.blocks = new ArrayList<>();
-            this.barrierIndexList = new ArrayList<int[]>();
-
+            this.barrierList = new ArrayList<int[]>();
+            paddle = new Rectangle(600, 950, 150, 20);
+            ballPosition = new Point(650, 940);
+            // timer = new Timer(10, e -> updateGame());
+            // timer.start();
+            timer = new Timer(10, (ActionEvent e) -> updateGame());
+            timer.start();
+            
             File file = new File(filePath); // File path should be in String data
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
-                barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
                 
                 
             } catch (IOException | ClassNotFoundException e) {
@@ -147,11 +159,10 @@ public class RunningMode extends JFrame{
             }
 
 
-            for (int[] i : barrierIndexList) {
+            for (int[] i : barrierList) {
                 System.out.println(i[2]);
                 switch (i[2]) {
                     case 1:
-                        SimpleBarrier simpleBarrier = new SimpleBarrier(20, i[0], i[1]);
                         addBlock(i[0], i[1],"red");
                         break;
                     case 2:
@@ -170,20 +181,121 @@ public class RunningMode extends JFrame{
             }
 
             
+            
         }
+
+        private void moveBall() {
+
+            ballPosition.x += ballSpeedX;
+            ballPosition.y += ballSpeedY;
+            if (ballPosition.x < 0 || ballPosition.x > getWidth()) {
+                ballSpeedX = -ballSpeedX;
+            }
+            if (ballPosition.y < 0) {
+                ballSpeedY = -ballSpeedY;
+            }
+            // if (ballPosition.y > getHeight()) { // Ball goes below the paddle
+            //     timer.stop();
+            //     JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
+            // }
+
+            // Check collision with the paddle
+            if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)) {
+                ballSpeedY = -ballSpeedY;
+                ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
+            }
+
+            // // Check collision with barriers
+            // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
+            // while (it.hasNext()) {
+            //     MapPanel.ColoredBlock block = it.next();
+            //     if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(block.rectangle)) {
+            //         ballSpeedY = -ballSpeedY; // Reflect the ball
+
+            //         it.remove(); // Remove the barrier on hit
+            //         break;
+            //     }
+            // }
+
+            //ALTERNATIVE
+
+            // Collision with barriers
+            Rectangle ballRect = new Rectangle(ballPosition.x, ballPosition.y, 1, 1);
+            // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
+            Iterator<MapPanel.ColoredBlock> it = blocks.iterator();
+            while (it.hasNext()) {
+                MapPanel.ColoredBlock block = it.next();
+                if (ballRect.intersects(block.rectangle)) {
+                    // Determine the collision direction
+                    double ballCenterX = ballPosition.x + 0.5; // changed from 5
+                    double ballCenterY = ballPosition.y + 0.5; // changed from 5
+                    int blockCenterX = block.rectangle.x + block.rectangle.width / 2;
+                    int blockCenterY = block.rectangle.y + block.rectangle.height / 2;
+
+                    double deltaX = ballCenterX - blockCenterX;
+                    double deltaY = ballCenterY - blockCenterY;
+
+                    // // Check which side (top, bottom, left, right) of the block the ball has hit
+                    // boolean collisionFromTopOrBottom = Math.abs(deltaY) > Math.abs(deltaX);
+                    // if (collisionFromTopOrBottom) {
+                    //     ballSpeedY = -ballSpeedY; // Vertical bounce
+                    //     if (deltaY > 0) { // Ball is below the block
+                    //         ballPosition.y = block.rectangle.y + block.rectangle.height;
+                    //     } else { // Ball is above the block
+                    //         ballPosition.y = block.rectangle.y - 10;
+                    //     }
+                    // } else {
+                    //     ballSpeedX = -ballSpeedX; // Horizontal bounce
+                    //     if (deltaX > 0) { // Ball is to the right of the block
+                    //         ballPosition.x = block.rectangle.x + block.rectangle.width;
+                    //     } else { // Ball is to the left of the block
+                    //         ballPosition.x = block.rectangle.x - 10;
+                    //     }
+                    // }
+
+                    //ALTERATIVE
+                    boolean hitVertical = Math.abs(deltaY) > Math.abs(deltaX);
+                    if (hitVertical) {
+                        ballSpeedY = -ballSpeedY;
+                        if (deltaY > 0) {
+                            ballPosition.y = block.rectangle.y + block.rectangle.height + 1; // Ball is below the block
+                        } else {
+                            ballPosition.y = block.rectangle.y - 1; // Ball is above the block
+                        }
+                    } else {
+                        ballSpeedX = -ballSpeedX;
+                        if (deltaX > 0) {
+                            ballPosition.x = block.rectangle.x + block.rectangle.width + 1; // Ball is to the right of the block
+                        } else {
+                            ballPosition.x = block.rectangle.x - 1; // Ball is to the left of the block
+                        }
+                    }
+
+                    it.remove(); // Remove the barrier on hit
+                    break; // Assuming only one collision can occur per frame
+                }
+
+            }
+            
+            
+            
+            repaint();
+        }
+
 
         public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
-            
+            System.out.println(selectedColor);
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
-            
             return true;
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+
             for (ColoredBlock block : blocks) {
                 switch (block.color) {
                     case "red":
@@ -198,13 +310,30 @@ public class RunningMode extends JFrame{
                     default:
                         g.setColor(Color.BLACK); // Default case
                 }
-                
                 g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                g.setColor(Color.BLACK);
+                g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+                g.setColor(Color.RED);
+                g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
             }
+
+            // Calculate the center of the paddle
+            int centerX = paddle.x + paddle.width / 2;
+            int centerY = paddle.y + paddle.height / 2;
             
+            // Rotate the graphics context
+            g2d.rotate(Math.toRadians(paddleAngle), centerX, centerY);
+
+            // Draw the paddle with rotation
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+
+            // Clean up
+            g2d.dispose();
+                    
         }
 
-        private static class ColoredBlock implements Serializable {
+        private class ColoredBlock implements Serializable {
             Rectangle rectangle;
             String color;
     
@@ -214,181 +343,158 @@ public class RunningMode extends JFrame{
             }
         }
 
-
-    }
-
-    
-    // Load map and save map for the game
-        public void saveMap() {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Specify a file to save");
-            int userSelection = fileChooser.showSaveDialog(this);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToSave = fileChooser.getSelectedFile();
-                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                    oos.writeObject(barrierList);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    
-        @SuppressWarnings("unchecked")
-        public void loadMap() {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Select a file to load");
-            int userSelection = fileChooser.showOpenDialog(this);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToLoad = fileChooser.getSelectedFile();
-                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
-                    String file = fileToLoad.getAbsolutePath();
-                    BarrierReader reader = new BarrierReader();
-                    barrierList = reader.readBarriers(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-/* 
-    private void moveBall() {
-
-        ballPosition.x += ballSpeedX;
-        ballPosition.y += ballSpeedY;
-        if (ballPosition.x < 0 || ballPosition.x > getWidth()) {
-            ballSpeedX = -ballSpeedX;
-        }
-        if (ballPosition.y < 0) {
-            ballSpeedY = -ballSpeedY;
-        }
-        if (ballPosition.y > getHeight()) { // Ball goes below the paddle
-            timer.stop();
-            JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
-        }
-
-        // Check collision with the paddle
-        if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(paddle)) {
-            ballSpeedY = -ballSpeedY;
-            ballPosition.y = paddle.y - 10; // Adjust ball position to avoid sticking
-        }
-
-        // // Check collision with barriers
-        // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
-        // while (it.hasNext()) {
-        //     MapPanel.ColoredBlock block = it.next();
-        //     if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(block.rectangle)) {
-        //         ballSpeedY = -ballSpeedY; // Reflect the ball
-
-        //         it.remove(); // Remove the barrier on hit
-        //         break;
-        //     }
+        // @Override
+        // public void paintComponent(Graphics g) {
+        //     super.paintComponent(g);
+        //     g.setColor(Color.BLACK);
+        //     g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+        //     g.setColor(Color.RED);
+        //     g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
+        //     // for (MapPanel.ColoredBlock block : barriers) {
+        //     //     g.setColor(Color.GREEN);
+        //     //     g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+        //     // }
+            
         // }
+        
+        
+        private void updateGame() {
+            moveBall();
+            movePaddle(); // Method to update paddle position
+            repaint();
+        }
 
-        //ALTERNATIVE
-
-        // Collision with barriers
-        Rectangle ballRect = new Rectangle(ballPosition.x, ballPosition.y, 10, 10);
-        Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
-        while (it.hasNext()) {
-            MapPanel.ColoredBlock block = it.next();
-            if (ballRect.intersects(block.rectangle)) {
-                // Determine the collision direction
-                int ballCenterX = ballPosition.x + 5;
-                int ballCenterY = ballPosition.y + 5;
-                int blockCenterX = block.rectangle.x + block.rectangle.width / 2;
-                int blockCenterY = block.rectangle.y + block.rectangle.height / 2;
-
-                int deltaX = ballCenterX - blockCenterX;
-                int deltaY = ballCenterY - blockCenterY;
-
-                // Check which side (top, bottom, left, right) of the block the ball has hit
-                boolean collisionFromTopOrBottom = Math.abs(deltaY) > Math.abs(deltaX);
-                if (collisionFromTopOrBottom) {
-                    ballSpeedY = -ballSpeedY; // Vertical bounce
-                    if (deltaY > 0) { // Ball is below the block
-                        ballPosition.y = block.rectangle.y + block.rectangle.height;
-                    } else { // Ball is above the block
-                        ballPosition.y = block.rectangle.y - 10;
-                    }
-                } else {
-                    ballSpeedX = -ballSpeedX; // Horizontal bounce
-                    if (deltaX > 0) { // Ball is to the right of the block
-                        ballPosition.x = block.rectangle.x + block.rectangle.width;
-                    } else { // Ball is to the left of the block
-                        ballPosition.x = block.rectangle.x - 10;
-                    }
+        private void movePaddle() {
+            setUpKeyBindings();
+            if (paddleMoveDirection != 0) {
+                int newPaddleX = paddle.x + (paddleSpeed * paddleMoveDirection);
+                // Ensure the paddle does not move out of the panel's bounds
+                if (newPaddleX < 0) {
+                    newPaddleX = 0;
+                } else if (newPaddleX + paddle.width > getWidth()) {
+                    newPaddleX = getWidth() - paddle.width;
                 }
-
-                it.remove(); // Remove the barrier on hit
-                break; // Assuming only one collision can occur per frame
+                paddle.x = newPaddleX;
             }
         }
 
-        repaint();
+        private void setUpKeyBindings() {
+            InputMap im = getInputMap(JPanel.WHEN_IN_FOCUSED_WINDOW);
+            ActionMap am = getActionMap();
+        
+            im.put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
+            im.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
+            im.put(KeyStroke.getKeyStroke("released LEFT"), "stopMoving");
+            im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
+
+                        // New bindings for rotation
+            im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
+            im.put(KeyStroke.getKeyStroke("DOWN"), "rotateCounterClockwise");
+                
+            am.put("moveLeft", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    paddleMoveDirection = -1;
+                }
+            });
+        
+            am.put("moveRight", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    paddleMoveDirection = 1;
+                }
+            });
+        
+            am.put("stopMoving", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    paddleMoveDirection = 0;
+                }
+            });
+
+                        // Actions for rotation
+            am.put("rotateClockwise", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    paddleAngle += 5; // Increment angle by 5 degrees
+                    repaint();
+                }
+            });
+
+            am.put("rotateCounterClockwise", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    paddleAngle -= 5; // Decrement angle by 5 degrees
+                    repaint();
+                }
+            });
+        }
+
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                paddleMoveDirection = -1; // Move left
+                // frame.appendInfoText("key activation.");
+            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                paddleMoveDirection = 1; // Move right
+                // frame.appendInfoText("key activation.");
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            // if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            //     paddleMoveDirection = 0; // Stop moving when key is released
+            // }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // This method can be left empty if not used
+        }
+
     }
- */
-    // @Override
-    // public void paintComponent(Graphics g) {
-    //     super.paintComponent(g);
-    //     g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-    //     g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
-    // }
 
 
-/*     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.BLACK);
-        g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-        g.setColor(Color.RED);
-        g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
-        for (MapPanel.ColoredBlock block : barriers) {
-            g.setColor(Color.GREEN);
-            g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+// Load map and save map for the game
+    public void saveMap() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Specify a file to save");
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
+                oos.writeObject(barriers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
- */
-    // @Override
-    // public void keyPressed(KeyEvent e) {
-    //     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-    //         paddle.x = Math.max(0, paddle.x - 10);
-    //     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-    //         paddle.x = Math.min(getWidth() - paddle.width, paddle.x + 10);
-    //     }
-    //     repaint();
-    // }
 
-    // @Override
-    // public void keyPressed(KeyEvent e) {
-    //     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-    //         paddle.x = Math.max(0, paddle.x - 10);
-    //     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-    //         paddle.x = Math.min(getWidth() - paddle.width, paddle.x + 10);
-    //     }
-    // }
+    @SuppressWarnings("unchecked")
+    public void loadMap() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select a file to load");
+        int userSelection = fileChooser.showOpenDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToLoad = fileChooser.getSelectedFile();
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+                String file = fileToLoad.getAbsolutePath();
+                BarrierReader reader = new BarrierReader();
+                barriers = reader.readBarriers(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-    // //???
-    // @Override
-    // public void keyReleased(KeyEvent e) {
-    //     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-    //         paddle.x = Math.max(0, paddle.x - 10);
-    //     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-    //         paddle.x = Math.min(getWidth() - paddle.width, paddle.x + 10);
-    //     }
-    // }
+    
 
 
-    // //???
-    // @Override
-    // public void keyTyped(KeyEvent e) {
-    //     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-    //         paddle.x = Math.max(0, paddle.x - 10);
-    //     } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-    //         paddle.x = Math.min(getWidth() - paddle.width, paddle.x + 10);
-    //     }
-    // }
 
     public static void main(String args[]){
-        RunningMode run = new RunningMode(1);
+        RunningMode run = new RunningMode();
         run.setVisible(true);
     }
 
