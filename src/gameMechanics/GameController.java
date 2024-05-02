@@ -22,7 +22,7 @@ public class GameController {
         HashMap<String, String> userdata = new HashMap<>();
         try {
             
-            FileReader fread = new FileReader("GameSaves/players.txt");
+            FileReader fread = new FileReader("src/utilities/GameSaves/players.txt");
             BufferedReader reader = new BufferedReader(fread);
 
             String line;
@@ -59,7 +59,7 @@ public class GameController {
     public void addPlayer(String username, String password){
         try {
             
-            FileWriter fw = new FileWriter("GameSaves/players.txt", true);
+            FileWriter fw = new FileWriter("src/utilities/GameSaves/players.txt", true);
             BufferedWriter writer = new BufferedWriter(fw);
             writer.write(username + "," + password);
             writer.newLine();          
@@ -74,7 +74,7 @@ public class GameController {
     public void update(ArrayList<Player> updatedplayers){
         try {
             
-            FileWriter fw = new FileWriter("GameSaves/players.txt");
+            FileWriter fw = new FileWriter("src/utilities/GameSaves/players.txt");
             BufferedWriter writer = new BufferedWriter(fw);
             for (Player p : updatedplayers){
                 writer.write(p.getName() + "," + p.getPass());
