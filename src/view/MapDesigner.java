@@ -180,7 +180,7 @@ import java.io.Serializable;
                     
                         int x = (int) (Math.random() * 900)+60; 
                         int y = (int) (Math.random() * 500); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"red");
                     }
                 }
                 mapPanel.setSelectedColor("green");
@@ -190,7 +190,7 @@ import java.io.Serializable;
                     
                         int x = (int) (Math.random() * 900) + 60; 
                         int y = (int) (Math.random() * 500); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"blue");
                     }
                 }
                 mapPanel.setSelectedColor("blue");
@@ -200,7 +200,7 @@ import java.io.Serializable;
                     
                         int x = (int) (Math.random() * 900)+60; 
                         int y = (int) (Math.random() * 500); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"green");
                     }
                 }
                 
@@ -225,10 +225,12 @@ import java.io.Serializable;
         private final MapDesigner frame;
 
 
+
         public MapPanel(MapDesigner frame) {
             this.frame = frame;
             this.blocks = new ArrayList<>();
             this.barrierList = new ArrayList<int[]>();
+
             this.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -240,7 +242,7 @@ import java.io.Serializable;
                     if (SwingUtilities.isRightMouseButton(e)) {
                         showContextMenu(e.getX(), e.getY(), e);
                     } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < getHeight() / 1.2) {
-                        if (addBlock(e.getX(), e.getY())) {
+                        if (addBlock(e.getX(), e.getY(),selectedColor)) {
                             frame.appendInfoText("Placed " + selectedColor + " block at (" + e.getX() + ", " + e.getY() + ")");
                         } else {
                             frame.appendInfoText("Failed to place block at (" + e.getX() + ", " + e.getY() + ") - Overlap");
@@ -273,7 +275,7 @@ import java.io.Serializable;
             this.selectedColor = color;
         }
 
-        public boolean addBlock(int x, int y) {
+        public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
             for (ColoredBlock block : blocks) {
@@ -373,19 +375,42 @@ import java.io.Serializable;
     
         public void loadMap(int mapIndex) {
             
+            this.blocks = new ArrayList<>();
+            this.barrierList = new ArrayList<int[]>();
+    
             File fileToLoad = new File("src/gameMapSaves/exampleMap" + mapIndex + ".dat");
-            System.out.println(mapIndex);
-                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
                     
-                    ArrayList<int[]> intArray = (ArrayList<int[]>) ois.readObject();
+                    barrierList = (ArrayList<int[]>) ois.readObject();
+                    
+                    for (int i = 0; i < barrierList.size(); i++) {
+                        int[] currentBarrier = barrierList.get(i);
+                        switch (barrierList.get(i)[2]) {
+                            
+                            case 1:
+                                SimpleBarrier simpleBarrier = new SimpleBarrier(20, currentBarrier[0], currentBarrier[1]);
+                                addBlock(currentBarrier[0], currentBarrier[1],"red");
+                                break;
+                            case 2:
+                                addBlock(currentBarrier[0], currentBarrier[1],"blue");
+                                break;
+                            case 3:
+                                addBlock(currentBarrier[0], currentBarrier[1],"green");
+                                break;
+                                
+                            default:
+                                break;
+                        }
+                    }
 
-                    blocks = (ArrayList<ColoredBlock>) ois.readObject();
+        
                     repaint();
+                    
                     frame.appendInfoText("Map loaded successfully from " + fileToLoad.getAbsolutePath());
-                } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                     frame.appendInfoText("Error loading map: " + e.getMessage());
                     e.printStackTrace();
-                }
+            }
         }
 
         @Override
