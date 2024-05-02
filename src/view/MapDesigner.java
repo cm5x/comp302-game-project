@@ -6,6 +6,7 @@ import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
+import utilities.FrameCloseListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,9 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-
-
 
     public class MapDesigner extends JFrame implements ActionListener{
         private final MapPanel mapPanel;
@@ -150,11 +148,13 @@ import java.io.Serializable;
             buttonPanel.add(saveButton);
 
             JButton loadButton = new JButton("Load Map");
-            loadButton.addActionListener(e -> mapPanel.loadMap());
+            loadButton.addActionListener(e -> {
+                MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(mapPanel);
+                mapSlotsFrame.setVisible(true);
+            });
             buttonPanel.add(loadButton);
 
             blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
-
 
         }
 
@@ -212,10 +212,11 @@ import java.io.Serializable;
                 
              }
         }
+
     }
 
 
-    class MapPanel extends JPanel {
+    class MapPanel extends JPanel implements FrameCloseListener {
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
         private String selectedColor = "red";  // Default color
@@ -365,26 +366,18 @@ import java.io.Serializable;
 
         public void saveMap() {
 
-            MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(barrierList);
+            MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(barrierList, this);
             mapSlotsFrame.setVisible(true);
         
         }
     
-        @SuppressWarnings("unchecked")
-        public void loadMap() {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Select a file to load");
-            int userSelection = fileChooser.showOpenDialog(this);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToLoad = fileChooser.getSelectedFile();
+        public void loadMap(int mapIndex) {
+            
+            File fileToLoad = new File("src/gameMapSaves/exampleMap" + mapIndex + ".dat");
+            System.out.println(mapIndex);
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
-
+                    
                     ArrayList<int[]> intArray = (ArrayList<int[]>) ois.readObject();
-
-                    for (int[] i : intArray) {
-                        System.out.println(i[0]);
-                        
-                    }
 
                     blocks = (ArrayList<ColoredBlock>) ois.readObject();
                     repaint();
@@ -393,6 +386,12 @@ import java.io.Serializable;
                     frame.appendInfoText("Error loading map: " + e.getMessage());
                     e.printStackTrace();
                 }
-            }
+        }
+
+        @Override
+        public void onFrameClosed(int data) {
+            
+            System.out.println("Received data from SecondaryFrame: " + data);
+            loadMap(data);
         }
     }

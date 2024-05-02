@@ -1,6 +1,9 @@
 package view;
 
 import javax.swing.*;
+
+import utilities.FrameCloseListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,8 +24,11 @@ public class MapSlotsFrame extends JFrame {
     private JButton mapSlot4;
     private JButton mapSlot5;
     private ArrayList<int[]> mapArrayList;
+    private FrameCloseListener listener;
+    private int loadMapIndex;
 
-    public MapSlotsFrame(ArrayList<int[]> mapArrayList) {
+
+    public MapSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {
         
         setTitle("Map Slots");
         setSize(500,600);
@@ -30,6 +36,7 @@ public class MapSlotsFrame extends JFrame {
         setLocationRelativeTo(null);
 
         this.mapArrayList = mapArrayList;
+        this.listener = listener;
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 10)); // 5 rows, 1 column
@@ -237,6 +244,132 @@ public class MapSlotsFrame extends JFrame {
         setVisible(true);
     }
 
+    public MapSlotsFrame(FrameCloseListener listener) {
+        
+        setTitle("Map Slots");
+        setSize(500,600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        this.listener = listener;
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 1, 10, 10)); // 5 rows, 1 column
+
+        Path directory = Paths.get("src/gameMapSaves");
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
+            // Iterate over the files and subdirectories in the directory
+            for (Path file : stream) {
+                
+                gameSaves.add(index);
+                index++;
+                // Perform operations on the file, such as reading its contents or processing it
+            }
+        } catch (IOException | DirectoryIteratorException e) {
+            e.printStackTrace();
+        }
+
+        if (gameSaves.contains(1)) {
+            JButton mapSlot1 = new JButton("Map 1");
+            mapSlot1.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    loadMapIndex = 1;
+                    dispose();
+                }
+            });
+            panel.add(mapSlot1);
+        } else {
+            JButton mapSlot1 = new JButton("Empty Slot");
+            mapSlot1.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    
+                }
+            });
+            panel.add(mapSlot1);
+        }
+
+        if (gameSaves.contains(2)) {
+            JButton mapSlot2 = new JButton("Map 2");
+            mapSlot2.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    loadMapIndex = 2;
+                    dispose();
+                }
+            });
+            panel.add(mapSlot2);
+        } else {
+            JButton mapSlot2 = new JButton("Empty Slot");
+            mapSlot2.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    
+                }
+            });
+            panel.add(mapSlot2);
+        }
+
+        if (gameSaves.contains(3)) {
+            JButton mapSlot3 = new JButton("Map 3");
+            mapSlot3.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    loadMapIndex = 3;
+                    dispose();
+                }
+            });
+            panel.add(mapSlot3);
+        } else {
+            JButton mapSlot3 = new JButton("Empty Slot");
+            mapSlot3.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    
+                }
+            });
+            panel.add(mapSlot3);
+        }
+
+        if (gameSaves.contains(4)) {
+            JButton mapSlot4 = new JButton("Map 4");
+            mapSlot4.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    loadMapIndex = 4;
+                    dispose();
+                }
+            });
+            panel.add(mapSlot4);
+        } else {
+            JButton mapSlot4 = new JButton("Empty Slot");
+            mapSlot4.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    saveGame(mapArrayList, 4);
+                    JOptionPane.showMessageDialog(null, "Map Saved");
+                    dispose();
+                }
+            });
+            panel.add(mapSlot4);
+        }
+        
+        if (gameSaves.contains(5)) {
+            JButton mapSlot5 = new JButton("Map 5");
+            mapSlot5.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    loadMapIndex = 5;
+                    dispose();
+                }
+            });
+            panel.add(mapSlot5);
+        } else {
+            JButton mapSlot5 = new JButton("Empty Slot");
+            mapSlot5.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                        
+                }
+            });
+            panel.add(mapSlot5);
+        }
+        
+        add(panel);
+        setVisible(true);
+    }
+
     public MapSlotsFrame() {
         
         setTitle("Map Slots");
@@ -370,6 +503,13 @@ public class MapSlotsFrame extends JFrame {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        // Send data back to MainFrame
+        listener.onFrameClosed(loadMapIndex);
     }
 
     public static void main(String[] args) {
