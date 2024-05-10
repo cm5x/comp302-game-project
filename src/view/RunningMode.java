@@ -30,7 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
+import java.awt.geom.AffineTransform;
 import utilities.*;
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
@@ -126,8 +126,8 @@ public class RunningMode extends JFrame{
         
         private Rectangle paddle;
         private Point ballPosition;
-        private int ballSpeedX = 3;
-        private int ballSpeedY = 3;
+        private double ballSpeedX = 3;
+        private double ballSpeedY = 3;
         private Timer timer;
         private int paddleSpeed = 10; // Speed of paddle movement
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
@@ -199,11 +199,44 @@ public class RunningMode extends JFrame{
             //     JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
             // }
 
+            // getting the rotated paddle and its rotation angle
+            AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(paddleAngle), paddle.x,paddle.y);
+            Shape rotatedPaddle = rotation.createTransformedShape(new Rectangle(paddle.x, paddle.y, paddle.width, paddle.height));            
+            double rotationAngle = Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
+
             // Check collision with the paddle
-            if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)) {
+            if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle) && rotationAngle == 0) {
                 ballSpeedY = -ballSpeedY;
                 ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
             }
+            else if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)){
+
+                // Calculate the angle between the center of the paddle and the ball
+                double angle = Math.atan2(ballPosition.getY() - rotatedPaddle.getBounds2D().getCenterY(), ballPosition.getX() - rotatedPaddle.getBounds2D().getCenterX());
+
+                // Reflect the ball's velocity vector across the normal of the paddle
+                double incomingAngle = Math.atan2(ballSpeedY, ballSpeedX);
+                double reflectionAngle = 2 * angle - incomingAngle;
+
+                // Calculate the magnitude of the velocity vector
+                double velocityMagnitude = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
+
+                // Calculate the new velocity components
+                double newVelocityX = Math.cos(reflectionAngle) * velocityMagnitude;
+                double newVelocityY = Math.sin(reflectionAngle) * velocityMagnitude;
+
+                // Update the ball's velocity
+                ballSpeedX = (int) newVelocityX;
+                ballSpeedY = (int) -newVelocityY;
+
+                // If the ball is slower than some threshold, make it faster
+                double check = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
+                if (check < 1){
+                    ballSpeedX *= 9;
+                    ballSpeedY *= 9;
+                }
+
+            }    
 
             // // Check collision with barriers
             // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
@@ -221,6 +254,7 @@ public class RunningMode extends JFrame{
 
             // Collision with barriers
             Rectangle ballRect = new Rectangle(ballPosition.x, ballPosition.y, 1, 1);
+
             // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
             Iterator<MapPanel.ColoredBlock> it = blocks.iterator();
             while (it.hasNext()) {
@@ -274,15 +308,13 @@ public class RunningMode extends JFrame{
                     it.remove(); // Remove the barrier on hit
                     break; // Assuming only one collision can occur per frame
                 }
-
-            }
-            
+        }
             
             
             repaint();
         }
 
-
+        //mape blok eklıyor
         public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
@@ -311,12 +343,17 @@ public class RunningMode extends JFrame{
                         g.setColor(Color.BLACK); // Default case
                 }
                 g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                //g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 g.setColor(Color.BLACK);
-                g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-                g.setColor(Color.RED);
+                
+                
+                // Burayı yunus editledi
+                //g.setColor(Color.RED);
                 g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
             }
+            
 
+            //rOTATE İLE ALAKALI ASAGISI
             // Calculate the center of the paddle
             int centerX = paddle.x + paddle.width / 2;
             int centerY = paddle.y + paddle.height / 2;
