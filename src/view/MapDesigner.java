@@ -208,8 +208,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 900)+60; 
-                        int y = (int) (Math.random() * 500); 
+                        int x = (int) (Math.random() * 1250); 
+                        int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
@@ -218,8 +218,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 900) + 60; 
-                        int y = (int) (Math.random() * 500); 
+                        int x = (int) (Math.random() * 1250); 
+                        int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
@@ -228,8 +228,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 900)+60; 
-                        int y = (int) (Math.random() * 500); 
+                        int x = (int) (Math.random() * 1250); 
+                        int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
@@ -239,8 +239,8 @@ import java.io.Serializable;
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
                     
-                        int x = (int) (Math.random() * 900)+60; 
-                        int y = (int) (Math.random() * 500); 
+                        int x = (int) (Math.random() * 1250); 
+                        int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
                 }
@@ -327,11 +327,22 @@ import java.io.Serializable;
         public boolean addBlock(int x, int y) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
+            
             for (ColoredBlock block : blocks) {
+                if (block.rectangle.intersects(new Rectangle(gridX, gridY+10, BLOCK_WIDTH, BLOCK_HEIGHT))) {
+                    return false;
+                }
+
+                if (block.rectangle.intersects(new Rectangle(gridX, gridY-10, BLOCK_WIDTH, BLOCK_HEIGHT))) {
+                    return false;
+                }
+
                 if (block.rectangle.intersects(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT))) {
                     return false; // Block already exists or overlaps in this area
                 }
             }
+
+        
 
             switch (selectedColor) {
                 case "simple":
@@ -349,6 +360,7 @@ import java.io.Serializable;
                 case "rewarding":
                     int[] rewardingBarrierArray = new int[]{gridX,gridY,4,1}; //rewarding barrier
                     barrierList.add(rewardingBarrierArray);
+                    break;
                 default:
                     break;
             }

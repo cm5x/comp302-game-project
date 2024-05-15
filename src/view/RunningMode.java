@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,7 @@ import utilities.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -50,6 +52,17 @@ public class RunningMode extends JFrame{
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
+    String imgpath1 = "assets/images/200iconbluegem.png";
+    String imgpath2 = "assets/images/200iconfirm.png";
+    String imgpath3 = "assets/images/200iconredgem.png";
+    String imgpath4 = "assets/images/200icongreengem.png";
+    String backgroundpath = "assets/images/200background.png";
+
+    Image img1 = new ImageIcon(imgpath1).getImage();
+    Image img2 = new ImageIcon(imgpath2).getImage();
+    Image img3 = new ImageIcon(imgpath3).getImage();
+    Image img4 = new ImageIcon(imgpath4).getImage();
+    Image backimg = new ImageIcon(backgroundpath).getImage();
 
     public RunningMode(int selectedMap) {
         setTitle("Running Mode");
@@ -118,7 +131,7 @@ public class RunningMode extends JFrame{
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierIndexList;
-        private String selectedColor = "red";  // Default color
+        private String selectedColor = "simple";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
@@ -151,16 +164,16 @@ public class RunningMode extends JFrame{
                 System.out.println(i[2]);
                 switch (i[2]) {
                     case 1:
-                        SimpleBarrier simpleBarrier = new SimpleBarrier(20, i[0], i[1]);
-                        addBlock(i[0], i[1],"red");
+                        addBlock(i[0], i[1],"simple");
                         break;
                     case 2:
-                        addBlock(i[0], i[1],"blue");
+                        addBlock(i[0], i[1],"reinforced");
                         break;
                     case 3:
-                        addBlock(i[0], i[1],"green");
+                        addBlock(i[0], i[1],"explosive");
                         break;
-                        
+                    case 4:
+                        addBlock(i[0], i[1],"rewarding");
                     default:
                         break;
                 }
@@ -175,31 +188,36 @@ public class RunningMode extends JFrame{
         public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
-            
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
-            
             return true;
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+            g.drawImage(backimg, 0, 0, this.getWidth(), this.getHeight(), this);
             for (ColoredBlock block : blocks) {
                 switch (block.color) {
-                    case "red":
-                        g.setColor(Color.RED);
+                    case "simple":
+                        //g.setColor(Color.RED);
+                        g.drawImage(img1, block.rectangle.x, block.rectangle.y, null);
                         break;
-                    case "blue":
-                        g.setColor(Color.BLUE);
+                    case "reinforced":
+                        //g.setColor(Color.BLUE);
+                        g.drawImage(img2, block.rectangle.x, block.rectangle.y, null);
                         break;
-                    case "green":
-                        g.setColor(Color.GREEN);
+                    case "explosive":
+                        //g.setColor(Color.GREEN);
+                        g.drawImage(img3, block.rectangle.x, block.rectangle.y, null);
+                        break;
+                    case "rewarding":
+                        g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
                         break;
                     default:
-                        g.setColor(Color.BLACK); // Default case
+                        break;
+                        // Default case
                 }
-                
-                g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
             }
             
         }
