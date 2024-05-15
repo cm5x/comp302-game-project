@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Timer;
 
@@ -39,6 +40,7 @@ import javax.swing.SwingUtilities;
 import org.w3c.dom.events.MouseEvent;
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
+import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
 import utilities.BarrierReader;
@@ -63,6 +65,8 @@ public class RunningMode extends JFrame{
     Image img3 = new ImageIcon(imgpath3).getImage();
     Image img4 = new ImageIcon(imgpath4).getImage();
     Image backimg = new ImageIcon(backgroundpath).getImage();
+
+    ArrayList<Barrier> bArrayList = new ArrayList<>();
 
     public RunningMode(int selectedMap) {
         setTitle("Running Mode");
@@ -165,15 +169,26 @@ public class RunningMode extends JFrame{
                 switch (i[2]) {
                     case 1:
                         addBlock(i[0], i[1],"simple");
+                        SimpleBarrier sbar = new SimpleBarrier(i[0], i[1]);
+                        bArrayList.add(sbar);
                         break;
                     case 2:
                         addBlock(i[0], i[1],"reinforced");
+                        Random random = new Random();     
+                        int hitnum = random.nextInt(3) + 1;
+                        ReinforcedBarrier rbar = new ReinforcedBarrier(hitnum, i[0], i[1]);
+                        bArrayList.add(rbar);
                         break;
                     case 3:
                         addBlock(i[0], i[1],"explosive");
+                        ExplosiveBarrier ebar = new ExplosiveBarrier(i[0], i[1]);
+                        bArrayList.add(ebar);
                         break;
                     case 4:
                         addBlock(i[0], i[1],"rewarding");
+                        RewardingBarrier rewbar = new RewardingBarrier(i[0], i[1]);
+                        bArrayList.add(rewbar);
+                        break;
                     default:
                         break;
                 }
