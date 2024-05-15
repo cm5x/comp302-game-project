@@ -42,8 +42,7 @@ public class PauseMenu extends JFrame {
         saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                RunningMode runningModePage = new RunningMode();
-                runningModePage.saveMap();
+                
             }
         });
         panel.add(saveButton);

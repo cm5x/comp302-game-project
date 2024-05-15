@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +24,8 @@ import java.util.Scanner;
 import java.util.Timer;
 
 import utilities.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,9 +45,10 @@ import utilities.BarrierReader;
 
 public class RunningMode extends JFrame{
 
-    private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
+    private ArrayList<ArrayList<Barrier>> barrierList; // list that will store all barriers
     private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
+    private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
@@ -64,7 +68,7 @@ public class RunningMode extends JFrame{
         setTitle("Running Mode");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        this.selectedMap = selectedMap;
 
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
@@ -126,12 +130,12 @@ public class RunningMode extends JFrame{
     class MapPanel extends JPanel {
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
-        private ArrayList<int[]> barrierList;
+        private ArrayList<int[]> barrierIndexList;
         private String selectedColor = "red";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
-        private String filePath = "src/utilities/exampleMap1.dat";
+        private String filePath = "src/gameMapSaves/exampleMap" + selectedMap + ".dat";
         // private Rectangle paddle;
         // private Point ballPosition;
         // private int ballSpeedX = 2;
@@ -142,13 +146,13 @@ public class RunningMode extends JFrame{
         public MapPanel(RunningMode frame) {
             this.frame = frame;
             this.blocks = new ArrayList<>();
-            this.barrierList = new ArrayList<int[]>();
+            this.barrierIndexList = new ArrayList<int[]>();
 
             File file = new File(filePath); // File path should be in String data
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
-                barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
                 
                 
             } catch (IOException | ClassNotFoundException e) {
@@ -156,7 +160,7 @@ public class RunningMode extends JFrame{
             }
 
 
-            for (int[] i : barrierList) {
+            for (int[] i : barrierIndexList) {
                 System.out.println(i[2]);
                 switch (i[2]) {
                     case 1:
@@ -184,8 +188,9 @@ public class RunningMode extends JFrame{
         public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
-            System.out.println(selectedColor);
+            
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
+            
             return true;
         }
 
@@ -240,7 +245,7 @@ public class RunningMode extends JFrame{
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File fileToSave = fileChooser.getSelectedFile();
                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                    oos.writeObject(barriers);
+                    oos.writeObject(barrierList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -257,7 +262,7 @@ public class RunningMode extends JFrame{
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
                     String file = fileToLoad.getAbsolutePath();
                     BarrierReader reader = new BarrierReader();
-                    barriers = reader.readBarriers(file);
+                    barrierList = reader.readBarriers(file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -402,7 +407,7 @@ public class RunningMode extends JFrame{
     // }
 
     public static void main(String args[]){
-        RunningMode run = new RunningMode();
+        RunningMode run = new RunningMode(1);
         run.setVisible(true);
     }
 
