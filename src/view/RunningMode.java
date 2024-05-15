@@ -64,7 +64,7 @@ public class RunningMode extends JFrame{
     Image img4 = new ImageIcon(imgpath4).getImage();
     Image backimg = new ImageIcon(backgroundpath).getImage();
 
-    public RunningMode() {
+    public RunningMode(int selectedMap) {
         setTitle("Running Mode");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -173,7 +173,7 @@ public class RunningMode extends JFrame{
                         addBlock(i[0], i[1],"explosive");
                         break;
                     case 4:
-                        addBlock(i[0], i[1], "rewarding");
+                        addBlock(i[0], i[1],"rewarding");
                     default:
                         break;
                 }
@@ -188,9 +188,7 @@ public class RunningMode extends JFrame{
         public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
-            
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
-            
             return true;
         }
 
@@ -214,8 +212,9 @@ public class RunningMode extends JFrame{
                         break;
                     case "rewarding":
                         g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
-
+                        break;
                     default:
+                        break;
                         // Default case
                 }
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
