@@ -131,7 +131,7 @@ public class RunningMode extends JFrame{
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierIndexList;
-        private String selectedColor = "red";  // Default color
+        private String selectedColor = "simple";  // Default color
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
