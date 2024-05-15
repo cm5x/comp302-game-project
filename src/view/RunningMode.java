@@ -3,6 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -220,6 +222,20 @@ public class RunningMode extends JFrame{
                     case "reinforced":
                         //g.setColor(Color.BLUE);
                         g.drawImage(img2, block.rectangle.x, block.rectangle.y, null);
+                        for (Barrier barrier : bArrayList) {
+                            
+                            if (barrier.getXCoordinate() == block.rectangle.x && barrier.getYCoordinate() == block.rectangle.y){
+                                int health = barrier.getHealth();
+                                Font font = new Font("Arial", Font.BOLD, 24).deriveFont(Font.BOLD, 20);
+                                FontMetrics metrics = g.getFontMetrics(font);
+                                String text = Integer.toString(health); 
+                                g.setFont(font);
+                                g.setColor(Color.RED);
+                                g.drawString(text, barrier.getXCoordinate() + 38, barrier.getYCoordinate() + 18);
+                                
+                            }
+                            
+                        }
                         break;
                     case "explosive":
                         //g.setColor(Color.GREEN);
