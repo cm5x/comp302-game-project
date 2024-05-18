@@ -21,8 +21,8 @@ public class SimpleBarrier extends JComponent implements Barrier {
     private String imgpath = "assets/images/200iconbluegem.png";
     private static final Random random = new Random();
 
-    public SimpleBarrier(int length, int startX, int startY) {
-        this.length = length;
+    public SimpleBarrier(int startX, int startY) {
+       
         this.health = 1; // Simple barriers can be destroyed in one hit
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;

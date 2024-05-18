@@ -78,7 +78,7 @@ public class Login extends JFrame{
                     JOptionPane.showMessageDialog(Login.this, "Login Failed. Please try again.");
                 }
                 */
-                if (controller.verifyPlayer(username, password)){
+                else if (controller.verifyPlayer(username, password)){
                     JOptionPane.showMessageDialog(Login.this, "Login Successfull");
                     Homepage homepage = new Homepage(username);
                     homepage.setVisible(true);

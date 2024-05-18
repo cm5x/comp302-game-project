@@ -28,7 +28,7 @@ public String getName(){
 }
 
 public void setpass(String newpass){
-    this.username = newpass;
+    this.password = newpass;
 }
 
 public String getPass(){

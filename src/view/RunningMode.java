@@ -1,6 +1,18 @@
 
+
 package view;
 import java.awt.*;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Rectangle;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,6 +26,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 // import java.util.Timer;
 import javax.swing.*;
@@ -33,8 +46,23 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.awt.geom.AffineTransform;
 import utilities.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
+import org.w3c.dom.events.MouseEvent;
+
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
+import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
 import utilities.BarrierReader;
@@ -55,6 +83,19 @@ public class RunningMode extends JFrame{
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
+    String imgpath1 = "assets/images/200iconbluegem.png";
+    String imgpath2 = "assets/images/200iconfirm.png";
+    String imgpath3 = "assets/images/200iconredgem.png";
+    String imgpath4 = "assets/images/200icongreengem.png";
+    String backgroundpath = "assets/images/200background.png";
+
+    Image img1 = new ImageIcon(imgpath1).getImage();
+    Image img2 = new ImageIcon(imgpath2).getImage();
+    Image img3 = new ImageIcon(imgpath3).getImage();
+    Image img4 = new ImageIcon(imgpath4).getImage();
+    Image backimg = new ImageIcon(backgroundpath).getImage();
+
+    ArrayList<Barrier> bArrayList = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
@@ -126,8 +167,14 @@ public class RunningMode extends JFrame{
     class MapPanel extends JPanel implements KeyListener {
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
-        private ArrayList<int[]> barrierList;
-        private String selectedColor = "red";  // Default color
+
+        //previous version
+        //private ArrayList<int[]> barrierList;    
+        //private String selectedColor = "red";  // Default color
+
+        private ArrayList<int[]> barrierIndexList;
+        private String selectedColor = "simple";  // Default color
+
         private static final int BLOCK_WIDTH = 100; // Width of the block
         private static final int BLOCK_HEIGHT = 20; // Height of the block
         private final RunningMode frame;
@@ -172,15 +219,31 @@ public class RunningMode extends JFrame{
                 System.out.println(i[2]);
                 switch (i[2]) {
                     case 1:
-                        addBlock(i[0], i[1],"red");
+
+                        //addBlock(i[0], i[1],"red");
+
+                        addBlock(i[0], i[1],"simple");
+                        SimpleBarrier sbar = new SimpleBarrier(i[0], i[1]);
+                        bArrayList.add(sbar);
+
                         break;
                     case 2:
-                        addBlock(i[0], i[1],"blue");
+                        addBlock(i[0], i[1],"reinforced");
+                        Random random = new Random();     
+                        int hitnum = random.nextInt(3) + 1;
+                        ReinforcedBarrier rbar = new ReinforcedBarrier(hitnum, i[0], i[1]);
+                        bArrayList.add(rbar);
                         break;
                     case 3:
-                        addBlock(i[0], i[1],"green");
+                        addBlock(i[0], i[1],"explosive");
+                        ExplosiveBarrier ebar = new ExplosiveBarrier(i[0], i[1]);
+                        bArrayList.add(ebar);
                         break;
-                        
+                    case 4:
+                        addBlock(i[0], i[1],"rewarding");
+                        RewardingBarrier rewbar = new RewardingBarrier(i[0], i[1]);
+                        bArrayList.add(rewbar);
+                        break;
                     default:
                         break;
                 }
@@ -358,7 +421,9 @@ public class RunningMode extends JFrame{
         public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
+
             System.out.println(selectedColor);
+
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
             return true;
         }
@@ -366,22 +431,48 @@ public class RunningMode extends JFrame{
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
             Graphics2D g2d = (Graphics2D) g.create();
+
+
+            g.drawImage(backimg, 0, 0, this.getWidth(), this.getHeight(), this);
 
             for (ColoredBlock block : blocks) {
                 switch (block.color) {
-                    case "red":
-                        g.setColor(Color.RED);
+                    case "simple":
+                        //g.setColor(Color.RED);
+                        g.drawImage(img1, block.rectangle.x, block.rectangle.y, null);
                         break;
-                    case "blue":
-                        g.setColor(Color.BLUE);
+                    case "reinforced":
+                        //g.setColor(Color.BLUE);
+                        g.drawImage(img2, block.rectangle.x, block.rectangle.y, null);
+                        for (Barrier barrier : bArrayList) {
+                            
+                            if (barrier.getXCoordinate() == block.rectangle.x && barrier.getYCoordinate() == block.rectangle.y){
+                                int health = barrier.getHealth();
+                                Font font = new Font("Arial", Font.BOLD, 24).deriveFont(Font.BOLD, 20);
+                                FontMetrics metrics = g.getFontMetrics(font);
+                                String text = Integer.toString(health); 
+                                g.setFont(font);
+                                g.setColor(Color.RED);
+                                g.drawString(text, barrier.getXCoordinate() + 38, barrier.getYCoordinate() + 18);
+                                
+                            }
+                            
+                        }
                         break;
-                    case "green":
-                        g.setColor(Color.GREEN);
+                    case "explosive":
+                        //g.setColor(Color.GREEN);
+                        g.drawImage(img3, block.rectangle.x, block.rectangle.y, null);
+                        break;
+                    case "rewarding":
+                        g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
                         break;
                     default:
-                        g.setColor(Color.BLACK); // Default case
+                        break;
+                        // Default case
                 }
+
                 g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
                 //g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 g.setColor(Color.BLACK);
@@ -390,6 +481,9 @@ public class RunningMode extends JFrame{
                 // Burayı yunus editledi
                 //g.setColor(Color.RED);
                 g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
+
+                //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+
             }
             
 
