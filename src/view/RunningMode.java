@@ -195,9 +195,10 @@ public class RunningMode extends JFrame{
         public MapPanel(RunningMode frame) {
             this.frame = frame;
             this.blocks = new ArrayList<>();
-            this.barrierList = new ArrayList<int[]>();
-            paddle = new Rectangle(600, 950, 150, 20);
-            ballPosition = new Point(650, 940);
+            this.barrierIndexList = new ArrayList<int[]>();
+            Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
+            paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
+            ballPosition = new Point(screenSize.width/2, screenSize.height-70);
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
             timer = new Timer(10, (ActionEvent e) -> updateGame());
@@ -207,7 +208,7 @@ public class RunningMode extends JFrame{
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
-                barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
                 
                 
             } catch (IOException | ClassNotFoundException e) {
@@ -215,7 +216,7 @@ public class RunningMode extends JFrame{
             }
 
 
-            for (int[] i : barrierList) {
+            for (int[] i : barrierIndexList) {
                 System.out.println(i[2]);
                 switch (i[2]) {
                     case 1:
