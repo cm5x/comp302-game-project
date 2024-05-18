@@ -310,7 +310,7 @@ public class RunningMode extends JFrame{
                     // If the ball is slower than some threshold, make it faster
                     double check = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
                     if (check < 1){
-                        double scale = 1 / check;
+                        double scale = 3 / check;
                         // ballSpeedX *= 9;
                         // ballSpeedY *= 9;
                         ballSpeedX *= 2*scale;
