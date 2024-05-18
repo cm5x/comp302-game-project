@@ -2,17 +2,6 @@
 
 package view;
 import java.awt.*;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Rectangle;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -28,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+
+// import org.w3c.dom.events.MouseEvent;
 // import java.util.Timer;
 import javax.swing.*;
 // import javax.swing.Timer;
@@ -48,17 +39,6 @@ import java.awt.geom.AffineTransform;
 import utilities.*;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-// import org.w3c.dom.events.MouseEvent;
 
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
@@ -80,6 +60,7 @@ public class RunningMode extends JFrame{
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
     private final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
+    private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
@@ -88,21 +69,24 @@ public class RunningMode extends JFrame{
     String imgpath3 = "assets/images/200iconredgem.png";
     String imgpath4 = "assets/images/200icongreengem.png";
     String backgroundpath = "assets/images/200background.png";
+    String stpath = "assets/images/200player.png";
 
     Image img1 = new ImageIcon(imgpath1).getImage();
     Image img2 = new ImageIcon(imgpath2).getImage();
     Image img3 = new ImageIcon(imgpath3).getImage();
     Image img4 = new ImageIcon(imgpath4).getImage();
     Image backimg = new ImageIcon(backgroundpath).getImage();
+    Image stff = new ImageIcon(stpath).getImage();
 
     ArrayList<Barrier> bArrayList = new ArrayList<>();
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
-    public RunningMode() {
+    public RunningMode(int selectedMap) {
         setTitle("Running Mode");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.selectedMap = selectedMap;
 
 
         // Creating the map panel where game objects will interact
@@ -175,10 +159,10 @@ public class RunningMode extends JFrame{
         private ArrayList<int[]> barrierIndexList;
         private String selectedColor = "simple";  // Default color
 
-        private static final int BLOCK_WIDTH = 100; // Width of the block
-        private static final int BLOCK_HEIGHT = 20; // Height of the block
+        private static final int BLOCK_WIDTH = 86; // Width of the block
+        private static final int BLOCK_HEIGHT = 26; // Height of the block
         private final RunningMode frame;
-        private String filePath = "src/utilities/exampleMap1.dat";
+        private String filePath = "src/gameMapSaves/exampleMap" + selectedMap + ".dat";
         
         private Rectangle paddle;
         private Point ballPosition;
@@ -195,7 +179,7 @@ public class RunningMode extends JFrame{
         public MapPanel(RunningMode frame) {
             this.frame = frame;
             this.blocks = new ArrayList<>();
-            this.barrierList = new ArrayList<int[]>();
+            this.barrierIndexList = new ArrayList<int[]>();
             paddle = new Rectangle(600, 950, 150, 20);
             ballPosition = new Point(650, 940);
             // timer = new Timer(10, e -> updateGame());
@@ -207,7 +191,7 @@ public class RunningMode extends JFrame{
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
-                barrierList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
                 
                 
             } catch (IOException | ClassNotFoundException e) {
@@ -215,7 +199,7 @@ public class RunningMode extends JFrame{
             }
 
 
-            for (int[] i : barrierList) {
+            for (int[] i : barrierIndexList) {
                 System.out.println(i[2]);
                 switch (i[2]) {
                     case 1:
@@ -473,8 +457,9 @@ public class RunningMode extends JFrame{
                         // Default case
                 }
 
-                g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-                //g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+                //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                g2d.setColor(Color.BLACK);
+                g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 g.setColor(Color.BLACK);
                 
                 
@@ -496,9 +481,9 @@ public class RunningMode extends JFrame{
             g2d.rotate(Math.toRadians(paddleAngle), centerX, centerY);
 
             // Draw the paddle with rotation
-            g2d.setColor(Color.BLACK);
-            g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-
+            g.setColor(Color.BLACK);
+            g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            //g.drawImage(stff, paddle.x, paddle.y, null);
             // Clean up
             g2d.dispose();
                     
@@ -665,7 +650,7 @@ public class RunningMode extends JFrame{
 
 
     public static void main(String args[]){
-        RunningMode run = new RunningMode();
+        RunningMode run = new RunningMode(1);
         run.setVisible(true);
     }
 
