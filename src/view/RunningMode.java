@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,10 @@ import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
 import utilities.BarrierReader;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
+
 import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -50,6 +55,8 @@ public class RunningMode extends JFrame{
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
+
+    private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
     public RunningMode() {
         setTitle("Running Mode");
@@ -73,6 +80,8 @@ public class RunningMode extends JFrame{
         this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
         this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
         this.add(mapPanel);
+
+        // LOGGER.setLevel(Level.ALL);
 
         // Create buttons 
         pauseButton = new JButton("Pause");
@@ -184,60 +193,73 @@ public class RunningMode extends JFrame{
             
         }
 
-        private void moveBall() {
+            private void moveBall() {
 
-            ballPosition.x += ballSpeedX;
-            ballPosition.y += ballSpeedY;
-            if (ballPosition.x < 0 || ballPosition.x > getWidth()) {
-                ballSpeedX = -ballSpeedX;
-            }
-            if (ballPosition.y < 0) {
-                ballSpeedY = -ballSpeedY;
-            }
-            // if (ballPosition.y > getHeight()) { // Ball goes below the paddle
-            //     timer.stop();
-            //     JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
-            // }
-
-            // getting the rotated paddle and its rotation angle
-            AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(paddleAngle), paddle.x,paddle.y);
-            Shape rotatedPaddle = rotation.createTransformedShape(new Rectangle(paddle.x, paddle.y, paddle.width, paddle.height));            
-            double rotationAngle = Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
-
-            // Check collision with the paddle
-            if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle) && rotationAngle == 0) {
-                ballSpeedY = -ballSpeedY;
-                ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
-            }
-            else if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)){
-
-                // Calculate the angle between the center of the paddle and the ball
-                double angle = Math.atan2(ballPosition.getY() - rotatedPaddle.getBounds2D().getCenterY(), ballPosition.getX() - rotatedPaddle.getBounds2D().getCenterX());
-
-                // Reflect the ball's velocity vector across the normal of the paddle
-                double incomingAngle = Math.atan2(ballSpeedY, ballSpeedX);
-                double reflectionAngle = 2 * angle - incomingAngle;
-
-                // Calculate the magnitude of the velocity vector
-                double velocityMagnitude = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
-
-                // Calculate the new velocity components
-                double newVelocityX = Math.cos(reflectionAngle) * velocityMagnitude;
-                double newVelocityY = Math.sin(reflectionAngle) * velocityMagnitude;
-
-                // Update the ball's velocity
-                ballSpeedX = (int) newVelocityX;
-                ballSpeedY = (int) -newVelocityY;
-
-                // If the ball is slower than some threshold, make it faster
-                double check = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
-                if (check < 1){
-                    ballSpeedX *= 9;
-                    ballSpeedY *= 9;
+                ballPosition.x += ballSpeedX;
+                ballPosition.y += ballSpeedY;
+                if (ballPosition.x < 0 || ballPosition.x > getWidth()) {
+                    ballSpeedX = -ballSpeedX;
+                }
+                if (ballPosition.y < 0) {
+                    ballSpeedY = -ballSpeedY;
+                }
+                if (ballSpeedX == 0 && ballSpeedY == 0) {
+                    ballSpeedX = 3;
+                    ballSpeedY = -3;
                 }
 
-            }    
+                // if (ballPosition.y > getHeight()) { // Ball goes below the paddle
+                //     timer.stop();
+                //     JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
+                // }
 
+                // getting the rotated paddle and its rotation angle
+                AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(paddleAngle), paddle.x,paddle.y);
+                Shape rotatedPaddle = rotation.createTransformedShape(new Rectangle(paddle.x, paddle.y, paddle.width, paddle.height));            
+                double rotationAngle = Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
+
+                // Check collision with the paddle
+                if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle) && rotationAngle == 0) {
+                    ballSpeedY = -ballSpeedY;
+                    // ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
+                    ballPosition.y = paddle.y -1 ; // Adjust ball position to avoid sticking
+                }
+                else if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)){
+
+                    // Calculate the angle between the center of the paddle and the ball
+                    double angle = Math.atan2(ballPosition.getY() - rotatedPaddle.getBounds2D().getCenterY(), ballPosition.getX() - rotatedPaddle.getBounds2D().getCenterX());
+
+                    // Reflect the ball's velocity vector across the normal of the paddle
+                    double incomingAngle = Math.atan2(ballSpeedY, ballSpeedX);
+                    double reflectionAngle = 2 * angle - incomingAngle;
+
+                    // Calculate the magnitude of the velocity vector
+                    double velocityMagnitude = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
+
+                    // Calculate the new velocity components
+                    double newVelocityX = Math.cos(reflectionAngle) * velocityMagnitude;
+                    double newVelocityY = Math.sin(reflectionAngle) * velocityMagnitude;
+
+                    // Update the ball's velocity
+                    ballSpeedX = (int) newVelocityX;
+                    ballSpeedY = (int) -newVelocityY;
+
+                    // If the ball is slower than some threshold, make it faster
+                    double check = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
+                    if (check < 1){
+                        double scale = 1 / check;
+                        // ballSpeedX *= 9;
+                        // ballSpeedY *= 9;
+                        ballSpeedX *= 2*scale;
+                        ballSpeedY *= 2*scale; 
+
+                    }
+                    // Adjust ball position to avoid sticking
+                    ballPosition.y = (int) (rotatedPaddle.getBounds2D().getMinY() - 1);
+                    
+                }   
+                
+               
             // // Check collision with barriers
             // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
             // while (it.hasNext()) {
@@ -261,13 +283,13 @@ public class RunningMode extends JFrame{
                 MapPanel.ColoredBlock block = it.next();
                 if (ballRect.intersects(block.rectangle)) {
                     // Determine the collision direction
-                    double ballCenterX = ballPosition.x + 0.5; // changed from 5
-                    double ballCenterY = ballPosition.y + 0.5; // changed from 5
-                    int blockCenterX = block.rectangle.x + block.rectangle.width / 2;
-                    int blockCenterY = block.rectangle.y + block.rectangle.height / 2;
+                    // double ballCenterX = ballPosition.x + 0.5; // changed from 5
+                    // double ballCenterY = ballPosition.y + 0.5; // changed from 5
+                    // int blockCenterX = block.rectangle.x + block.rectangle.width / 2;
+                    // int blockCenterY = block.rectangle.y + block.rectangle.height / 2;
 
-                    double deltaX = ballCenterX - blockCenterX;
-                    double deltaY = ballCenterY - blockCenterY;
+                    // double deltaX = ballCenterX - blockCenterX;
+                    // double deltaY = ballCenterY - blockCenterY;
 
                     // // Check which side (top, bottom, left, right) of the block the ball has hit
                     // boolean collisionFromTopOrBottom = Math.abs(deltaY) > Math.abs(deltaX);
@@ -288,24 +310,42 @@ public class RunningMode extends JFrame{
                     // }
 
                     //ALTERATIVE
-                    boolean hitVertical = Math.abs(deltaY) > Math.abs(deltaX);
-                    if (hitVertical) {
-                        ballSpeedY = -ballSpeedY;
-                        if (deltaY > 0) {
-                            ballPosition.y = block.rectangle.y + block.rectangle.height + 1; // Ball is below the block
-                        } else {
-                            ballPosition.y = block.rectangle.y - 1; // Ball is above the block
-                        }
-                    } else {
-                        ballSpeedX = -ballSpeedX;
-                        if (deltaX > 0) {
-                            ballPosition.x = block.rectangle.x + block.rectangle.width + 1; // Ball is to the right of the block
-                        } else {
-                            ballPosition.x = block.rectangle.x - 1; // Ball is to the left of the block
-                        }
-                    }
+                    // boolean hitVertical = Math.abs(deltaY) > Math.abs(deltaX);
+                    // if (hitVertical) {
+                    //     ballSpeedY = -ballSpeedY;
+                    //     it.remove(); // Remove the barrier on hit
+                    //     LOGGER.log(Level.INFO, "Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY);
+                    //     // if (deltaY > 0) {
+                    //     //     ballPosition.y = block.rectangle.y + block.rectangle.height + 1; // Ball is below the block
+                    //     // } else {
+                    //     //     ballPosition.y = block.rectangle.y - 1; // Ball is above the block
+                    //     // }
+                    // } else {
+                    //     ballSpeedX = -ballSpeedX;
+                    //     it.remove(); // Remove the barrier on hit
+                    //     LOGGER.log(Level.INFO, "Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX);
+                    //     // if (deltaX > 0) {
+                    //     //     ballPosition.x = block.rectangle.x + block.rectangle.width + 1; // Ball is to the right of the block
+                    //     // } else {
+                    //     //     ballPosition.x = block.rectangle.x - 1; // Ball is to the left of the block
+                    //     // }
+                    // }
 
-                    it.remove(); // Remove the barrier on hit
+                    // it.remove(); // Remove the barrier on hit
+                     // Ensure the ball's speed doesn't drop to zero at any point
+               
+                    //ALT VX
+                    Rectangle intersection = ballRect.intersection(block.rectangle);
+                    if (intersection.width < intersection.height) {
+                        ballSpeedX = -ballSpeedX;
+                        LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX));
+                    } else {
+                        ballSpeedY = -ballSpeedY;
+                        LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
+                    }
+                    it.remove();
+                    LOGGER.log(Level.INFO, MessageFormat.format("Barrier removed at: ({0}, {1})", block.rectangle.x, block.rectangle.y));
+                    
                     break; // Assuming only one collision can occur per frame
                 }
         }
@@ -349,7 +389,7 @@ public class RunningMode extends JFrame{
                 
                 // Burayı yunus editledi
                 //g.setColor(Color.RED);
-                g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
+                g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
             }
             
 
