@@ -58,7 +58,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import org.w3c.dom.events.MouseEvent;
+// import org.w3c.dom.events.MouseEvent;
 
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
