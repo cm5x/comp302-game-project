@@ -568,9 +568,9 @@ public class RunningMode extends JFrame{
                 }
 
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-                g2d.setColor(Color.BLACK);
-                g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-                g.setColor(Color.BLACK);
+                //g2d.setColor(Color.BLACK);
+                //g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+                //g.setColor(Color.BLACK);
                 
 
                 fireBall.draw(g);
