@@ -51,8 +51,12 @@ public class MagicalStaff implements KeyListener {
         loadImage();
     }
 
-    public double getLength() {
+    public int getLength() {
         return length;
+    }
+
+    public void setLength(int newLength) {
+        this.length = newLength;
     }
 
     public double getThickness() {

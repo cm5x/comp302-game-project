@@ -58,6 +58,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import spells.MagicalStaffExpansion;
+import spells.Hex;
+import spells.FelixFelicis;
+import spells.OverwhelmingFireBall;
+
 public class RunningMode extends JFrame{
 
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
@@ -86,6 +91,9 @@ public class RunningMode extends JFrame{
     ImageIcon heartimg = new ImageIcon(chancePath);
 
     ArrayList<Barrier> bArrayList = new ArrayList<>();
+    // TODO: diğer spelleri ekle Melike
+    private MagicalStaffExpansion magicalStaffExpansion;
+    private Hex hexSpell;
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
@@ -244,6 +252,9 @@ public class RunningMode extends JFrame{
         
         //add(mapPanel,BorderLayout.EAST);
         this.setVisible(true);
+        //TODO: Initialize the spells
+        magicalStaffExpansion = new MagicalStaffExpansion(this);
+        hexSpell = new Hex(this);
     }    
     
     class MapPanel extends JPanel implements KeyListener {
@@ -269,7 +280,12 @@ public class RunningMode extends JFrame{
         private int paddleSpeed = 10; // Speed of paddle movement
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
-
+        private boolean isMagicalStaffActive = false;
+        private int originalPaddleWidth;
+        private boolean hexCanonsActive = false;
+        private Point leftCanon;
+        private Point rightCanon;
+        private List<Projectile> projectiles = new ArrayList<>();
         
 
         public MapPanel(RunningMode frame) {
@@ -285,6 +301,8 @@ public class RunningMode extends JFrame{
             ballPosition = new Point(screenSize.width/2, screenSize.height-70);
             fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
             staff = new MagicalStaff(screenSize);
+            originalPaddleWidth = staff.getLength();
+
 
 
             // timer = new Timer(10, e -> updateGame());
@@ -516,7 +534,8 @@ public class RunningMode extends JFrame{
                 }
         }
             
-            
+            moveProjectiles();
+
             repaint();
         }
 
@@ -606,6 +625,20 @@ public class RunningMode extends JFrame{
             //g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
             //g.drawImage(stff, paddle.x, paddle.y, null);
             // Clean up
+
+            //hex related
+            if (hexCanonsActive) {
+                g2d.setColor(Color.MAGENTA);
+                g2d.fillRect(leftCanon.x - 5, leftCanon.y - 20, 10, 20); // Depend these two paddle locations
+                g2d.fillRect(rightCanon.x - 5, rightCanon.y - 20, 10, 20);
+            }
+
+            for (Projectile projectile : projectiles) {
+                g.setColor(Color.MAGENTA);
+                g.fillRect(projectile.x, projectile.y, 5, 10);
+            }
+
+
             g2d.dispose();
                     
         }
@@ -655,6 +688,13 @@ public class RunningMode extends JFrame{
                 }
                 paddle.x = newPaddleX;
                 staff.setXPos(newPaddleX);
+
+                //hex related
+                if (hexCanonsActive){
+                    updateCanonPositions();
+                    //fireHexes();
+    
+                }
             }
         }
 
@@ -666,6 +706,8 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
             im.put(KeyStroke.getKeyStroke("released LEFT"), "stopMoving");
             im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
+            im.put(KeyStroke.getKeyStroke("T"), "activateMagicalStaff");
+            im.put(KeyStroke.getKeyStroke("H"), "activateHexSpell");
 
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
@@ -710,8 +752,91 @@ public class RunningMode extends JFrame{
                     repaint();
                 }
             });
+            am.put("activateMagicalStaff", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                   magicalStaffExpansion.activate();
+                 }
+             });
+             am.put("activateHexSpell", new AbstractAction() {
+                 @Override
+                 public void actionPerformed(ActionEvent e) {
+                     hexSpell.activate();
+                 }
+             });
         }
 
+
+        public void activateHexCanons() {
+            hexCanonsActive = true;
+            updateCanonPositions();
+            fireHexes();
+            repaint();
+        }
+
+        public void deactivateHexCanons() {
+            hexCanonsActive = false;
+            repaint();
+        }
+
+        private void updateCanonPositions() {
+            double angleRadians = Math.toRadians(staff.getRotationAngle());
+
+            leftCanon = new Point(
+                (int) (staff.getXPos() - 10 * Math.cos(angleRadians)),
+                (int) (staff.getYPos() - 10 * Math.sin(angleRadians))
+            );
+
+            rightCanon = new Point(
+                (int) (staff.getXPos() + staff.getLength() + 10 * Math.cos(angleRadians)),
+                (int) (staff.getYPos() - 10 * Math.sin(angleRadians))
+            );
+        }
+
+        private void fireHexes() {
+            if (hexCanonsActive) {
+                fireHex(leftCanon);
+                fireHex(rightCanon);
+            }
+        }
+
+        private void fireHex(Point canonPosition) {
+            projectiles.add(new Projectile(canonPosition.x, canonPosition.y, -5, 5));
+        }
+
+        private void moveProjectiles() {
+            Iterator<Projectile> it = projectiles.iterator();
+            while (it.hasNext()) {
+                Projectile projectile = it.next();
+                projectile.y -= projectile.speedY;
+                if (projectile.y < 0) {
+                    it.remove();
+                    continue;
+                }
+
+                Rectangle projectileRect = new Rectangle(projectile.x, projectile.y, 5, 10);
+                Iterator<MapPanel.ColoredBlock> blockIt = blocks.iterator();
+                while (blockIt.hasNext()) {
+                    MapPanel.ColoredBlock block = blockIt.next();
+                    if (projectileRect.intersects(block.rectangle)) {
+                        blockIt.remove();
+                        it.remove();
+                        break;
+                    }
+                }
+            }
+        }
+
+        private class Projectile {
+            int x, y;
+            int speedY;
+
+            Projectile(int x, int y, int speedX, int speedY) {
+                this.x = x;
+                this.y = y;
+                this.speedY = speedY;
+            }
+        }
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -738,6 +863,22 @@ public class RunningMode extends JFrame{
 
     }
 
+    public void expandPaddle() {
+        // mapPanel.staff.width *= 2;
+        staff.setLength(staff.getLength()*2);
+        mapPanel.repaint();
+    }
+    public void resetPaddle() {
+        staff.setLength(mapPanel.originalPaddleWidth);
+        mapPanel.repaint();
+    }
+
+    public void activateHexCanons() {
+        mapPanel.activateHexCanons();
+    }
+    public void deactivateHexCanons() {
+        mapPanel.deactivateHexCanons();
+    }
 
 // Load map and save map for the game
     public void saveMap() {

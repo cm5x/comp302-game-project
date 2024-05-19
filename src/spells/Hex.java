@@ -1,18 +1,27 @@
 package spells;
-import spells.Spell;
 
-public class Hex implements Spell{
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import view.RunningMode;
 
-    public Hex(){
+public class Hex extends Spell {
 
+    public Hex(RunningMode runningMode) {
+        super("Hex Spell", new ImageIcon("path/to/icon.png"), runningMode);
     }
 
-    public void activate(){
-
+    @Override
+    protected void performAction() {
+        runningMode.activateHexCanons();
     }
 
-    public void deactivate(){
-        
+    @Override
+    protected void undoAction() {
+        runningMode.deactivateHexCanons();
     }
 
+    @Override
+    protected int getDuration() {
+        return 30; // 30 seconds
+    }
 }
