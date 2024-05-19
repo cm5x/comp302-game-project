@@ -180,8 +180,14 @@ public class RunningMode extends JFrame{
             this.frame = frame;
             this.blocks = new ArrayList<>();
             this.barrierIndexList = new ArrayList<int[]>();
-            paddle = new Rectangle(600, 950, 150, 20);
-            ballPosition = new Point(650, 940);
+
+            //paddle = new Rectangle(600, 950, 150, 20);
+            //ballPosition = new Point(650, 940);
+
+            Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
+            paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
+            ballPosition = new Point(screenSize.width/2, screenSize.height-70);
+
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
             timer = new Timer(10, (ActionEvent e) -> updateGame());
