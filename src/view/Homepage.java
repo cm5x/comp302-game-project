@@ -31,7 +31,7 @@ public class Homepage extends JFrame {
         JButton playButton = new JButton("Play Game");
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MapSlotsFrame run = new MapSlotsFrame();
+                PlayGame run = new PlayGame();
                 run.setVisible(true);
             }
         });

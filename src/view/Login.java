@@ -10,8 +10,6 @@ import view.Homepage;
 
 public class Login extends JFrame{
 
-    private static Login instance = null;
-
     // input fields in the frame
     private JTextField usernameField;
     private JPasswordField passwordField;
