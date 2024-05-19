@@ -1,15 +1,22 @@
-
+package gameComponents;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import java.awt.Image;
 
 public class MagicalStaff implements KeyListener {
-    private double length;
-    private double thickness;
+    private int length;
+    private int thickness;
     private double rotationAngle;
     private double rotationRate;
     private double movementSpeed;
-    private double xPos; // Current x position of the staff
+    private int xPos; // Current x position of the staff
+    private int yPos;
     private boolean expanded;
     private long expansionStartTime;
     private boolean hexActivated;
@@ -18,16 +25,18 @@ public class MagicalStaff implements KeyListener {
     private boolean rotateRight;
     private boolean moveLeft;
     private boolean moveRight;
+    private Image image;
 
     private static final double ROTATION_LIMIT = 45.0;
 
     public MagicalStaff(Dimension screenSize) {
-        this.length = screenSize.getWidth() * 0.1;
-        this.thickness = 20.0;
+        this.length = (int) (screenSize.getWidth() * 0.1);
+        this.thickness = 20;
         this.rotationAngle = 0.0;
         this.rotationRate = 45.0;
         this.movementSpeed = 5.0; // Adjust movement speed as needed
-        this.xPos = screenSize.getWidth() / 2; // Start at the center of the screen
+        this.xPos = (int) (screenSize.getWidth() / 2); // Start at the center of the screen
+        this.yPos = (int) screenSize.getHeight()-200;
         this.expanded = false;
         this.expansionStartTime = 0;
         this.hexActivated = false;
@@ -36,6 +45,7 @@ public class MagicalStaff implements KeyListener {
         this.rotateRight = false;
         this.moveLeft = false;
         this.moveRight = false;
+        loadImage();
     }
 
     public double getLength() {
@@ -63,6 +73,20 @@ public class MagicalStaff implements KeyListener {
             rotationAngle -= rotationRate * 0.02;
         } else if (rotateRight && rotationAngle < ROTATION_LIMIT) {
             rotationAngle += rotationRate * 0.02;
+        }
+    }
+
+    private void loadImage() {
+        try {
+            image = ImageIO.read(getClass().getResource("/assets/images/200Player.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void draw(Graphics g) {
+        if (image != null) {
+            g.drawImage(image, xPos, yPos, length, thickness, null);
         }
     }
 
