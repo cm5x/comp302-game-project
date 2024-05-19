@@ -43,6 +43,7 @@ import javax.imageio.ImageIO;
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.FireBall;
+import gameComponents.MagicalStaff;
 import gameComponents.Player;
 import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
@@ -91,6 +92,7 @@ public class RunningMode extends JFrame{
     private FireBall fireBall;
     private int chances;
     private Timer timer;
+    private MagicalStaff staff;
 
     public RunningMode(int selectedMap, Player player) {
         setTitle("Running Mode");
@@ -268,7 +270,7 @@ public class RunningMode extends JFrame{
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
 
-
+        
 
         public MapPanel(RunningMode frame) {
             this.frame = frame;
@@ -282,6 +284,7 @@ public class RunningMode extends JFrame{
             paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
             ballPosition = new Point(screenSize.width/2, screenSize.height-70);
             fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
+            staff = new MagicalStaff(screenSize);
 
 
             // timer = new Timer(10, e -> updateGame());
@@ -364,21 +367,21 @@ public class RunningMode extends JFrame{
                 // }
 
                 // getting the rotated paddle and its rotation angle
-                AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(paddleAngle), paddle.x,paddle.y);
-                Shape rotatedPaddle = rotation.createTransformedShape(new Rectangle(paddle.x, paddle.y, paddle.width, paddle.height));            
-                double rotationAngle = Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
+                AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(staff.getRotationAngle()),staff.getXPos()+staff.getLength()/2,staff.getYPos()-staff.getThickness()/2);
+                Shape rotatedPaddle = rotation.createTransformedShape(staff.getBounds());            
+                double rotationAngle = staff.getRotationAngle(); //Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
 
                 // Check collision with the paddle
-                if (fireBall.getBounds().intersects(paddle) && rotationAngle == 0) {
+                if (fireBall.getBounds().intersects(staff.getBounds()) && rotationAngle == 0) {
                     ballSpeedY = -ballSpeedY;
                     // ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
                     fireBall.setY(paddle.y-1);
-                    ballPosition.y = paddle.y -1 ; // Adjust ball position to avoid sticking
+                    ballPosition.y = (int) staff.getYPos()/2 -1 ; // Adjust ball position to avoid sticking
                 }
-                else if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)){
+                else if (fireBall.getBounds().intersects(staff.getBounds())){//new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(staff.getBounds())){
 
                     // Calculate the angle between the center of the paddle and the ball
-                    double angle = Math.atan2(fireBall.getY() - rotatedPaddle.getBounds2D().getCenterY(), fireBall.getX() - rotatedPaddle.getBounds2D().getCenterX());
+                    double angle = Math.atan2(fireBall.getY() - staff.getYPos()-staff.getThickness()/2, fireBall.getX() - staff.getXPos()-staff.getLength()/2);  // Might need to change
 
                     // Reflect the ball's velocity vector across the normal of the paddle
                     double incomingAngle = Math.atan2(ballSpeedY, ballSpeedX);
@@ -405,9 +408,9 @@ public class RunningMode extends JFrame{
                         ballSpeedY *= 2*scale; 
 
                     }
-                    // Adjust ball position to avoid sticking
-                    fireBall.setY((int) (rotatedPaddle.getBounds2D().getMinY() - 1));
-                    ballPosition.y = (int) (rotatedPaddle.getBounds2D().getMinY() - 1);
+                    // Adjust ball position to avoid sticking    // Might need to change
+                    fireBall.setY((int) (staff.getYPos() - 1));
+                    ballPosition.y = (int) (staff.getYPos() - 1);
                     
                 }   
                 
@@ -569,8 +572,9 @@ public class RunningMode extends JFrame{
                 g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 g.setColor(Color.BLACK);
                 
+
                 fireBall.draw(g);
-                
+                staff.draw(g2d);
                 // Burayı yunus editledi
                 //g.setColor(Color.RED);
                 //g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
@@ -589,8 +593,8 @@ public class RunningMode extends JFrame{
             g2d.rotate(Math.toRadians(paddleAngle), centerX, centerY);
 
             // Draw the paddle with rotation
-            g.setColor(Color.BLACK);
-            g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            //g.setColor(Color.BLACK);
+            //g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
             //g.drawImage(stff, paddle.x, paddle.y, null);
             // Clean up
             g2d.dispose();
@@ -635,10 +639,13 @@ public class RunningMode extends JFrame{
                 // Ensure the paddle does not move out of the panel's bounds
                 if (newPaddleX < 0) {
                     newPaddleX = 0;
+                    staff.setXPos(0);
                 } else if (newPaddleX + paddle.width > getWidth()) {
                     newPaddleX = getWidth() - paddle.width;
+                    staff.setXPos( (int) (getWidth()-staff.getThickness()));
                 }
                 paddle.x = newPaddleX;
+                staff.setXPos(newPaddleX);
             }
         }
 
@@ -681,6 +688,7 @@ public class RunningMode extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     paddleAngle += 5; // Increment angle by 5 degrees
+                    staff.setRotationAngle(staff.getRotationAngle()+0.0872665);
                     repaint();
                 }
             });
@@ -689,6 +697,7 @@ public class RunningMode extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     paddleAngle -= 5; // Decrement angle by 5 degrees
+                    staff.setRotationAngle(staff.getRotationAngle()-0.0872665);
                     repaint();
                 }
             });
