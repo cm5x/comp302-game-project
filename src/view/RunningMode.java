@@ -292,6 +292,29 @@ public class RunningMode extends JFrame{
             timer = new Timer(10, (ActionEvent e) -> updateGame());
             timer.start();
             
+            loadMap();
+            
+        }
+        /**
+         * Loads a game map from a specified file path.
+         * 
+         * Requires:
+         * - `filePath` should be a valid path to an existing map file.
+         * 
+         * Modifies:
+         * - `barrierIndexList` is modified to contain the barriers loaded from the file.
+         * - Various barrier objects (`SimpleBarrier`, `ReinforcedBarrier`, `ExplosiveBarrier`, `RewardingBarrier`) are added to `bArrayList`.
+         * - The UI is updated to reflect the loaded barriers.
+         * 
+         * Effects:
+         * - Deserializes the barrier list from the specified file.
+         * - Adds the barriers to the game according to their types.
+         * - If an I/O or class not found error occurs, prints the stack trace of the exception.
+         * 
+         * @param filePath the path of the file to load
+         */
+        private void loadMap() {
+
             File file = new File(filePath); // File path should be in String data
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
@@ -340,9 +363,6 @@ public class RunningMode extends JFrame{
                 repaint();
 
             }
-
-            
-            
         }
 
             private void moveBall() {
@@ -760,6 +780,10 @@ public class RunningMode extends JFrame{
                 e.printStackTrace();
             }
         }
+    }
+
+    private void loadMap(int mapSave) {
+
     }
 
     
