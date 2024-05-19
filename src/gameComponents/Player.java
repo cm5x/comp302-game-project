@@ -1,7 +1,13 @@
 package gameComponents;
 
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 public class Player {
-    private int playerChance;
+    private int playerChance = 3;
     public String username;
     private String password;
 
@@ -34,5 +40,22 @@ public void setpass(String newpass){
 public String getPass(){
     return this.password;
 }
+
+public void decChance(JPanel chancePanel, ArrayList<JLabel> labels){
+    this.playerChance = playerChance - 1;
+    if (!labels.isEmpty()) {
+            JLabel label = labels.remove(labels.size() - 1);
+            chancePanel.remove(label);
+            chancePanel.revalidate();
+            chancePanel.repaint();
+
+            }
+
+    if(this.getChances() == 0){
+                    JOptionPane.showMessageDialog(null, "Game Over!", "Message", JOptionPane.PLAIN_MESSAGE);
+
+                }
+    
+}   
 }
 
