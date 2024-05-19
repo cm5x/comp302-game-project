@@ -193,8 +193,7 @@ public class RunningMode extends JFrame{
         private boolean hexCanonsActive = false;
         private Point leftCanon;
         private Point rightCanon;
-        private List<Projectile> projectiles = new ArrayList<>();
-
+        
 
 
         public MapPanel(RunningMode frame) {
@@ -432,8 +431,7 @@ public class RunningMode extends JFrame{
                 }
         }
             
-            moveProjectiles();
-
+            
             repaint();
         }
 
@@ -523,15 +521,9 @@ public class RunningMode extends JFrame{
 
             if (hexCanonsActive) {
                 g2d.setColor(Color.MAGENTA);
-                g2d.fillRect(leftCanon.x - 5, leftCanon.y - 20, 10, 20); // Depend these two paddle locations
+                g2d.fillRect(leftCanon.x - 5, leftCanon.y - 20, 10, 20);
                 g2d.fillRect(rightCanon.x - 5, rightCanon.y - 20, 10, 20);
             }
-
-            for (Projectile projectile : projectiles) {
-                g.setColor(Color.MAGENTA);
-                g.fillRect(projectile.x, projectile.y, 5, 10);
-            }
-
             //g.drawImage(stff, paddle.x, paddle.y, null);
             // Clean up
             g2d.dispose();
@@ -580,11 +572,6 @@ public class RunningMode extends JFrame{
                     newPaddleX = getWidth() - paddle.width;
                 }
                 paddle.x = newPaddleX;
-            }
-            if (hexCanonsActive){
-                updateCanonPositions();
-                //fireHexes();
-
             }
         }
 
@@ -660,7 +647,6 @@ public class RunningMode extends JFrame{
         public void activateHexCanons() {
             hexCanonsActive = true;
             updateCanonPositions();
-            fireHexes();
             repaint();
         }
 
@@ -685,50 +671,6 @@ public class RunningMode extends JFrame{
             );
         }
 
-        private void fireHexes() {
-            if (hexCanonsActive) {
-                fireHex(leftCanon);
-                fireHex(rightCanon);
-            }
-        }
-
-        private void fireHex(Point canonPosition) {
-            projectiles.add(new Projectile(canonPosition.x, canonPosition.y, -5, 5));
-        }
-
-        private void moveProjectiles() {
-            Iterator<Projectile> it = projectiles.iterator();
-            while (it.hasNext()) {
-                Projectile projectile = it.next();
-                projectile.y -= projectile.speedY;
-                if (projectile.y < 0) {
-                    it.remove();
-                    continue;
-                }
-
-                Rectangle projectileRect = new Rectangle(projectile.x, projectile.y, 5, 10);
-                Iterator<MapPanel.ColoredBlock> blockIt = blocks.iterator();
-                while (blockIt.hasNext()) {
-                    MapPanel.ColoredBlock block = blockIt.next();
-                    if (projectileRect.intersects(block.rectangle)) {
-                        blockIt.remove();
-                        it.remove();
-                        break;
-                    }
-                }
-            }
-        }
-
-        private class Projectile {
-            int x, y;
-            int speedY;
-
-            Projectile(int x, int y, int speedX, int speedY) {
-                this.x = x;
-                this.y = y;
-                this.speedY = speedY;
-            }
-        }
 
         @Override
         public void keyPressed(KeyEvent e) {
