@@ -42,14 +42,15 @@ import java.io.Serializable;
         JLabel bluelab;
         JLabel greenlab;
         JLabel rewlab;
-
         JPanel randomPanel;
+        int limitcounter;
 
         public MapDesigner() {
             super("Map Designer");
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setLayout(new BorderLayout());
             this.setSize(1920, 1080);
+            limitcounter = 0;
 
             // Map panel
             this.mapPanel = new MapPanel(this);
@@ -189,8 +190,16 @@ import java.io.Serializable;
                     JOptionPane.showMessageDialog(null, "Simple barriers should be more than or equal to 75", "Message", JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
+                if (rednum > 120){
+                    JOptionPane.showMessageDialog(null, "Too much simple barriers!", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
                 if (greennum < 10){
                     JOptionPane.showMessageDialog(null, "Reinforced barriers should be more than or equal to 10", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+                if (greennum > 120){
+                    JOptionPane.showMessageDialog(null, "Too much reinforced barriers!", "Message", JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
 
@@ -199,50 +208,85 @@ import java.io.Serializable;
                     return;
                 }
 
+                if (bluenum > 40){
+                    JOptionPane.showMessageDialog(null, "Too much explosive barriers!", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+
                 if (rewnum < 10){
                     JOptionPane.showMessageDialog(null, "Rewarding barriers should be more than or equal to 10", "Message", JOptionPane.PLAIN_MESSAGE);
                     return;
                 }
+
+                if (rewnum > 40){
+                    JOptionPane.showMessageDialog(null, "Too much rewarding barriers!", "Message", JOptionPane.PLAIN_MESSAGE);
+                    return;
+                }
+                if (limitcounter > 150){
+                    JOptionPane.showMessageDialog(null, "Barrier limit reached", "Message", JOptionPane.PLAIN_MESSAGE);
+            
+                }
+                
                 mapPanel.setSelectedColor("simple");
                 for (int i = 0; i < rednum; i++) {
+                    if (limitcounter > 150){
+                        break;
+                    }
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
-                    
+                        
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
+                        
                     }
+                    limitcounter++;
                 }
                 mapPanel.setSelectedColor("reinforced");
                 for (int i = 0; i < greennum; i++) {
+                    if (limitcounter > 150){
+                        break;
+                    }
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
+                        
                     
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
+                    limitcounter++;
                 }
                 mapPanel.setSelectedColor("explosive");
                 for (int i = 0; i < bluenum; i++) {
+                    if (limitcounter > 150){
+                        break;
+                    }
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
+                        
                     
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
+                    limitcounter++;
                 }
 
                 mapPanel.setSelectedColor("rewarding");
                 for (int i = 0; i < rewnum; i++) {
+                    if (limitcounter > 150){
+                        break;
+                    }
                     boolean blockPlaced = false;
                     while (!blockPlaced) {
+                        
                     
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y);
                     }
+                    limitcounter++;
                 }
                 
                 }
