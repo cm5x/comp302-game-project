@@ -42,6 +42,7 @@ import javax.imageio.ImageIO;
 
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
+import gameComponents.FireBall;
 import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
@@ -82,12 +83,18 @@ public class RunningMode extends JFrame{
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
+    private FireBall fireBall;
+    private int chances;
+    private Timer timer;
+
     public RunningMode(int selectedMap) {
         setTitle("Running Mode");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.selectedMap = selectedMap;
+        
 
+        chances = 3;
 
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
@@ -166,9 +173,8 @@ public class RunningMode extends JFrame{
         
         private Rectangle paddle;
         private Point ballPosition;
-        private double ballSpeedX = 3;
-        private double ballSpeedY = 3;
-        private Timer timer;
+        private int ballSpeedX = 3;
+        private int ballSpeedY = 3;
         private int paddleSpeed = 10; // Speed of paddle movement
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
@@ -187,6 +193,8 @@ public class RunningMode extends JFrame{
             Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
             paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
             ballPosition = new Point(screenSize.width/2, screenSize.height-70);
+            fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
+
 
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
@@ -248,12 +256,13 @@ public class RunningMode extends JFrame{
 
             private void moveBall() {
 
-                ballPosition.x += ballSpeedX;
-                ballPosition.y += ballSpeedY;
-                if (ballPosition.x < 0 || ballPosition.x > getWidth()) {
+                fireBall.setX(ballSpeedX+fireBall.getX());
+                fireBall.setY(ballSpeedY+fireBall.getY());
+
+                if (fireBall.getX() < 0 || fireBall.getX() > getWidth()) {
                     ballSpeedX = -ballSpeedX;
                 }
-                if (ballPosition.y < 0) {
+                if (fireBall.getY() < 0) {
                     ballSpeedY = -ballSpeedY;
                 }
                 if (ballSpeedX == 0 && ballSpeedY == 0) {
@@ -272,15 +281,16 @@ public class RunningMode extends JFrame{
                 double rotationAngle = Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
 
                 // Check collision with the paddle
-                if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle) && rotationAngle == 0) {
+                if (fireBall.getBounds().intersects(paddle) && rotationAngle == 0) {
                     ballSpeedY = -ballSpeedY;
                     // ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
+                    fireBall.setY(paddle.y-1);
                     ballPosition.y = paddle.y -1 ; // Adjust ball position to avoid sticking
                 }
                 else if (new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(paddle)){
 
                     // Calculate the angle between the center of the paddle and the ball
-                    double angle = Math.atan2(ballPosition.getY() - rotatedPaddle.getBounds2D().getCenterY(), ballPosition.getX() - rotatedPaddle.getBounds2D().getCenterX());
+                    double angle = Math.atan2(fireBall.getY() - rotatedPaddle.getBounds2D().getCenterY(), fireBall.getX() - rotatedPaddle.getBounds2D().getCenterX());
 
                     // Reflect the ball's velocity vector across the normal of the paddle
                     double incomingAngle = Math.atan2(ballSpeedY, ballSpeedX);
@@ -308,6 +318,7 @@ public class RunningMode extends JFrame{
 
                     }
                     // Adjust ball position to avoid sticking
+                    fireBall.setY((int) (rotatedPaddle.getBounds2D().getMinY() - 1));
                     ballPosition.y = (int) (rotatedPaddle.getBounds2D().getMinY() - 1);
                     
                 }   
@@ -329,6 +340,7 @@ public class RunningMode extends JFrame{
 
             // Collision with barriers
             Rectangle ballRect = new Rectangle(ballPosition.x, ballPosition.y, 1, 1);
+            ballRect = fireBall.getBounds(); 
 
             // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
             Iterator<MapPanel.ColoredBlock> it = blocks.iterator();
@@ -389,6 +401,7 @@ public class RunningMode extends JFrame{
                
                     //ALT VX
                     Rectangle intersection = ballRect.intersection(block.rectangle);
+                    intersection = fireBall.getBounds().intersection(block.rectangle);
                     if (intersection.width < intersection.height) {
                         ballSpeedX = -ballSpeedX;
                         LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX));
@@ -468,10 +481,11 @@ public class RunningMode extends JFrame{
                 g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 g.setColor(Color.BLACK);
                 
+                fireBall.draw(g);
                 
                 // Burayı yunus editledi
                 //g.setColor(Color.RED);
-                g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
+                //g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
 
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
 

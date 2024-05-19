@@ -1,12 +1,44 @@
 package gameComponents;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class FireBall {
     private boolean overwhelmingActivated;
     private long overwhelmingStartTime;
+    private int x,y, xPosition,yPosition;
+    private final int SIZE = 16;
+    private Image image;
 
-    public FireBall(){
+    public FireBall(int x,int y){
         this.overwhelmingActivated = false;
         this.overwhelmingStartTime = 0;
+        this.x = x;
+        this.x = y;
+        this.xPosition = 1;
+        this.yPosition = 1;
+        loadImage();
+    }
+
+    private void loadImage() {
+        try {
+            image = ImageIO.read(getClass().getResource("/assets/images/200Fireball.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void draw(Graphics g) {
+        if (image != null) {
+            g.drawImage(image, x, y, SIZE, SIZE, null);
+        }
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, SIZE, SIZE);
     }
 
     public void activateOverwhelming(){
@@ -28,7 +60,26 @@ public class FireBall {
     public void deactivateOverwhelmed(){
         overwhelmingActivated = false;
     }
-    
+
+    public void setY(int num) {
+        y = num;
+    }
+
+    public void setX(int num) {
+        x = num;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+
+}
+  /*   
     private void moveBall() {
 
         ballPosition.x += ballSpeedX;
@@ -233,3 +284,4 @@ public class FireBall {
 }
 
 }
+ */
