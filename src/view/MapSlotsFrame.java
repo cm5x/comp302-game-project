@@ -1,6 +1,9 @@
 package view;
 
 import javax.swing.*;
+
+import gameComponents.Player;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +24,7 @@ public class MapSlotsFrame extends JFrame {
     private JButton mapSlot4;
     private JButton mapSlot5;
     private ArrayList<int[]> mapArrayList;
+    Player p = new Player("uname", "pass");
 
     public MapSlotsFrame(ArrayList<int[]> mapArrayList) {
         
@@ -266,7 +270,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot1 = new JButton("Map 1");
             mapSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    RunningMode run = new RunningMode(1);
+                    RunningMode run = new RunningMode(1,p);
                     run.setVisible(true);
                 }
             });
@@ -285,7 +289,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot2 = new JButton("Map 2");
             mapSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    RunningMode run = new RunningMode(2);
+                    RunningMode run = new RunningMode(2,p);
                     run.setVisible(true);
                 }
             });
@@ -304,7 +308,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot3 = new JButton("Map 3");
             mapSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    RunningMode run = new RunningMode(3);
+                    RunningMode run = new RunningMode(3,p);
                     run.setVisible(true);
                 }
             });
@@ -323,7 +327,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot4 = new JButton("Map 4");
             mapSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    RunningMode run = new RunningMode(4);
+                    RunningMode run = new RunningMode(4,p);
                     run.setVisible(true);
                 }
             });
@@ -342,7 +346,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot5 = new JButton("Map 5");
             mapSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    RunningMode run = new RunningMode(5);
+                    RunningMode run = new RunningMode(5,p);
                     run.setVisible(true);
                 }
             });
