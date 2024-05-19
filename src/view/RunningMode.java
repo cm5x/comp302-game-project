@@ -366,16 +366,25 @@ public class RunningMode extends JFrame{
                 //     JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.ERROR_MESSAGE);
                 // }
 
+                if (fireBall.getBounds().intersects(staff.getBounds())){
+                    ballSpeedY = -ballSpeedY;
+                    if (staff.getRotationAngle() > 0){
+                        ballSpeedX = -ballSpeedX;
+                    }
+                    ballPosition.y = (int) staff.getYPos()/2-1;
+                }
+
+
                 // getting the rotated paddle and its rotation angle
-                AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(staff.getRotationAngle()),staff.getXPos()+staff.getLength()/2,staff.getYPos()-staff.getThickness()/2);
+/*                 AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(staff.getRotationAngle()),staff.getXPos()+staff.getLength()/2,staff.getYPos()-staff.getThickness()/2);
                 Shape rotatedPaddle = rotation.createTransformedShape(staff.getBounds());            
                 double rotationAngle = staff.getRotationAngle(); //Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
 
                 // Check collision with the paddle
                 if (fireBall.getBounds().intersects(staff.getBounds()) && rotationAngle == 0) {
                     ballSpeedY = -ballSpeedY;
-                    // ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
-                    fireBall.setY(paddle.y-1);
+                    //ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
+                    fireBall.setY((int) staff.getYPos()-1);
                     ballPosition.y = (int) staff.getYPos()/2 -1 ; // Adjust ball position to avoid sticking
                 }
                 else if (fireBall.getBounds().intersects(staff.getBounds())){//new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(staff.getBounds())){
@@ -412,7 +421,7 @@ public class RunningMode extends JFrame{
                     fireBall.setY((int) (staff.getYPos() - 1));
                     ballPosition.y = (int) (staff.getYPos() - 1);
                     
-                }   
+                }    */
                 
                
             // // Check collision with barriers
@@ -688,7 +697,7 @@ public class RunningMode extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     paddleAngle += 5; // Increment angle by 5 degrees
-                    staff.setRotationAngle(staff.getRotationAngle()+0.0872665);
+                    staff.setRotationAngle(staff.getRotationAngle()+0.0872665);              
                     repaint();
                 }
             });
