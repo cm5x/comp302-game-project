@@ -1,20 +1,27 @@
 package spells;
-import spells.Spell;
-import gameComponents.MagicalStaff;
 
-public class MagicalStaffExpansion implements Spell {
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import view.RunningMode;
 
-    // Instantiate
-    public MagicalStaffExpansion(){
+public class MagicalStaffExpansion extends Spell {
 
+    public MagicalStaffExpansion(RunningMode runningMode) {
+        super("Magical Staff Expansion", new ImageIcon("path/to/icon.png"), runningMode);
     }
 
-    public void activate(){
-        
+    @Override
+    protected void performAction() {
+        runningMode.expandPaddle();
     }
 
-    public void deactivate(){
-
+    @Override
+    protected void undoAction() {
+        runningMode.resetPaddle();
     }
 
+    @Override
+    protected int getDuration() {
+        return 30; // 30 seconds
+    }
 }

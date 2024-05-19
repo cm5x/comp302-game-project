@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import spells.MagicalStaffExpansion;
+
 // import org.w3c.dom.events.MouseEvent;
 // import java.util.Timer;
 import javax.swing.*;
@@ -80,6 +82,7 @@ public class RunningMode extends JFrame{
     Image stff = new ImageIcon(stpath).getImage();
 
     ArrayList<Barrier> bArrayList = new ArrayList<>();
+    private MagicalStaffExpansion magicalStaffExpansion;
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
@@ -153,6 +156,10 @@ public class RunningMode extends JFrame{
         add(blockChooserPanel, BorderLayout.WEST);
         //add(mapPanel,BorderLayout.EAST);
         this.setVisible(true);
+        
+        // Initialize the MagicalStaffExpansion spell
+        magicalStaffExpansion = new MagicalStaffExpansion(this);
+
     }    
     
     class MapPanel extends JPanel implements KeyListener {
@@ -178,7 +185,8 @@ public class RunningMode extends JFrame{
         private int paddleSpeed = 10; // Speed of paddle movement
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
-
+        private boolean isMagicalStaffActive = false;
+        private int originalPaddleWidth;
 
 
 
@@ -194,6 +202,7 @@ public class RunningMode extends JFrame{
             paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
             ballPosition = new Point(screenSize.width/2, screenSize.height-70);
             fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
+            originalPaddleWidth = paddle.width;
 
 
             // timer = new Timer(10, e -> updateGame());
@@ -562,6 +571,7 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
             im.put(KeyStroke.getKeyStroke("released LEFT"), "stopMoving");
             im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
+            im.put(KeyStroke.getKeyStroke("T"), "activateMagicalStaff");
 
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
@@ -604,6 +614,13 @@ public class RunningMode extends JFrame{
                     repaint();
                 }
             });
+            am.put("activateMagicalStaff", new AbstractAction() {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                  magicalStaffExpansion.activate();
+    }
+});
+
         }
 
 
@@ -665,8 +682,14 @@ public class RunningMode extends JFrame{
         }
     }
 
-    
-
+    public void expandPaddle() {
+        mapPanel.paddle.width *= 2;
+        mapPanel.repaint();
+    }
+    public void resetPaddle() {
+        mapPanel.paddle.width = mapPanel.originalPaddleWidth;
+        mapPanel.repaint();
+    }
 
 
     public static void main(String args[]){
