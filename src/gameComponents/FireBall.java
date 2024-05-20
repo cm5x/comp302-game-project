@@ -3,6 +3,7 @@ package gameComponents;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -25,7 +26,8 @@ public class FireBall {
 
     private void loadImage() {
         try {
-            image = ImageIO.read(getClass().getResource("/assets/images/200Fireball.png"));
+            //image = ImageIO.read(getClass().getResource("/assets/images/200Fireball.png"));
+            image = ImageIO.read(new FileInputStream("assets/images/200Fireball.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

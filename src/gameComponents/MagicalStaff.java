@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -89,7 +90,9 @@ public class MagicalStaff implements KeyListener {
 
     private void loadImage() {
         try {
-            image = ImageIO.read(getClass().getResource("/assets/images/200Player.png"));
+            //image = ImageIO.read(getClass().getResource("/assets/images/200Player.png"));
+            image = ImageIO.read(new FileInputStream("assets/images/200Player.png"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }

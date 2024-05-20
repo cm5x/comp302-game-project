@@ -664,7 +664,7 @@ public class RunningMode extends JFrame{
             Rectangle rectangle;
             String color;
 
-            ColoredBlock(Rectangle rectangle, String color) {
+            public ColoredBlock(Rectangle rectangle, String color) {
                 this.rectangle = rectangle;
                 this.color = color;
             }
@@ -842,9 +842,6 @@ public class RunningMode extends JFrame{
             }
         }
     }
-
-    
-
 
 
     public static void main(String args[]){

@@ -2,6 +2,7 @@ package gameComponents;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,9 +30,18 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
 
         // Change appereance of barrier
         try {
-            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/Firm.png");
+            // InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/Firm.png");
+            // if (inputStream != null) {
+            //     //barrierImage = ImageIO.read(inputStream);
+            //     barrierImage = ImageIO.read(new FileInputStream("assets/GameResources/Firm.png"));
+            //     inputStream.close();
+            // } else {
+            //     throw new IOException("Resource not found.");
+            // }
+            InputStream inputStream = new FileInputStream("assets/GameResources/Firm.png");
             if (inputStream != null) {
-                barrierImage = ImageIO.read(inputStream);
+                //barrierImage = ImageIO.read(inputStream);
+                barrierImage = ImageIO.read(new FileInputStream("assets/GameResources/Firm.png"));
                 inputStream.close();
             } else {
                 throw new IOException("Resource not found.");

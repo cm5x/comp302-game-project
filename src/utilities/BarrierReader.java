@@ -59,7 +59,8 @@ public class BarrierReader {
             // Create barrier instances to add to the barrier class
             switch (id) { 
                 case 1:
-                    SimpleBarrier bar1 = new SimpleBarrier(86, x, y);
+                    //SimpleBarrier bar1 = new SimpleBarrier(86, x, y);
+                    SimpleBarrier bar1 = new SimpleBarrier(x, y);
                     simpleBarriers.add(bar1);
                     break;
                 case 2:
