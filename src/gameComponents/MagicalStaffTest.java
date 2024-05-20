@@ -76,22 +76,22 @@ public class MagicalStaffTest {
     // Glass-Box 
     @Test
     public void testUpdateRotationInternalLogic() {
-        // Test rotating left
+        // Test left
         staff.rotateLeft = true;
         staff.updateRotation();
         double expectedAngleLeft = -staff.rotationRate * 0.02;
         assertEquals(expectedAngleLeft, staff.getRotationAngle(), 0.01);
 
-        // Reset angle
+
         staff.setRotationAngle(0);
 
-        // Test rotating right
+        // Test right
         staff.rotateRight = true;
         staff.updateRotation();
         double expectedAngleRight = staff.rotationRate * 0.02;
         assertEquals(expectedAngleRight, staff.getRotationAngle(), 0.01);
 
-        // Test no rotation when both flags are false
+     
         staff.rotateLeft = false;
         staff.rotateRight = false;
         double initialAngle = staff.getRotationAngle();
