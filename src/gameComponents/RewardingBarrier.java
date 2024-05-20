@@ -17,12 +17,14 @@ public class RewardingBarrier extends JComponent implements Barrier {
     private String imgpath = "assets/images/200icongreengem.png";
     private int x1Coordinate;
     private int y1Coordinate;
+    private int health;
 
     public RewardingBarrier(int startX, int startY) {
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 20, startY, startY + 20}; // Assuming fixed size for rewarding barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+        this.health = 1;
         // Change appereance of barrier
         try {
             InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/GreenGem.png");
@@ -49,16 +51,17 @@ public class RewardingBarrier extends JComponent implements Barrier {
     
     @Override
     public int getHealth() {
-        return 1; // Rewarding barriers are destroyed immediately upon hitting
+        return health; // Rewarding barriers are destroyed immediately upon hitting
     }
 
     @Override
     public boolean isDestroyed() {
-        return destroyed;
+        return health<=0;
     }
 
     @Override
     public void hit(int hitDamage) {
+        this.health = health - hitDamage;
         if (!destroyed) {
             destroyed = true;
         }
