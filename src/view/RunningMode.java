@@ -542,7 +542,21 @@ public class RunningMode extends JFrame{
                         ballSpeedY = -ballSpeedY;
                         LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
                     }
-                    it.remove();
+                    int xcoor = block.rectangle.x;
+                    int ycoor = block.rectangle.y;
+                    for (Barrier barr : bArrayList){
+                        if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
+                            barr.hit(1);
+                        
+
+                            if (barr.isDestroyed()){
+                                it.remove();
+                                bArrayList.remove(barr);
+                            }
+                        }
+
+                    }
+                    //it.remove();
                     LOGGER.log(Level.INFO, MessageFormat.format("Barrier removed at: ({0}, {1})", block.rectangle.x, block.rectangle.y));
                     
                     break; // Assuming only one collision can occur per frame
