@@ -157,7 +157,7 @@ public class MagicalStaff implements KeyListener {
         updateRotation();
     }
 
-    // Getter for the current x position of the staff
+
     public double getXPos() {
         return xPos;
     }
