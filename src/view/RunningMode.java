@@ -62,6 +62,7 @@ import spells.MagicalStaffExpansion;
 import spells.Hex;
 import spells.FelixFelicis;
 import spells.OverwhelmingFireBall;
+import spells.Hex.Projectile;
 
 public class RunningMode extends JFrame{
 
@@ -102,6 +103,14 @@ public class RunningMode extends JFrame{
     private Timer timer;
     private MagicalStaff staff;
 
+    public MagicalStaff getStaff() {
+        return staff;
+    }
+    
+    public MapPanel getMapPanel() {
+        return mapPanel;
+    }
+
     public RunningMode(int selectedMap, Player player) {
         setTitle("Running Mode");
         setSize(1920,1080);
@@ -130,6 +139,10 @@ public class RunningMode extends JFrame{
         this.chancePanel.setBackground(Color.GRAY);
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(null);
+
+        //TODO: Initialize the spells
+        this.magicalStaffExpansion = new MagicalStaffExpansion(this);
+        this.hexSpell = new Hex(this);
 
         this.mapPanel = new MapPanel(this);
         this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));  // Add a black line border
@@ -249,15 +262,14 @@ public class RunningMode extends JFrame{
         add(blockChooserPanel, BorderLayout.WEST);
 
         
-        
         //add(mapPanel,BorderLayout.EAST);
         this.setVisible(true);
-        //TODO: Initialize the spells
-        magicalStaffExpansion = new MagicalStaffExpansion(this);
-        hexSpell = new Hex(this);
-    }    
+
+    }
     
-    class MapPanel extends JPanel implements KeyListener {
+    
+    
+    public class MapPanel extends JPanel implements KeyListener {
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
 
@@ -282,11 +294,15 @@ public class RunningMode extends JFrame{
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
-        private boolean hexCanonsActive = false;
-        private Point leftCanon;
-        private Point rightCanon;
-        private List<Projectile> projectiles = new ArrayList<>();
+
         
+        public int getOriginalPaddleWidth(){
+            return originalPaddleWidth;
+        }
+
+        public ArrayList<ColoredBlock> getBlocks(){
+            return blocks;
+        }
 
         public MapPanel(RunningMode frame) {
             this.frame = frame;
@@ -533,9 +549,10 @@ public class RunningMode extends JFrame{
                     break; // Assuming only one collision can occur per frame
                 }
         }
+            if(hexSpell.hexCanonsActive){
+                hexSpell.moveProjectiles();
+            }
             
-            moveProjectiles();
-
             repaint();
         }
 
@@ -627,15 +644,15 @@ public class RunningMode extends JFrame{
             // Clean up
 
             //hex related
-            if (hexCanonsActive) {
+            if (hexSpell.hexCanonsActive) {
                 g2d.setColor(Color.MAGENTA);
-                g2d.fillRect(leftCanon.x - 5, leftCanon.y - 20, 10, 20); // Depend these two paddle locations
-                g2d.fillRect(rightCanon.x - 5, rightCanon.y - 20, 10, 20);
+                g2d.fillRect(hexSpell.leftCanon.x - 5, hexSpell.leftCanon.y - 20, 10, 20); // Depend these two paddle locations
+                g2d.fillRect(hexSpell.rightCanon.x - 5, hexSpell.rightCanon.y - 20, 10, 20);
             }
 
-            for (Projectile projectile : projectiles) {
+            for (Projectile projectile : hexSpell.projectiles) {
                 g.setColor(Color.MAGENTA);
-                g.fillRect(projectile.x, projectile.y, 5, 10);
+                g.fillRect((int) projectile.x, (int) projectile.y, 5, 10);
             }
 
 
@@ -643,13 +660,16 @@ public class RunningMode extends JFrame{
                     
         }
 
-        private class ColoredBlock implements Serializable {
+        public class ColoredBlock implements Serializable {
             Rectangle rectangle;
             String color;
-    
+
             ColoredBlock(Rectangle rectangle, String color) {
                 this.rectangle = rectangle;
                 this.color = color;
+            }
+            public Rectangle getRectangle(){
+                return rectangle;
             }
         }
 
@@ -690,8 +710,8 @@ public class RunningMode extends JFrame{
                 staff.setXPos(newPaddleX);
 
                 //hex related
-                if (hexCanonsActive){
-                    updateCanonPositions();
+                if (hexSpell.hexCanonsActive){
+                    hexSpell.updateCanonPositions();
                     //fireHexes();
     
                 }
@@ -766,78 +786,6 @@ public class RunningMode extends JFrame{
              });
         }
 
-
-        public void activateHexCanons() {
-            hexCanonsActive = true;
-            updateCanonPositions();
-            fireHexes();
-            repaint();
-        }
-
-        public void deactivateHexCanons() {
-            hexCanonsActive = false;
-            repaint();
-        }
-
-        private void updateCanonPositions() {
-            double angleRadians = Math.toRadians(staff.getRotationAngle());
-
-            leftCanon = new Point(
-                (int) (staff.getXPos() - 10 * Math.cos(angleRadians)),
-                (int) (staff.getYPos() - 10 * Math.sin(angleRadians))
-            );
-
-            rightCanon = new Point(
-                (int) (staff.getXPos() + staff.getLength() + 10 * Math.cos(angleRadians)),
-                (int) (staff.getYPos() - 10 * Math.sin(angleRadians))
-            );
-        }
-
-        private void fireHexes() {
-            if (hexCanonsActive) {
-                fireHex(leftCanon);
-                fireHex(rightCanon);
-            }
-        }
-
-        private void fireHex(Point canonPosition) {
-            projectiles.add(new Projectile(canonPosition.x, canonPosition.y, -5, 5));
-        }
-
-        private void moveProjectiles() {
-            Iterator<Projectile> it = projectiles.iterator();
-            while (it.hasNext()) {
-                Projectile projectile = it.next();
-                projectile.y -= projectile.speedY;
-                if (projectile.y < 0) {
-                    it.remove();
-                    continue;
-                }
-
-                Rectangle projectileRect = new Rectangle(projectile.x, projectile.y, 5, 10);
-                Iterator<MapPanel.ColoredBlock> blockIt = blocks.iterator();
-                while (blockIt.hasNext()) {
-                    MapPanel.ColoredBlock block = blockIt.next();
-                    if (projectileRect.intersects(block.rectangle)) {
-                        blockIt.remove();
-                        it.remove();
-                        break;
-                    }
-                }
-            }
-        }
-
-        private class Projectile {
-            int x, y;
-            int speedY;
-
-            Projectile(int x, int y, int speedX, int speedY) {
-                this.x = x;
-                this.y = y;
-                this.speedY = speedY;
-            }
-        }
-
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -861,23 +809,6 @@ public class RunningMode extends JFrame{
             // This method can be left empty if not used
         }
 
-    }
-
-    public void expandPaddle() {
-        // mapPanel.staff.width *= 2;
-        staff.setLength(staff.getLength()*2);
-        mapPanel.repaint();
-    }
-    public void resetPaddle() {
-        staff.setLength(mapPanel.originalPaddleWidth);
-        mapPanel.repaint();
-    }
-
-    public void activateHexCanons() {
-        mapPanel.activateHexCanons();
-    }
-    public void deactivateHexCanons() {
-        mapPanel.deactivateHexCanons();
     }
 
 // Load map and save map for the game
