@@ -11,7 +11,13 @@ import javax.imageio.ImageIO;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-
+/**
+     * Constructor of MagicalStaff object.
+     * @param screenSize the dimensions of the screen
+     * @requires a valid screensize which is not equals to zero.
+     * @modifies this
+     * @effects Initializes the MagicalStaff with parameters also loads the image.
+     */
 public class MagicalStaff implements KeyListener {
     private int length;
     private int thickness;
@@ -78,7 +84,13 @@ public class MagicalStaff implements KeyListener {
             xPos += movementSpeed; // Move right
         }
     }
-
+    /**
+     * Update the rotation of the staff with user key input.
+     * @requires none
+     * @modifies modifies this.rotationAngle
+     * @effects Rotates the staff left or right with settled rotationRate if the corresponding flags are set,
+     * ensuring the rotation angle does not exceed the ROTATION_LIMIT.
+     */
     public void updateRotation() {
         if (rotateLeft && rotationAngle > -ROTATION_LIMIT) {
             rotationAngle -= rotationRate * 0.02;
