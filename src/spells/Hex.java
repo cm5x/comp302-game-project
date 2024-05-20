@@ -77,7 +77,14 @@ public class Hex extends Spell {
             (int) (runningMode.getStaff().getYPos() - 10 * Math.sin(angleRadians))
         );
     }
-
+/**
+ * Requires: projectiles is not null and contains only non-null Projectile objects.
+ * Modifies: this.projectiles, runningMode.getMapPanel().getBlocks()
+ * Effects: Moves each projectile in projectiles upwards by its speedY.
+ *          Removes any projectile that moves off the screen (y < 0).
+ *          Removes any projectile that intersects with a block in runningMode.getMapPanel().getBlocks().
+ *          Removes any block that is hit by a projectile.
+ */
     public void moveProjectiles() {
         Iterator<Projectile> it = projectiles.iterator();
         while (it.hasNext()) {
