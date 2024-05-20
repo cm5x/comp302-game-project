@@ -695,6 +695,51 @@ public class RunningMode extends JFrame{
             }
         }
 
+        private void checkGameOver() {
+            if (fireBall.getY() > staff.getYPos() + staff.getThickness() + 100) {
+                timer.stop();
+                showGameOverFrame();
+            }
+
+            if (blocks.isEmpty()) {
+                timer.stop();
+                showGameOverFrame();
+            }
+        }
+
+        private void showGameOverFrame() {
+            JFrame gameOverFrame = new JFrame("Game Over");
+            gameOverFrame.setSize(300, 150);
+            gameOverFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            gameOverFrame.setLocationRelativeTo(null);
+    
+            JLabel messageLabel = new JLabel("Game Over! The ball went below the paddle.", SwingConstants.CENTER);
+            JButton okButton = new JButton("OK");
+    
+            okButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameOverFrame.dispose();
+                }
+            });
+    
+            JPanel panel = new JPanel();
+            panel.setLayout(new BorderLayout());
+            panel.add(messageLabel, BorderLayout.CENTER);
+            panel.add(okButton, BorderLayout.SOUTH);
+    
+            gameOverFrame.add(panel);
+            gameOverFrame.setVisible(true);
+        }
+        
+
+        private void removeAllBarriers() {
+            blocks.clear();
+            bArrayList.clear();
+            repaint();
+            //checkRemainingBarriers(); // Immediately check if there are any barriers left
+        }
+
         // @Override
         // public void paintComponent(Graphics g) {
         //     super.paintComponent(g);
@@ -754,6 +799,8 @@ public class RunningMode extends JFrame{
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
             im.put(KeyStroke.getKeyStroke("DOWN"), "rotateCounterClockwise");
+            // Secret key combination to remove all barriers
+            im.put(KeyStroke.getKeyStroke("control shift D"), "removeAllBarriers");
                 
             am.put("moveLeft", new AbstractAction() {
                 @Override
@@ -806,6 +853,13 @@ public class RunningMode extends JFrame{
                      hexSpell.activate();
                  }
              });
+             // Action for removing all barriers
+            am.put("removeAllBarriers", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    removeAllBarriers();
+                }
+            });
         }
 
         @Override
