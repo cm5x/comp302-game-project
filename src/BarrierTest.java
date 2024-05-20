@@ -75,7 +75,7 @@ public class BarrierTest {
 
     
     public boolean repOK(){
-        //repok for simpleBarrier
+        //repok for simpleBarrier (same for other barriers)
         if (barrier.getHealth() < 0){
             return false;
         }
@@ -94,9 +94,8 @@ public class BarrierTest {
         
 
        
-
         
-
+        
 
         return true;
     }
