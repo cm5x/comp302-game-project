@@ -551,6 +551,7 @@ public class RunningMode extends JFrame{
                     }
                     int xcoor = block.rectangle.x;
                     int ycoor = block.rectangle.y;
+
                     for (Barrier barr : bArrayList){
                         if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
                             barr.hit(1);
@@ -564,6 +565,7 @@ public class RunningMode extends JFrame{
                         }
 
                     }
+                    
                     //it.remove();
                     LOGGER.log(Level.INFO, MessageFormat.format("Barrier removed at: ({0}, {1})", block.rectangle.x, block.rectangle.y));
                     
