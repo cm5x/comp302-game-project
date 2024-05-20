@@ -19,6 +19,8 @@ public interface Barrier {
     public void paintComponent(Graphics g);
     public int getXCoordinate();
     public int getYCoordinate();
+    public void freeze();
+    public void unfreeze(); 
 
    
 }

@@ -11,7 +11,6 @@ import java.awt.*;
 
 public class SimpleBarrier extends JComponent implements Barrier {
 
-    private int length;
     private int health;
     private int x1Coordinate;
     private int y1Coordinate;
@@ -140,6 +139,16 @@ public class SimpleBarrier extends JComponent implements Barrier {
     public JPanel getJPanel(){
         BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
         return panel;
+    }
+
+    @Override
+    public void freeze() {
+        // add infinite void
+    }
+
+    @Override
+    public void unfreeze() {
+        // add  infinite void
     }
 
     

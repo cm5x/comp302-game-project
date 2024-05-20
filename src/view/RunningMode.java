@@ -48,6 +48,7 @@ import gameComponents.Player;
 import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
+import gameComponents.Ymir;   
 import utilities.BarrierReader;
 
 import java.util.logging.Logger;
@@ -67,11 +68,11 @@ import spells.Hex.Projectile;
 public class RunningMode extends JFrame{
 
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
-    private final MapPanel mapPanel;
+    public final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
-    private int selectedMap;
+    public int selectedMap;
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
@@ -79,6 +80,7 @@ public class RunningMode extends JFrame{
     String imgpath2 = "assets/images/200iconfirm.png";
     String imgpath3 = "assets/images/200iconredgem.png";
     String imgpath4 = "assets/images/200icongreengem.png";
+    String imgpath5 = "assets/images/200iconHollowPurple.png";   //HollowPurpleBarrier image added
     String backgroundpath = "assets/images/200background.png";
     String stpath = "assets/images/200player.png";
     String chancePath = "assets/images/200Heart.png";
@@ -87,6 +89,7 @@ public class RunningMode extends JFrame{
     Image img2 = new ImageIcon(imgpath2).getImage();
     Image img3 = new ImageIcon(imgpath3).getImage();
     Image img4 = new ImageIcon(imgpath4).getImage();
+    Image img5 = new ImageIcon(imgpath5).getImage();
     Image backimg = new ImageIcon(backgroundpath).getImage();
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
@@ -102,6 +105,9 @@ public class RunningMode extends JFrame{
     private int chances;
     private Timer timer;
     private MagicalStaff staff;
+    
+    private Ymir ymir; //Ymir object to be used in the game
+
 
     public MagicalStaff getStaff() {
         return staff;
@@ -117,6 +123,8 @@ public class RunningMode extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.selectedMap = selectedMap;
         chances = player.getChances();
+
+        this.ymir = new Ymir(this, bArrayList, fireBall);
 
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
@@ -660,6 +668,7 @@ public class RunningMode extends JFrame{
                     
         }
 
+
         public class ColoredBlock implements Serializable {
             Rectangle rectangle;
             String color;
@@ -843,14 +852,16 @@ public class RunningMode extends JFrame{
         }
     }
 
-    
 
-
+    public void startGame() {
+        ymir.startCoinFlipping();
+    }
 
     public static void main(String args[]){
         Player p = new Player("uname", "pass");
         RunningMode run = new RunningMode(1,p);
         run.setVisible(true);
+        run.startGame();  //Flip-coin started
     }
 
 }

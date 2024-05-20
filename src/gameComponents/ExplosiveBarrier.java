@@ -125,4 +125,14 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     public int getYCoordinate() {
         return y1Coordinate;
     }
+
+    @Override
+    public void freeze() {
+        // add infinite void
+    }
+
+    @Override
+    public void unfreeze() {
+        // add infinite void
+    }
 }
