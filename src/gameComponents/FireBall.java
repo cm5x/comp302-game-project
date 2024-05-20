@@ -50,6 +50,10 @@ public class FireBall {
         return overwhelmingActivated;
     }
 
+    // @ requires: The duration parameter must be a non-negative integer representing the duration in seconds.
+    // @ modifies: Does not modify any class fields. 
+    // @ effects: Returns true if the overwhelming effect is still active, if not, returns false.
+
     public boolean isOverwhelmendDurationElapsed(int duration){
         if (!overwhelmingActivated) return true;
         long currentTime = System.currentTimeMillis();
