@@ -59,7 +59,7 @@ public abstract class Spell {
         undoAction();
     }
 
-    protected abstract void performAction();
+    public abstract void performAction();
     protected abstract void undoAction();
     protected abstract int getDuration();
 

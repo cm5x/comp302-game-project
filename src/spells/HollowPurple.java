@@ -11,8 +11,8 @@ import view.RunningMode.MapPanel;
 
 public class HollowPurple extends Spell {
 
-    private HollowPurpleBarrier[] newbarriers;
-    private static final int NUM_BARRIERS = 8;
+    HollowPurpleBarrier[] newbarriers;
+    static final int NUM_BARRIERS = 8;
 
     public HollowPurple(String name, RunningMode runningMode) {
         super(name, new ImageIcon("path/to/icon.png"), runningMode);  //add path to icon
@@ -20,7 +20,7 @@ public class HollowPurple extends Spell {
     }
 
     @Override
-    protected void performAction() {
+    public void performAction() {
         Random rand = new Random();
 
         for (int i = 0; i < NUM_BARRIERS; i++) {

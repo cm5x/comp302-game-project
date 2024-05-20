@@ -13,7 +13,7 @@ public class DoubleAccel extends Spell{
     }
 
     @Override
-    protected void performAction() {
+    public void performAction() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'performAction'");
     }

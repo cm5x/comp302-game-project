@@ -131,7 +131,7 @@ public class MapDesigner extends JFrame {
 }
 
 
-class MapPanel extends JPanel {
+public class MapPanel extends JPanel {
     private ArrayList<ColoredBlock> blocks;
     private String selectedColor = "red";  // Default color
     private static final int BLOCK_WIDTH = 200; // Width of the block
@@ -193,6 +193,16 @@ class MapPanel extends JPanel {
         this.selectedColor = color;
     }
 
+    public int getHollowPurpleBlockCount() {
+        int count = 0;
+        for (ColoredBlock block : blocks) {
+            if (block.color.equals("hollowpurple")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public ArrayList<MapPanel.ColoredBlock> getBarriers(){
 
         return this.blocks;
@@ -241,7 +251,7 @@ class MapPanel extends JPanel {
 
     public static class ColoredBlock implements Serializable {
         Rectangle rectangle;
-        String color;
+        public String color;
 
         ColoredBlock(Rectangle rectangle, String color) {
             this.rectangle = rectangle;

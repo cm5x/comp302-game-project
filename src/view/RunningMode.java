@@ -280,7 +280,7 @@ public class RunningMode extends JFrame{
     
     public class MapPanel extends JPanel implements KeyListener {
         // Initialize Magic staff 
-        private ArrayList<ColoredBlock> blocks;
+        public ArrayList<ColoredBlock> blocks;
 
         //previous version
         //private ArrayList<int[]> barrierList;    
@@ -377,6 +377,12 @@ public class RunningMode extends JFrame{
                         bArrayList.add(rewbar);
                         break;
 
+                    case 5:
+                        addBlock(i[0], i[1],"hollowpurple");
+                        HollowPurpleBarrier hpbar = new HollowPurpleBarrier(i[0], i[1]);
+                        bArrayList.add(hpbar);
+                        break;
+                        
                     default:
                         break;
                 }

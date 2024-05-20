@@ -32,7 +32,7 @@ public class Ymir {
         this.fireball = fireball;
 
         abilities = new ArrayList<>();
-        abilities.add(new InfiniteVoid("InfiniteVoid", runningMode));
+        //abilities.add(new InfiniteVoid("InfiniteVoid", runningMode));
         //abilities.add(new DoubleAccel(null, runningMode, fireball));
         abilities.add(new HollowPurple("HollowPurple", runningMode));
 
@@ -52,7 +52,7 @@ public class Ymir {
                 if (random.nextDouble() < COIN_FLIP_PROBABILITY) {
                     showCoinFlipResult(true);
                     Spell ability = chooseAbility();
-                    ability.activate();
+                    ability.performAction();
                     updateLastTwoAbilities(ability);
                 } else {
                     showCoinFlipResult(false);

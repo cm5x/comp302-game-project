@@ -19,7 +19,7 @@ public class InfiniteVoid extends Spell{
     }
 
     @Override
-    protected void performAction() {
+    public void performAction() {
         // TODO Auto-generated method stub
     }
 
