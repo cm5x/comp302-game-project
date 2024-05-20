@@ -565,7 +565,7 @@ public class RunningMode extends JFrame{
                         }
 
                     }
-                    
+
                     //it.remove();
                     LOGGER.log(Level.INFO, MessageFormat.format("Barrier removed at: ({0}, {1})", block.rectangle.x, block.rectangle.y));
                     
