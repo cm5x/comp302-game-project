@@ -81,7 +81,7 @@ public class RunningMode extends JFrame{
     String imgpath2 = "assets/images/200iconfirm.png";
     String imgpath3 = "assets/images/200iconredgem.png";
     String imgpath4 = "assets/images/200icongreengem.png";
-    String imgpath5 = "assets/images/200iconHollowPurple.png";   //HollowPurpleBarrier image added
+    String imgpath5 = "assets/images/iconHollowPurple.png";   //HollowPurpleBarrier image added
     String backgroundpath = "assets/images/200background.png";
     String stpath = "assets/images/200player.png";
     String chancePath = "assets/images/200Heart.png";

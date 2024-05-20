@@ -32,7 +32,16 @@ public class HollowPurple extends Spell {
             
             HollowPurpleBarrier barrier = new HollowPurpleBarrier(x, y);
             newbarriers[i] = barrier;
-            runningMode.mapPanel.addBlock(x, y, "hollowpurple"); // Add the block to the map
+            boolean isplaced = false;
+            while (!isplaced){
+
+                isplaced = runningMode.mapPanel.addBlock(x, y, "hollowpurple"); // Add the block to the map
+
+                x = rand.nextInt(runningMode.mapPanel.getWidth());
+                y = rand.nextInt(runningMode.mapPanel.getHeight());
+               
+            }
+           
         }
     }
 
