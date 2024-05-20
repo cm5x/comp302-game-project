@@ -23,12 +23,12 @@ public class Ymir {
     private Random random;
     private Timer timer;
     private RunningMode runningMode;
-    private List<Barrier> barriers;
+    private ArrayList<Barrier> barriers;
     private FireBall fireball;
 
     public Ymir(RunningMode runningMode, List<Barrier> barriers, FireBall fireball) {
         this.runningMode = runningMode;
-        this.barriers = barriers;
+        this.barriers = runningMode.bArrayList;
         this.fireball = fireball;
 
         abilities = new ArrayList<>();

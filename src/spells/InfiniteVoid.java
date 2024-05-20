@@ -25,7 +25,7 @@ public class InfiniteVoid extends Spell{
 
     @Override
     protected void undoAction() {
-        // TODO Auto-generated method stub
+        //
     }
 
     @Override

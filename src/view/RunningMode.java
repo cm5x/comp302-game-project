@@ -50,6 +50,7 @@ import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
 import gameComponents.Ymir;   
 import utilities.BarrierReader;
+import gameComponents.HollowPurpleBarrier;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -94,7 +95,7 @@ public class RunningMode extends JFrame{
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
 
-    ArrayList<Barrier> bArrayList = new ArrayList<>();
+    public ArrayList<Barrier> bArrayList = new ArrayList<>();
     // TODO: diğer spelleri ekle Melike
     private MagicalStaffExpansion magicalStaffExpansion;
     private Hex hexSpell;
@@ -288,8 +289,8 @@ public class RunningMode extends JFrame{
         private ArrayList<int[]> barrierIndexList;
         private String selectedColor = "simple";  // Default color
 
-        private static final int BLOCK_WIDTH = 86; // Width of the block
-        private static final int BLOCK_HEIGHT = 26; // Height of the block
+        public static final int BLOCK_WIDTH = 86; // Width of the block
+        public static final int BLOCK_HEIGHT = 26; // Height of the block
         private final RunningMode frame;
         private String filePath = "src/gameMapSaves/exampleMap" + selectedMap + ".dat";
         
@@ -375,17 +376,30 @@ public class RunningMode extends JFrame{
                         RewardingBarrier rewbar = new RewardingBarrier(i[0], i[1]);
                         bArrayList.add(rewbar);
                         break;
+
                     default:
                         break;
                 }
 
                 repaint();
 
-            }
-
-            
+            }     
             
         }
+
+            public void removeBlock(int x, int y) {
+                Iterator<ColoredBlock> it = blocks.iterator();
+                while (it.hasNext()) {
+                    ColoredBlock block = it.next();
+                    if (block.rectangle.x == x && block.rectangle.y == y) {
+                        it.remove();
+                        break;
+                    }
+                }
+                repaint();
+            }
+
+
 
             private void moveBall() {
 
@@ -614,6 +628,9 @@ public class RunningMode extends JFrame{
                         break;
                     case "rewarding":
                         g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
+                        break;
+                    case "hollowpurple":
+                        g.drawImage(img5, block.rectangle.x, block.rectangle.y, null);
                         break;
                     default:
                         break;
