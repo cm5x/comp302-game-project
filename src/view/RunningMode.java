@@ -348,7 +348,6 @@ public class RunningMode extends JFrame{
                         addBlock(i[0], i[1],"simple");
                         SimpleBarrier sbar = new SimpleBarrier(i[0], i[1]);
                         bArrayList.add(sbar);
-
                         break;
                     case 2:
                         addBlock(i[0], i[1],"reinforced");
