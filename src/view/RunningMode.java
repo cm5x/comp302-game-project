@@ -211,7 +211,6 @@ public class RunningMode extends JFrame{
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                timer.stop();
                 PauseMenu pauseMenu = new PauseMenu();
                 pauseMenu.setVisible(true);
             }
