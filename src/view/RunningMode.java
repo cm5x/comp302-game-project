@@ -698,6 +698,8 @@ public class RunningMode extends JFrame{
             moveBall();
             movePaddle(); // Method to update paddle position
             repaint();
+            checkGameOver();
+            
         }
 
         private void movePaddle() {
