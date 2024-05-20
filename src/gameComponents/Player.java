@@ -50,11 +50,6 @@ public void decChance(JPanel chancePanel, ArrayList<JLabel> labels){
             chancePanel.repaint();
 
             }
-
-    if(this.getChances() == 0){
-                    JOptionPane.showMessageDialog(null, "Game Over!", "Message", JOptionPane.PLAIN_MESSAGE);
-
-                }
     
 }   
 }

@@ -211,6 +211,7 @@ public class RunningMode extends JFrame{
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                timer.stop();
                 PauseMenu pauseMenu = new PauseMenu();
                 pauseMenu.setVisible(true);
             }
@@ -234,7 +235,14 @@ public class RunningMode extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //can eksiltme fonksiyonu bunu bi yere koyarız
+                
                 player.decChance(chancePanel, labels);
+
+                if (player.getChances() == 0) {
+                    timer.stop();
+                    JOptionPane.showMessageDialog(null, "Game Over!", "Message", JOptionPane.PLAIN_MESSAGE);
+                }
+
             }
         });
 
@@ -379,7 +387,6 @@ public class RunningMode extends JFrame{
         }
 
             private void moveBall() {
-
                 fireBall.setX(ballSpeedX+fireBall.getX());
                 fireBall.setY(ballSpeedY+fireBall.getY());
 
@@ -552,6 +559,7 @@ public class RunningMode extends JFrame{
                             if (barr.isDestroyed()){
                                 it.remove();
                                 bArrayList.remove(barr);
+                                break;
                             }
                         }
 
