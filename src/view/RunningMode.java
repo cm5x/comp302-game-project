@@ -4,6 +4,7 @@ package view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -61,7 +62,8 @@ import java.awt.event.KeyEvent;
 public class RunningMode extends JFrame{
 
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
-    private final MapPanel mapPanel;
+    private ArrayList<int[]> barrierIndexList;
+    public final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
@@ -246,7 +248,7 @@ public class RunningMode extends JFrame{
         this.setVisible(true);
     }    
     
-    class MapPanel extends JPanel implements KeyListener {
+    public class MapPanel extends JPanel implements KeyListener {
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
 
@@ -292,9 +294,18 @@ public class RunningMode extends JFrame{
             timer = new Timer(10, (ActionEvent e) -> updateGame());
             timer.start();
             
-            loadMap();
+            loadMap(selectedMap);
             
         }
+
+        public ArrayList<int[]> getBarrierIndexList() {
+            return barrierIndexList;
+        }
+
+        public ArrayList<Barrier> getBArrayList() {
+            return bArrayList;
+        }
+
         /**
          * Loads a game map from a specified file path.
          * 
@@ -313,8 +324,9 @@ public class RunningMode extends JFrame{
          * 
          * @param filePath the path of the file to load
          */
-        private void loadMap() {
+        public void loadMap(int mapIndex) {
 
+            filePath = "src/gameMapSaves/exampleMap" + mapIndex + ".dat";
             File file = new File(filePath); // File path should be in String data
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
@@ -322,9 +334,75 @@ public class RunningMode extends JFrame{
                 barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
                 
                 
+                
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
+
+            for (int[] i : barrierIndexList) {
+                System.out.println(i[2]);
+                switch (i[2]) {
+                    case 1:
+
+                        //addBlock(i[0], i[1],"red");
+
+                        addBlock(i[0], i[1],"simple");
+                        SimpleBarrier sbar = new SimpleBarrier(i[0], i[1]);
+                        bArrayList.add(sbar);
+
+                        break;
+                    case 2:
+                        addBlock(i[0], i[1],"reinforced");
+                        Random random = new Random();     
+                        int hitnum = random.nextInt(3) + 1;
+                        ReinforcedBarrier rbar = new ReinforcedBarrier(hitnum, i[0], i[1]);
+                        bArrayList.add(rbar);
+                        break;
+                    case 3:
+                        addBlock(i[0], i[1],"explosive");
+                        ExplosiveBarrier ebar = new ExplosiveBarrier(i[0], i[1]);
+                        bArrayList.add(ebar);
+                        break;
+                    case 4:
+                        addBlock(i[0], i[1],"rewarding");
+                        RewardingBarrier rewbar = new RewardingBarrier(i[0], i[1]);
+                        bArrayList.add(rewbar);
+                        break;
+                    default:
+                        break;
+                }
+
+                repaint();
+
+            }
+        }
+
+        public void loadMap(String filePath) throws Exception {
+
+            File file = new File(filePath); // File path should be in String data
+
+            
+            
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+
+                barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                
+                
+            } catch (IOException | ClassNotFoundException e) {
+                
+                if (e.getClass() == IOException.class) {
+                    if (file.length() == 0) {
+                        throw new ClassNotFoundException();
+                    } else {
+                        throw e;
+                    }
+                }
+
+                throw e;
+            }
+
+            
 
 
             for (int[] i : barrierIndexList) {
@@ -782,10 +860,9 @@ public class RunningMode extends JFrame{
         }
     }
 
-    private void loadMap(int mapSave) {
+    public void loadMap(int mapSave) {
 
     }
-
     
 
 
@@ -795,5 +872,6 @@ public class RunningMode extends JFrame{
         RunningMode run = new RunningMode(1,p);
         run.setVisible(true);
     }
+
 
 }
