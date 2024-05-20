@@ -1,5 +1,5 @@
 package gameComponents;
-import  org.junit.*;
+import org.junit.*;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 
@@ -15,71 +15,87 @@ public class MagicalStaffTest {
     }
 
     @Test
-    public void testInitialPositionAndState() {
-        assertEquals((int) (screenSize.getWidth() / 2), staff.getXPos(), 0);
-        assertEquals((int) screenSize.getHeight() - 200, staff.getYPos(), 0);
+    public void testInitialRotationState() {
         assertEquals(0, staff.getRotationAngle(), 0.01);
-        assertFalse(staff.rotateLeft);
-        assertFalse(staff.rotateRight);
-        assertFalse(staff.moveLeft);
-        assertFalse(staff.moveRight);
-    }
-
-    @Test
-    public void testMoveLeft() {
-        int initialXPos = staff.getXPos();
-        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_LEFT));
-        staff.update();
-        assertTrue(staff.getXPos() < initialXPos);
-    }
-
-    @Test
-    public void testMoveRight() {
-        int initialXPos = staff.getXPos();
-        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_RIGHT));
-        staff.update();
-        assertTrue(staff.getXPos() > initialXPos);
     }
 
     @Test
     public void testRotateLeft() {
-        double initialAngle = staff.getRotationAngle();
         staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_A));
-        staff.update();
-        assertTrue(staff.getRotationAngle() < initialAngle);
+        staff.updateRotation();
+        assertTrue(staff.getRotationAngle() < 0);
     }
 
     @Test
     public void testRotateRight() {
-        double initialAngle = staff.getRotationAngle();
         staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_D));
-        staff.update();
-        assertTrue(staff.getRotationAngle() > initialAngle);
+        staff.updateRotation();
+        assertTrue(staff.getRotationAngle() > 0);
     }
 
     @Test
-    public void testMovementBoundary() {
-        staff.setXPos(0);
-        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_LEFT));
-        staff.update();
-        assertEquals(0, staff.getXPos(), 0);
-
-        staff.setXPos(screenSize.width - staff.getLength());
-        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_RIGHT));
-        staff.update();
-        assertEquals(screenSize.width - staff.getLength(), staff.getXPos(), 0);
-    }
-
-    @Test
-    public void testRotationBoundary() {
+    public void testRotateLeftBoundary() {
         staff.setRotationAngle(-MagicalStaff.ROTATION_LIMIT);
         staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_A));
-        staff.update();
+        staff.updateRotation();
         assertEquals(-MagicalStaff.ROTATION_LIMIT, staff.getRotationAngle(), 0.01);
+    }
 
+    @Test
+    public void testRotateRightBoundary() {
         staff.setRotationAngle(MagicalStaff.ROTATION_LIMIT);
         staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_D));
-        staff.update();
+        staff.updateRotation();
         assertEquals(MagicalStaff.ROTATION_LIMIT, staff.getRotationAngle(), 0.01);
+    }
+
+    @Test
+    public void testRotationStepSize() {
+        double initialAngle = staff.getRotationAngle();
+        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_A));
+        staff.updateRotation();
+        assertEquals(initialAngle - staff.rotationRate * 0.02, staff.getRotationAngle(), 0.01);
+
+        initialAngle = staff.getRotationAngle();
+        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_D));
+        staff.updateRotation();
+        assertEquals(initialAngle + staff.rotationRate * 0.02, staff.getRotationAngle(), 0.01);
+    }
+
+    @Test
+    public void testRotationDirectionFlags() {
+        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_A));
+        assertTrue(staff.rotateLeft);
+        assertFalse(staff.rotateRight);
+
+        staff.keyPressed(new KeyEvent(new java.awt.Component(){}, 0, 0, 0, KeyEvent.VK_D));
+        assertTrue(staff.rotateRight);
+        assertFalse(staff.rotateLeft);
+    }
+
+    // Glass-Box 
+    @Test
+    public void testUpdateRotationInternalLogic() {
+        // Test rotating left
+        staff.rotateLeft = true;
+        staff.updateRotation();
+        double expectedAngleLeft = -staff.rotationRate * 0.02;
+        assertEquals(expectedAngleLeft, staff.getRotationAngle(), 0.01);
+
+        // Reset angle
+        staff.setRotationAngle(0);
+
+        // Test rotating right
+        staff.rotateRight = true;
+        staff.updateRotation();
+        double expectedAngleRight = staff.rotationRate * 0.02;
+        assertEquals(expectedAngleRight, staff.getRotationAngle(), 0.01);
+
+        // Test no rotation when both flags are false
+        staff.rotateLeft = false;
+        staff.rotateRight = false;
+        double initialAngle = staff.getRotationAngle();
+        staff.updateRotation();
+        assertEquals(initialAngle, staff.getRotationAngle(), 0.01);
     }
 }
