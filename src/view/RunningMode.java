@@ -463,17 +463,7 @@ public class RunningMode extends JFrame{
                 }    */
                 
                
-            // // Check collision with barriers
-            // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
-            // while (it.hasNext()) {
-            //     MapPanel.ColoredBlock block = it.next();
-            //     if (new Rectangle(ballPosition.x, ballPosition.y, 10, 10).intersects(block.rectangle)) {
-            //         ballSpeedY = -ballSpeedY; // Reflect the ball
-
-            //         it.remove(); // Remove the barrier on hit
-            //         break;
-            //     }
-            // }
+            
 
             //ALTERNATIVE
 
@@ -486,54 +476,7 @@ public class RunningMode extends JFrame{
             while (it.hasNext()) {
                 MapPanel.ColoredBlock block = it.next();
                 if (ballRect.intersects(block.rectangle)) {
-                    // Determine the collision direction
-                    // double ballCenterX = ballPosition.x + 0.5; // changed from 5
-                    // double ballCenterY = ballPosition.y + 0.5; // changed from 5
-                    // int blockCenterX = block.rectangle.x + block.rectangle.width / 2;
-                    // int blockCenterY = block.rectangle.y + block.rectangle.height / 2;
-
-                    // double deltaX = ballCenterX - blockCenterX;
-                    // double deltaY = ballCenterY - blockCenterY;
-
-                    // // Check which side (top, bottom, left, right) of the block the ball has hit
-                    // boolean collisionFromTopOrBottom = Math.abs(deltaY) > Math.abs(deltaX);
-                    // if (collisionFromTopOrBottom) {
-                    //     ballSpeedY = -ballSpeedY; // Vertical bounce
-                    //     if (deltaY > 0) { // Ball is below the block
-                    //         ballPosition.y = block.rectangle.y + block.rectangle.height;
-                    //     } else { // Ball is above the block
-                    //         ballPosition.y = block.rectangle.y - 10;
-                    //     }
-                    // } else {
-                    //     ballSpeedX = -ballSpeedX; // Horizontal bounce
-                    //     if (deltaX > 0) { // Ball is to the right of the block
-                    //         ballPosition.x = block.rectangle.x + block.rectangle.width;
-                    //     } else { // Ball is to the left of the block
-                    //         ballPosition.x = block.rectangle.x - 10;
-                    //     }
-                    // }
-
-                    //ALTERATIVE
-                    // boolean hitVertical = Math.abs(deltaY) > Math.abs(deltaX);
-                    // if (hitVertical) {
-                    //     ballSpeedY = -ballSpeedY;
-                    //     it.remove(); // Remove the barrier on hit
-                    //     LOGGER.log(Level.INFO, "Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY);
-                    //     // if (deltaY > 0) {
-                    //     //     ballPosition.y = block.rectangle.y + block.rectangle.height + 1; // Ball is below the block
-                    //     // } else {
-                    //     //     ballPosition.y = block.rectangle.y - 1; // Ball is above the block
-                    //     // }
-                    // } else {
-                    //     ballSpeedX = -ballSpeedX;
-                    //     it.remove(); // Remove the barrier on hit
-                    //     LOGGER.log(Level.INFO, "Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX);
-                    //     // if (deltaX > 0) {
-                    //     //     ballPosition.x = block.rectangle.x + block.rectangle.width + 1; // Ball is to the right of the block
-                    //     // } else {
-                    //     //     ballPosition.x = block.rectangle.x - 1; // Ball is to the left of the block
-                    //     // }
-                    // }
+                    
 
                     // it.remove(); // Remove the barrier on hit
                      // Ensure the ball's speed doesn't drop to zero at any point
@@ -642,7 +585,7 @@ public class RunningMode extends JFrame{
 
                 fireBall.draw(g);
                 staff.draw(g2d);
-                // Burayı yunus editledi
+                
                 //g.setColor(Color.RED);
                 //g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
 
@@ -651,7 +594,7 @@ public class RunningMode extends JFrame{
             }
             
 
-            //rOTATE İLE ALAKALI ASAGISI
+            //Below is related to rotating function.
             // Calculate the center of the paddle
             int centerX = paddle.x + paddle.width / 2;
             int centerY = paddle.y + paddle.height / 2;
@@ -659,11 +602,7 @@ public class RunningMode extends JFrame{
             // Rotate the graphics context
             g2d.rotate(Math.toRadians(paddleAngle), centerX, centerY);
 
-            // Draw the paddle with rotation
-            //g.setColor(Color.BLACK);
-            //g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-            //g.drawImage(stff, paddle.x, paddle.y, null);
-            // Clean up
+            
 
             //hex related
             if (hexSpell.hexCanonsActive) {
