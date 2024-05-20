@@ -28,7 +28,7 @@ import java.io.Serializable;
 
 
     public class MapDesigner extends JFrame implements ActionListener{
-        private final MapPanel mapPanel;
+        protected final MapPanel mapPanel;
         private final JPanel blockChooserPanel;
         private final JTextArea infoTextArea;
 
@@ -45,6 +45,10 @@ import java.io.Serializable;
         JPanel randomPanel;
         int limitcounter;
 
+        int rednum; 
+        int greennum;
+        int bluenum;
+        int rewnum ;
         public MapDesigner() {
             super("Map Designer");
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -297,11 +301,17 @@ import java.io.Serializable;
                 
              }
         }
+
+        public boolean repOk() {
+            return limitcounter <= 150 && (rednum >= 75 && rednum <= 120) && (greennum >= 10 && greennum <= 120) &&
+                   (bluenum >= 5 && bluenum <= 40) && (rewnum >= 10 && rewnum <= 40);
+        }
+        
     }
 
 
     class MapPanel extends JPanel {
-        private ArrayList<ColoredBlock> blocks;
+        protected ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
         private String selectedColor = "simple";  // Default color
         private static final int BLOCK_WIDTH = 86; // Width of the block
