@@ -636,37 +636,47 @@ public class RunningMode extends JFrame{
 
         private void checkGameOver() {
             if (fireBall.getY() > staff.getYPos() + staff.getThickness() + 100) {
-                timer.stop();
-                showGameOverFrame();
+                chances--;
+                if (chances > 0) {
+                    resetBallAndContinue();
+                } else {
+                    timer.stop();
+                    showGameOverFrame("Game Over! No chances left.");
+                }
             }
-
+        
             if (blocks.isEmpty()) {
                 timer.stop();
-                showGameOverFrame();
+                showGameOverFrame("Game Over! All barriers cleared.");
+            }
+        
+            if (chances == 0) {
+                timer.stop();
+                showGameOverFrame("Game Over! No chances left.");
             }
         }
 
-        private void showGameOverFrame() {
+        private void showGameOverFrame(String message) {
             JFrame gameOverFrame = new JFrame("Game Over");
             gameOverFrame.setSize(300, 150);
             gameOverFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             gameOverFrame.setLocationRelativeTo(null);
-    
-            JLabel messageLabel = new JLabel("Game Over! The ball went below the paddle.", SwingConstants.CENTER);
+        
+            JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
             JButton okButton = new JButton("OK");
-    
+        
             okButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     gameOverFrame.dispose();
                 }
             });
-    
+        
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
             panel.add(messageLabel, BorderLayout.CENTER);
             panel.add(okButton, BorderLayout.SOUTH);
-    
+        
             gameOverFrame.add(panel);
             gameOverFrame.setVisible(true);
         }
@@ -677,6 +687,24 @@ public class RunningMode extends JFrame{
             bArrayList.clear();
             repaint();
             //checkRemainingBarriers(); // Immediately check if there are any barriers left
+        }
+
+        private void resetBallAndContinue() {
+            // Reset the ball position to the initial position
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            fireBall.setX(screenSize.width / 2);
+            fireBall.setY(screenSize.height - 70);
+            
+            // Reset ball speed
+            ballSpeedX = 3;
+            ballSpeedY = -3;
+        
+            // Update the chances display
+            // Assuming you have a JLabel or some component to display remaining chances
+            //updateChancesDisplay();
+        
+            // Continue the game
+            timer.start();
         }
 
         // @Override
