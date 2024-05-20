@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import gameComponents.ExplosiveBarrier;
 import gameComponents.Player;
+import gameComponents.ReinforcedBarrier;
+import gameComponents.RewardingBarrier;
+import gameComponents.SimpleBarrier;
 import view.RunningMode;
 import view.RunningMode.MapPanel;
 
@@ -37,16 +41,15 @@ public class MapLoadTest {
         mapPanel.loadMap(filePath);
 
         assertEquals(3, mapPanel.getBarrierIndexList().size());
-        assertEquals(3, mapPanel.getBArrayList().size());
-        assertEquals("SimpleBarrier", mapPanel.getBArrayList().get(0).getClass());
-        assertEquals("RewardingBarrier", mapPanel.getBArrayList().get(1).getClass());
-        assertEquals("ExplosiveBarrier", mapPanel.getBArrayList().get(2).getClass());
+        assertEquals(SimpleBarrier.class, mapPanel.getBArrayList().get(0).getClass());
+        assertEquals(ReinforcedBarrier.class, mapPanel.getBArrayList().get(1).getClass());
+        assertEquals(ExplosiveBarrier.class, mapPanel.getBArrayList().get(2).getClass());
     }
 
     @Test
     public void testLoadMapInvalidFile() {
         String filePath = "invalidMap.dat";
-        assertThrows(IOException.class, () -> mapPanel.loadMap(filePath));
+        assertThrows(ClassNotFoundException.class, () -> mapPanel.loadMap(filePath));
     }
 
     @Test
@@ -80,10 +83,10 @@ public class MapLoadTest {
 
         assertEquals(4, mapPanel.getBarrierIndexList().size());
         assertEquals(4, mapPanel.getBArrayList().size());
-        assertEquals("SimpleBarrier", mapPanel.getBArrayList().get(0).getClass());
-        assertEquals("RewardingBarrier", mapPanel.getBArrayList().get(1).getClass());
-        assertEquals("ExplosiveBarrier", mapPanel.getBArrayList().get(2).getClass());
-        assertEquals("Test", mapPanel.getBArrayList().get(3).getClass());
+        assertEquals(SimpleBarrier.class, mapPanel.getBArrayList().get(0).getClass());
+        assertEquals(ReinforcedBarrier.class, mapPanel.getBArrayList().get(1).getClass());
+        assertEquals(ExplosiveBarrier.class, mapPanel.getBArrayList().get(2).getClass());
+        assertEquals(RewardingBarrier.class, mapPanel.getBArrayList().get(3).getClass());
     }
 
     private void saveTestMap(String filePath, ArrayList<int[]> barriers) throws IOException {

@@ -294,7 +294,7 @@ public class RunningMode extends JFrame{
             timer = new Timer(10, (ActionEvent e) -> updateGame());
             timer.start();
             
-            loadMap(selectedMap);
+            //loadMap(selectedMap);
             
         }
 
@@ -381,28 +381,22 @@ public class RunningMode extends JFrame{
         public void loadMap(String filePath) throws Exception {
 
             File file = new File(filePath); // File path should be in String data
-
-            
             
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
                 barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
-                
+                System.out.println("hellooo");
+                System.out.println(barrierIndexList.size());
                 
             } catch (IOException | ClassNotFoundException e) {
                 
-                if (e.getClass() == IOException.class) {
-                    if (file.length() == 0) {
-                        throw new ClassNotFoundException();
-                    } else {
-                        throw e;
-                    }
+                if (file.length() == 0) {
+                    throw new ClassNotFoundException();
+                } else {
+                    throw e;
                 }
 
-                throw e;
             }
-
-            
 
 
             for (int[] i : barrierIndexList) {
