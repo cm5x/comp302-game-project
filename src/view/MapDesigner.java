@@ -165,6 +165,11 @@ import java.io.Serializable;
             loadButton.addActionListener(e -> mapPanel.loadMap());
             buttonPanel.add(loadButton);
 
+            JButton contButton = new JButton("Continue");
+            contButton.addActionListener(this);
+            //bunun içine de yazabilirsin actionperformed kısmına da 
+            buttonPanel.add(contButton);
+
             blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
 
 
