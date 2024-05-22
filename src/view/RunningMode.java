@@ -475,7 +475,7 @@ public class RunningMode extends JFrame{
             Iterator<MapPanel.ColoredBlock> it = blocks.iterator();
             while (it.hasNext()) {
                 MapPanel.ColoredBlock block = it.next();
-                if (ballRect.intersects(block.rectangle)) {
+                if (ballRect.intersects(block.rectangle) && block.rectangle.getWidth() > 50) {
                     
 
                     // it.remove(); // Remove the barrier on hit
@@ -505,6 +505,15 @@ public class RunningMode extends JFrame{
                                     blocks.add(new ColoredBlock(rewblock, "rewardbox"));       
                                       
                                 }
+
+                                if (barr instanceof ExplosiveBarrier){
+                                    Rectangle remain;
+                                    for (int i = 0; i < 3; i++) {
+                                        int cons = 30*i;
+                                        remain = new Rectangle(block.rectangle.x + cons , block.rectangle.y+ 23, 10, 20);
+                                        blocks.add(new ColoredBlock(remain, "remain"));
+                                    }
+                                }
                                 bArrayList.remove(barr);
                                 break;
                                 
@@ -522,8 +531,18 @@ public class RunningMode extends JFrame{
                 }
 
                 if (block.rectangle.intersects(staff.getBounds())){
+                    if (block.rectangle.getWidth() == 10){
+                        player.decChance(chancePanel, labels);
+                    }
+
+                    else{
+                        //burda power up pickleniyor spell seçme yazılabilir
+                    }
+
                     it.remove();
-                    //burda power up pickleniyor spell seçme yazılabilir
+                    
+                    
+                    
                     break;
                 }
         }
@@ -540,12 +559,8 @@ public class RunningMode extends JFrame{
             int gridY = y - (y % BLOCK_HEIGHT);
 
             System.out.println(selectedColor);
-            if (selectedColor.equals("rewardbox")){
-                blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, 20, 20), selectedColor));
-            }
-            else {
-                blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
-            }
+            blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
+            
             return true;
         }
 
@@ -583,7 +598,6 @@ public class RunningMode extends JFrame{
                         }
                         break;
                     case "explosive":
-                        //g.setColor(Color.GREEN);
                         g.drawImage(img3, block.rectangle.x, block.rectangle.y, null);
                         break;
                     case "rewarding":
@@ -594,10 +608,17 @@ public class RunningMode extends JFrame{
                         g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
                         g.setColor(Color.BLACK);
                         g.drawString("?", block.rectangle.x + 5, block.rectangle.y + 18);
+                        block.rectangle.y = block.rectangle.y + 2;  
+                        break; 
+                    case "remain":
+                        g.setColor(Color.RED);
+                        g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
                         block.rectangle.y = block.rectangle.y + 2;
+                        break;
+                        
                     default:
                         break;
-                        // Default case
+                        
                 }
 
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
