@@ -41,7 +41,7 @@ public class MultiplayerWaitingScreen extends JFrame {
                     multiplayerServer.sendMap(barrierList);
 
                     Player p = new Player("uname", "pass");
-                    RunningMode run = new RunningMode(6,p,barrierList);
+                    RunningMode run = new RunningMode(6,p,barrierList,multiplayerServer);
                     run.setVisible(true);
 
 

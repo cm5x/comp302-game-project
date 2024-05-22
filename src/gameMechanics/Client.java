@@ -17,10 +17,12 @@ public class Client {
    private Socket socket;
    private int port;
    private ArrayList<int[]> barrierList;
+   private Client clientInstance;
 
    public Client(String serverAdress, int port) {
       this.serverAdress = serverAdress;
       this.port = port;
+      this.clientInstance = this;
    }
 
    public void connectToServer(){
@@ -63,7 +65,7 @@ public class Client {
             barrierList = arrayList;
 
             Player p = new Player("uname", "pass");
-            RunningMode run = new RunningMode(6,p,barrierList);
+            RunningMode run = new RunningMode(6,p,barrierList,clientInstance);
             run.setVisible(true);
         
          //client.close();
@@ -74,14 +76,16 @@ public class Client {
       }
    }
 
-   public void refreshInfo(ArrayList<int[]> barrierList) throws IOException {
+   public int refreshInfo(ArrayList<int[]> barrierList) throws IOException {
       DataOutputStream out = new DataOutputStream(socket.getOutputStream());
       out.writeInt(barrierList.size());
         
       InputStream inFromServer = socket.getInputStream();
       DataInputStream inputBarrierList = new DataInputStream(inFromServer);
-
       System.out.println(inputBarrierList.readInt());
+      return inputBarrierList.readInt();
+
+      
       
    }
 }
