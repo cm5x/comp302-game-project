@@ -408,6 +408,9 @@ public class RunningMode extends JFrame{
                     }
                     ballPosition.y = (int) staff.getYPos()/2-1;
                 }
+                
+                
+                
 
 
                 // getting the rotated paddle and its rotation angle
@@ -468,6 +471,7 @@ public class RunningMode extends JFrame{
             ballRect = fireBall.getBounds(); 
 
             // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
+            
             Iterator<MapPanel.ColoredBlock> it = blocks.iterator();
             while (it.hasNext()) {
                 MapPanel.ColoredBlock block = it.next();
@@ -489,17 +493,24 @@ public class RunningMode extends JFrame{
                     }
                     int xcoor = block.rectangle.x;
                     int ycoor = block.rectangle.y;
-
                     for (Barrier barr : bArrayList){
                         if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
                             barr.hit(1);
-                        
+                            
 
                             if (barr.isDestroyed()){
                                 it.remove();
+                                if (barr.isRewarding()){
+                                    Rectangle rewblock = new Rectangle(block.rectangle.x + 43, block.rectangle.y+ 23, 20, 20);
+                                    blocks.add(new ColoredBlock(rewblock, "rewardbox"));       
+                                      
+                                }
                                 bArrayList.remove(barr);
                                 break;
+                                
                             }
+
+                            
                         }
 
                     }
@@ -508,6 +519,12 @@ public class RunningMode extends JFrame{
                     LOGGER.log(Level.INFO, MessageFormat.format("Barrier removed at: ({0}, {1})", block.rectangle.x, block.rectangle.y));
                     
                     break; // Assuming only one collision can occur per frame
+                }
+
+                if (block.rectangle.intersects(staff.getBounds())){
+                    it.remove();
+                    //burda power up pickleniyor spell seçme yazılabilir
+                    break;
                 }
         }
             if(hexSpell.hexCanonsActive){
@@ -523,8 +540,12 @@ public class RunningMode extends JFrame{
             int gridY = y - (y % BLOCK_HEIGHT);
 
             System.out.println(selectedColor);
-
-            blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
+            if (selectedColor.equals("rewardbox")){
+                blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, 20, 20), selectedColor));
+            }
+            else {
+                blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
+            }
             return true;
         }
 
@@ -568,6 +589,12 @@ public class RunningMode extends JFrame{
                     case "rewarding":
                         g.drawImage(img4, block.rectangle.x, block.rectangle.y, null);
                         break;
+                    case "rewardbox":
+                        g.setColor(Color.GREEN);
+                        g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
+                        g.setColor(Color.BLACK);
+                        g.drawString("?", block.rectangle.x + 5, block.rectangle.y + 18);
+                        block.rectangle.y = block.rectangle.y + 2;
                     default:
                         break;
                         // Default case
