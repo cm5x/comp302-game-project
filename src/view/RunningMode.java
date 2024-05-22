@@ -47,6 +47,8 @@ import gameComponents.Player;
 import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
+import gameMechanics.Client;
+import gameMechanics.Server;
 import utilities.BarrierReader;
 
 import java.util.logging.Logger;
@@ -85,12 +87,15 @@ public class RunningMode extends JFrame{
     ImageIcon heartimg = new ImageIcon(chancePath);
 
     ArrayList<Barrier> bArrayList = new ArrayList<>();
+    ArrayList<int[]> barrierMultiplayerIndexList;
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
     private FireBall fireBall;
     private int chances;
     private Timer timer;
+    private Server server;
+    private Client client;
 
     public RunningMode(int selectedMap, Player player) {
         setTitle("Running Mode");
@@ -242,7 +247,162 @@ public class RunningMode extends JFrame{
         
         //add(mapPanel,BorderLayout.EAST);
         this.setVisible(true);
-    }    
+    }
+
+    public RunningMode(int selectedMap, Player player, ArrayList<int[]> barrierList) {
+        setTitle("Running Mode");
+        setSize(1920,1080);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.selectedMap = selectedMap;
+        chances = player.getChances();
+        this.barrierMultiplayerIndexList = barrierList;
+    
+
+        // Creating the map panel where game objects will interact
+        //this.mapPanel = new MapPanel();
+        //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
+        //this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
+        //this.add(mapPanel, BorderLayout.CENTER);
+
+        // Panel on the left that will include the buttons to load, resume, save and load game
+        this.blockChooserPanel = new JPanel();
+        this.spellJPanel = new JPanel();
+        this.chancePanel = new JPanel();
+        this.blockChooserPanel.setPreferredSize(new Dimension(230, 400));
+        this.spellJPanel.setSize(230, 300);
+        this.spellJPanel.setBackground(Color.ORANGE);
+        this.spellJPanel.setLayout(null);
+        this.spellJPanel.setLocation(0, 240);
+        this.chancePanel.setSize(230, 150);
+        this.chancePanel.setLayout(new FlowLayout());
+        this.chancePanel.setLocation(0, 540);
+        this.chancePanel.setBackground(Color.GRAY);
+        this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
+        this.blockChooserPanel.setLayout(null);
+
+        this.mapPanel = new MapPanel(this);
+        this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));  // Add a black line border
+        this.mapPanel.setBackground(Color.WHITE);  // Set a different background color
+        this.add(mapPanel);
+
+        // LOGGER.setLevel(Level.ALL);
+
+
+        //setting up spellpanel
+        JLabel slab = new JLabel("Spell Inventory");
+        slab.setLocation(10, 10);
+        slab.setSize(200, 20);
+        JButton hexB = new JButton("Hex");
+        JButton OFB = new JButton("Overwhelming Fireball");
+        JButton ffButton = new JButton("Felix Felicis");
+        JButton MSE = new JButton("Magical Staff Expansion");
+        hexB.setSize(170, 40);
+        OFB.setSize(170,40);
+        ffButton.setSize(170, 40);
+        MSE.setSize(170,40);
+        hexB.setLocation(10, 50);
+        OFB.setLocation(10, 110);
+        ffButton.setLocation(10, 170);
+        MSE.setLocation(10, 230);
+        spellJPanel.add(slab);
+        spellJPanel.add(hexB);
+        spellJPanel.add(OFB);
+        spellJPanel.add(ffButton);
+        spellJPanel.add(MSE);
+
+        //setting up chance panel
+        JLabel clab = new JLabel("Remaining Chances");
+        clab.setSize(200, 20);
+        //adding chances
+        ArrayList<JLabel> labels = new ArrayList<>();
+        for (int i = 0; i<chances; i++){
+            JLabel tempLabel = new JLabel(heartimg);
+            chancePanel.add(tempLabel);
+            labels.add(tempLabel);
+        }
+
+        chancePanel.add(clab);
+        
+
+        // Create buttons 
+        pauseButton = new JButton("Pause");
+        saveButton = new JButton("Save");
+        loadButton = new JButton("Load");
+        pauseButton.setSize(200, 40);
+        loadButton.setSize(200, 40);
+        saveButton.setSize(200, 40);
+        pauseButton.setLocation(20, 50);
+        loadButton.setLocation(20, 110);
+        saveButton.setLocation(20, 170);
+
+
+        // Add buttons to the left pannel
+        blockChooserPanel.add(pauseButton);
+        blockChooserPanel.add(saveButton);
+        blockChooserPanel.add(loadButton);
+        blockChooserPanel.add(spellJPanel);
+        blockChooserPanel.add(chancePanel);
+        //Adding action listeners to buttons
+
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PauseMenu pauseMenu = new PauseMenu();
+                pauseMenu.setVisible(true);
+            }
+        });
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveMap();
+            }
+        });
+
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadMap();
+            }
+        });
+
+        //action listeners for spell buttons
+        hexB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //can eksiltme fonksiyonu bunu bi yere koyarız
+                player.decChance(chancePanel, labels);
+            }
+        });
+
+        OFB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //spell implementation
+            }
+        });
+
+        ffButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //spell implementation
+            }
+        });
+
+        MSE.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //spell implementation
+            }
+        });
+        
+        add(blockChooserPanel, BorderLayout.WEST);
+
+        
+        
+        //add(mapPanel,BorderLayout.EAST);
+        this.setVisible(true);
+    }
+    
     
     class MapPanel extends JPanel implements KeyListener {
         // Initialize Magic staff 
@@ -288,18 +448,23 @@ public class RunningMode extends JFrame{
             // timer.start();
             timer = new Timer(10, (ActionEvent e) -> updateGame());
             timer.start();
-            
-            File file = new File(filePath); // File path should be in String data
-            
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
-                barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
-                
-                
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+            if (selectedMap == 6) {
+
+                barrierIndexList = barrierMultiplayerIndexList;
+
+            } else {
+                File file = new File(filePath); // File path should be in String data
+            
+                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+    
+                    barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
+                    
+                    
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
-
 
             for (int[] i : barrierIndexList) {
                 System.out.println(i[2]);

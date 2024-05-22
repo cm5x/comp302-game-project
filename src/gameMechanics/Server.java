@@ -1,10 +1,12 @@
 package gameMechanics;
 
 import java.net.*;
+import java.util.ArrayList;
 import java.io.*;
 
 public class Server extends Thread {
     private ServerSocket serverSocket;
+    private Socket socket;
 
 
     public Server(int port) throws IOException {
@@ -17,29 +19,45 @@ public class Server extends Thread {
     }
 
      public void runServer() {
-        while(true) {
+       
            try {
-              System.out.println("Waiting for client on port " + 
+               System.out.println("Waiting for client on port " + 
                  serverSocket.getLocalPort() + "...");
-              Socket server = serverSocket.accept();
-              
-              System.out.println("Just connected to " + server.getRemoteSocketAddress());
-              DataInputStream in = new DataInputStream(server.getInputStream());
-              
-              System.out.println(in.readUTF());
-              DataOutputStream out = new DataOutputStream(server.getOutputStream());
-              out.writeUTF("Thank you for connecting to " + server.getLocalSocketAddress()
-                 + "\nGoodbye!");
+               Socket server = serverSocket.accept();
+               this.socket = server;
+                  
               //server.close();
               
            } catch (SocketTimeoutException s) {
               System.out.println("Socket timed out!");
-              break;
+              
            } catch (IOException e) {
               e.printStackTrace();
-              break;
+              
            }
-        }
+        
+     }
+
+     public void sendMap(ArrayList<int[]> barrierList) throws IOException, InterruptedException {
+         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+         out.writeInt(barrierList.size());
+
+            for (int[] array : barrierList) {
+                out.writeInt(array.length);
+                for (int value : array) {
+                    out.writeInt(value);
+                }
+            }
+     }
+
+     public void refreshInfo(ArrayList<int[]> barrierList) throws IOException {
+
+         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+         out.writeInt(barrierList.size());
+
+         InputStream inFromServer = socket.getInputStream();
+         DataInputStream inputBarrierList = new DataInputStream(inFromServer);
+
      }
 
      public static void main(String [] args) {

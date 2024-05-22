@@ -367,12 +367,12 @@ public class MapSlotsFrame extends JFrame {
     public void saveGame(ArrayList<int[]> barrierList, int mapSlot) {
         File fileToSave = new File("src/gameMapSaves/exampleMap" + mapSlot + ".dat");
             
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                oos.writeObject(barrierList);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
+            oos.writeObject(barrierList);
                 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

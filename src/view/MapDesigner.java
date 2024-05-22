@@ -25,8 +25,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 
-
-
     public class MapDesigner extends JFrame implements ActionListener{
         private final MapPanel mapPanel;
         private final JPanel blockChooserPanel;
@@ -165,6 +163,11 @@ import java.io.Serializable;
             loadButton.addActionListener(e -> mapPanel.loadMap());
             buttonPanel.add(loadButton);
 
+            JButton contButton = new JButton("Continue");
+            contButton.addActionListener(e -> mapPanel.contButtonPressed());
+            //bunun içine de yazabilirsin actionperformed kısmına da 
+            buttonPanel.add(contButton);
+
             blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
 
 
@@ -293,7 +296,6 @@ import java.io.Serializable;
                 catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Please enter valid numbers", "Message", JOptionPane.PLAIN_MESSAGE);
                 }
-
                 
              }
         }
@@ -303,7 +305,7 @@ import java.io.Serializable;
     class MapPanel extends JPanel {
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
-        private String selectedColor = "simple";  // Default color
+        private String selectedColor = "simple";  // Default barrier
         private static final int BLOCK_WIDTH = 86; // Width of the block
         private static final int BLOCK_HEIGHT = 26; // Height of the block
         private final MapDesigner frame;
@@ -479,6 +481,22 @@ import java.io.Serializable;
         //         e.printStackTrace();
         //     }
         // }
+
+        public void contButtonPressed() {
+            File fileToSave = new File("src/multiplayerMapSaves/multiplayerMap.dat");
+            
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
+                oos.writeObject(barrierList);
+                    
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            MultiplayerWaitingScreen run = new MultiplayerWaitingScreen(barrierList);
+            run.setVisible(true);
+            frame.setVisible(false);
+            
+        }
 
         public void saveMap() {
 
