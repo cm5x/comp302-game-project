@@ -102,6 +102,8 @@ public class RunningMode extends JFrame{
     private int chances;
     private Timer timer;
     private MagicalStaff staff;
+    private Player player;
+    private ArrayList<JLabel> labels;
 
     public MagicalStaff getStaff() {
         return staff;
@@ -116,6 +118,7 @@ public class RunningMode extends JFrame{
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.selectedMap = selectedMap;
+        this.player = player;
         chances = player.getChances();
 
         // Creating the map panel where game objects will interact
@@ -133,7 +136,7 @@ public class RunningMode extends JFrame{
         this.spellJPanel.setBackground(Color.ORANGE);
         this.spellJPanel.setLayout(null);
         this.spellJPanel.setLocation(0, 240);
-        this.chancePanel.setSize(230, 150);
+        this.chancePanel.setSize(230, 540);
         this.chancePanel.setLayout(new FlowLayout());
         this.chancePanel.setLocation(0, 540);
         this.chancePanel.setBackground(Color.GRAY);
@@ -178,7 +181,7 @@ public class RunningMode extends JFrame{
         JLabel clab = new JLabel("Remaining Chances");
         clab.setSize(200, 20);
         //adding chances
-        ArrayList<JLabel> labels = new ArrayList<>();
+        labels = new ArrayList<>();
         for (int i = 0; i<chances; i++){
             JLabel tempLabel = new JLabel(heartimg);
             chancePanel.add(tempLabel);
@@ -233,15 +236,7 @@ public class RunningMode extends JFrame{
         hexB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //can eksiltme fonksiyonu bunu bi yere koyarız
-                
-                player.decChance(chancePanel, labels);
-
-                if (player.getChances() == 0) {
-                    timer.stop();
-                    JOptionPane.showMessageDialog(null, "Game Over!", "Message", JOptionPane.PLAIN_MESSAGE);
-                }
-
+                //spell implementation
             }
         });
 
@@ -256,6 +251,7 @@ public class RunningMode extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //spell implementation
+                player.incChance(chancePanel, labels, heartimg);
             }
         });
 
@@ -636,10 +632,12 @@ public class RunningMode extends JFrame{
 
         private void checkGameOver() {
             if (fireBall.getY() > staff.getYPos() + staff.getThickness() + 100) {
-                chances--;
-                if (chances > 0) {
+                player.decChance(chancePanel, labels);
+                if (player.getChances() > 0) {
+                    timer.stop();
                     resetBallAndContinue();
-                } else {
+                } 
+                else {
                     timer.stop();
                     showGameOverFrame("Game Over! No chances left.");
                 }
@@ -650,7 +648,7 @@ public class RunningMode extends JFrame{
                 showGameOverFrame("Game Over! All barriers cleared.");
             }
         
-            if (chances == 0) {
+            if (player.getChances() == 0) {
                 timer.stop();
                 showGameOverFrame("Game Over! No chances left.");
             }
@@ -692,9 +690,11 @@ public class RunningMode extends JFrame{
         private void resetBallAndContinue() {
             // Reset the ball position to the initial position
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            fireBall.setX(screenSize.width / 2);
-            fireBall.setY(screenSize.height - 70);
+            //fireBall.setX(screenSize.width / 2);
+            //fireBall.setY(screenSize.height - 70);
             
+            fireBall.setX(screenSize.width/2 - 40);
+            fireBall.setY(0);
             // Reset ball speed
             ballSpeedX = 3;
             ballSpeedY = -3;

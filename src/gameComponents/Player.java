@@ -2,6 +2,7 @@ package gameComponents;
 
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -50,6 +51,18 @@ public void decChance(JPanel chancePanel, ArrayList<JLabel> labels){
             chancePanel.repaint();
 
             }
+    
+}
+
+public void incChance(JPanel chancePanel, ArrayList<JLabel> labels, ImageIcon heartimg){
+    this.playerChance = playerChance + 1;
+    JLabel labelnew = new JLabel(heartimg);
+    chancePanel.add(labelnew);
+    labels.add(labelnew);
+    chancePanel.revalidate();
+    chancePanel.repaint();
+
+            
     
 }   
 }
