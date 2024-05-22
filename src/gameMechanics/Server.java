@@ -50,7 +50,7 @@ public class Server extends Thread {
             }
      }
 
-     public int refreshInfo(ArrayList<int[]> barrierList) throws IOException {
+     public void refreshInfo(ArrayList<int[]> barrierList) throws IOException {
 
          DataOutputStream out = new DataOutputStream(socket.getOutputStream());
          out.writeInt(barrierList.size());
@@ -58,7 +58,7 @@ public class Server extends Thread {
          InputStream inFromServer = socket.getInputStream();
          DataInputStream inputBarrierList = new DataInputStream(inFromServer);
 
-         return inputBarrierList.readInt();
+         //return inputBarrierList.readInt();
 
      }
 

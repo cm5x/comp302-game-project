@@ -76,14 +76,14 @@ public class Client {
       }
    }
 
-   public int refreshInfo(ArrayList<int[]> barrierList) throws IOException {
+   public void refreshInfo(ArrayList<int[]> barrierList) throws IOException {
       DataOutputStream out = new DataOutputStream(socket.getOutputStream());
       out.writeInt(barrierList.size());
         
       InputStream inFromServer = socket.getInputStream();
       DataInputStream inputBarrierList = new DataInputStream(inFromServer);
       System.out.println(inputBarrierList.readInt());
-      return inputBarrierList.readInt();
+      //return inputBarrierList.readInt();
 
       
       

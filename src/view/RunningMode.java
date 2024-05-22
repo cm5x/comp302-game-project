@@ -664,7 +664,7 @@ public class RunningMode extends JFrame {
             if (server == null) {
                 timer = new Timer(2000, (ActionEvent e) -> {
                     try {
-                        int opponentBarrierCount = client.refreshInfo(barrierIndexList);
+                        client.refreshInfo(barrierIndexList);
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -674,7 +674,7 @@ public class RunningMode extends JFrame {
             } else {
                 timer = new Timer(2000, (ActionEvent e) -> {
                     try {
-                        int opponentBarrierCount = server.refreshInfo(barrierIndexList);
+                        server.refreshInfo(barrierIndexList);
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
