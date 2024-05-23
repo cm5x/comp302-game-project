@@ -377,11 +377,7 @@ public class RunningMode extends JFrame{
                 repaint();
 
             }
-
-            
-            
         }
-
             private void moveBall() {
                 fireBall.setX(ballSpeedX+fireBall.getX());
                 fireBall.setY(ballSpeedY+fireBall.getY());
@@ -409,62 +405,6 @@ public class RunningMode extends JFrame{
                     }
                     ballPosition.y = (int) staff.getYPos()/2-1;
                 }
-                
-                
-                
-
-
-                // getting the rotated paddle and its rotation angle
-/*                 AffineTransform rotation = AffineTransform.getRotateInstance(Math.toRadians(staff.getRotationAngle()),staff.getXPos()+staff.getLength()/2,staff.getYPos()-staff.getThickness()/2);
-                Shape rotatedPaddle = rotation.createTransformedShape(staff.getBounds());            
-                double rotationAngle = staff.getRotationAngle(); //Math.toDegrees(Math.atan2(rotation.getShearY(), rotation.getScaleY()));
-
-                // Check collision with the paddle
-                if (fireBall.getBounds().intersects(staff.getBounds()) && rotationAngle == 0) {
-                    ballSpeedY = -ballSpeedY;
-                    //ballPosition.y = paddle.y - 1; // Adjust ball position to avoid sticking
-                    fireBall.setY((int) staff.getYPos()-1);
-                    ballPosition.y = (int) staff.getYPos()/2 -1 ; // Adjust ball position to avoid sticking
-                }
-                else if (fireBall.getBounds().intersects(staff.getBounds())){//new Rectangle(ballPosition.x, ballPosition.y, 1, 1).intersects(staff.getBounds())){
-
-                    // Calculate the angle between the center of the paddle and the ball
-                    double angle = Math.atan2(fireBall.getY() - staff.getYPos()-staff.getThickness()/2, fireBall.getX() - staff.getXPos()-staff.getLength()/2);  // Might need to change
-
-                    // Reflect the ball's velocity vector across the normal of the paddle
-                    double incomingAngle = Math.atan2(ballSpeedY, ballSpeedX);
-                    double reflectionAngle = 2 * angle - incomingAngle;
-
-                    // Calculate the magnitude of the velocity vector
-                    double velocityMagnitude = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
-
-                    // Calculate the new velocity components
-                    double newVelocityX = Math.cos(reflectionAngle) * velocityMagnitude;
-                    double newVelocityY = Math.sin(reflectionAngle) * velocityMagnitude;
-
-                    // Update the ball's velocity
-                    ballSpeedX = (int) newVelocityX;
-                    ballSpeedY = (int) -newVelocityY;
-
-                    // If the ball is slower than some threshold, make it faster
-                    double check = Math.sqrt(ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY);
-                    if (check < 1){
-                        double scale = 3 / check;
-                        // ballSpeedX *= 9;
-                        // ballSpeedY *= 9;
-                        ballSpeedX *= 2*scale;
-                        ballSpeedY *= 2*scale; 
-
-                    }
-                    // Adjust ball position to avoid sticking    // Might need to change
-                    fireBall.setY((int) (staff.getYPos() - 1));
-                    ballPosition.y = (int) (staff.getYPos() - 1);
-                    
-                }    */
-                
-               
-            
-
             //ALTERNATIVE
 
             // Collision with barriers
@@ -622,21 +562,9 @@ public class RunningMode extends JFrame{
                         break;
                         
                 }
-
-                //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-                //g2d.setColor(Color.BLACK);
-                //g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-                //g.setColor(Color.BLACK);
-                
-
                 fireBall.draw(g);
                 staff.draw(g2d);
                 
-                //g.setColor(Color.RED);
-                //g.fillOval(ballPosition.x, ballPosition.y, 15, 15);
-
-                //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-
             }
             
 
@@ -757,21 +685,6 @@ public class RunningMode extends JFrame{
             timer.start();
         }
 
-        // @Override
-        // public void paintComponent(Graphics g) {
-        //     super.paintComponent(g);
-        //     g.setColor(Color.BLACK);
-        //     g.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-        //     g.setColor(Color.RED);
-        //     g.fillOval(ballPosition.x, ballPosition.y, 10, 10);
-        //     // for (MapPanel.ColoredBlock block : barriers) {
-        //     //     g.setColor(Color.GREEN);
-        //     //     g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-        //     // }
-            
-        // }
-        
-        
         private void updateGame() {
             moveBall();
             movePaddle(); // Method to update paddle position
