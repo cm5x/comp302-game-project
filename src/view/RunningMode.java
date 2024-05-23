@@ -297,6 +297,7 @@ public class RunningMode extends JFrame{
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
+        private boolean remaintouched = false;
 
         
         public int getOriginalPaddleWidth(){
@@ -471,8 +472,8 @@ public class RunningMode extends JFrame{
             ballRect = fireBall.getBounds(); 
 
             // Iterator<MapPanel.ColoredBlock> it = barriers.iterator();
-            
             Iterator<MapPanel.ColoredBlock> it = blocks.iterator();
+            
             while (it.hasNext()) {
                 MapPanel.ColoredBlock block = it.next();
                 if (ballRect.intersects(block.rectangle) && block.rectangle.getWidth() > 50) {
@@ -510,8 +511,10 @@ public class RunningMode extends JFrame{
                                     Rectangle remain;
                                     for (int i = 0; i < 3; i++) {
                                         int cons = 30*i;
-                                        remain = new Rectangle(block.rectangle.x + cons , block.rectangle.y+ 23, 10, 20);
+                                        remain = new Rectangle(block.rectangle.x + cons , block.rectangle.y + 23 , 10, 20);
                                         blocks.add(new ColoredBlock(remain, "remain"));
+                                        remaintouched = false;
+                                        
                                     }
                                 }
                                 bArrayList.remove(barr);
@@ -531,7 +534,8 @@ public class RunningMode extends JFrame{
                 }
 
                 if (block.rectangle.intersects(staff.getBounds())){
-                    if (block.rectangle.getWidth() == 10){
+                    if (block.rectangle.getWidth() == 10 && !remaintouched){
+                        remaintouched = true;
                         player.decChance(chancePanel, labels);
                     }
 
@@ -539,10 +543,8 @@ public class RunningMode extends JFrame{
                         //burda power up pickleniyor spell seçme yazılabilir
                     }
 
-                    it.remove();
                     
-                    
-                    
+                    it.remove(); 
                     break;
                 }
         }
