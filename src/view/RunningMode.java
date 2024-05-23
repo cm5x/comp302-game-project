@@ -846,18 +846,23 @@ public class RunningMode extends JFrame{
             am.put("rotateClockwise", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    paddleAngle += 5; // Increment angle by 5 degrees
-                    staff.setRotationAngle(staff.getRotationAngle()+0.0872665);              
-                    repaint();
+                    if (paddleAngle < 45) {
+                        paddleAngle += 5; // Increment angle by 5 degrees
+                        staff.setRotationAngle(staff.getRotationAngle() + 0.0872665);              
+                        repaint();
+                    }
+                
                 }
             });
 
             am.put("rotateCounterClockwise", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    paddleAngle -= 5; // Decrement angle by 5 degrees
-                    staff.setRotationAngle(staff.getRotationAngle()-0.0872665);
-                    repaint();
+                    if (paddleAngle > -45) {
+                        paddleAngle -= 5; // Decrement angle by 5 degrees
+                        staff.setRotationAngle(staff.getRotationAngle() - 0.0872665);
+                        repaint();
+                    }
                 }
             });
             am.put("activateMagicalStaff", new AbstractAction() {
