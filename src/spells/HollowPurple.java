@@ -25,7 +25,8 @@ public class HollowPurple extends Spell {
 
         for (int i = 0; i < NUM_BARRIERS; i++) {
             int x = rand.nextInt(runningMode.mapPanel.getWidth());
-            int y = rand.nextInt(runningMode.mapPanel.getHeight());
+            int y = rand.nextInt(runningMode.mapPanel.getHeight() - 200);
+            
             // Ensure x and y are aligned to the block grid
             x -= x % MapPanel.BLOCK_WIDTH;
             y -= y % MapPanel.BLOCK_HEIGHT;

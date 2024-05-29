@@ -27,7 +27,7 @@ public class HollowPurpleBarrier extends JComponent implements Barrier {
 
         // Change appearance of the barrier
         try {
-            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/iconHollowPurple.png");
+            InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/200iconHollowPurple.png");
             if (inputStream != null) {
                 barrierImage = ImageIO.read(inputStream);
                 inputStream.close();
