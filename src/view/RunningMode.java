@@ -292,8 +292,8 @@ public class RunningMode extends JFrame{
         
         private Rectangle paddle;
         private Point ballPosition;
-        private int ballSpeedX = 3;
-        private int ballSpeedY = 3;
+        private int ballSpeedX = 0;
+        private int ballSpeedY = 0;
         private int paddleSpeed = 10; // Speed of paddle movement
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
@@ -320,10 +320,11 @@ public class RunningMode extends JFrame{
             //ballPosition = new Point(650, 940);
 
             Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
-            paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
-            ballPosition = new Point(screenSize.width/2, screenSize.height-70);
-            fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
             staff = new MagicalStaff(screenSize);
+            paddle = new Rectangle((int)screenSize.getWidth()/2,(int) screenSize.getHeight()-200, 150, 20);
+            ballPosition = new Point((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 220);
+            fireBall = new FireBall((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 220);
+            
             originalPaddleWidth = staff.getLength();
             
             scoreLabel = new JLabel("Player: " + player.getName() + "      Score: " + score);
@@ -399,7 +400,7 @@ public class RunningMode extends JFrame{
                 }
                 if (ballSpeedX == 0 && ballSpeedY == 0) {
                     ballSpeedX = 3;
-                    ballSpeedY = -3;
+                    ballSpeedY = 3;
                 }
 
                 // if (ballPosition.y > getHeight()) { // Ball goes below the paddle
@@ -409,7 +410,7 @@ public class RunningMode extends JFrame{
 
                 if (fireBall.getBounds().intersects(staff.getBounds())){
                     ballSpeedY = -ballSpeedY;
-                    if (staff.getRotationAngle() > 0){
+                    if (staff.getRotationAngle() > 0.087){
                         ballSpeedX = -ballSpeedX;
                     }
                     ballPosition.y = (int) staff.getYPos()/2-1;
@@ -685,11 +686,11 @@ public class RunningMode extends JFrame{
             //fireBall.setX(screenSize.width / 2);
             //fireBall.setY(screenSize.height - 70);
             
-            fireBall.setX(screenSize.width/2 - 40);
-            fireBall.setY(0);
+            fireBall.setX((int) staff.getXPos() + staff.getLength()/2);
+            fireBall.setY((int) screenSize.getHeight()-220);
             // Reset ball speed
-            ballSpeedX = 3;
-            ballSpeedY = -3;
+            ballSpeedX = 0;
+            ballSpeedY = 0;
         
             // Update the chances display
             // Assuming you have a JLabel or some component to display remaining chances
@@ -700,9 +701,18 @@ public class RunningMode extends JFrame{
         }
 
         private void updateGame() {
-            moveBall();
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            //moveBall();
             movePaddle(); // Method to update paddle position
             updateTime();
+
+            if (ballSpeedX == 0 && ballSpeedY == 0) {
+                // Keep the fireball on top of the staff until Enter is pressed
+                fireBall.setX((int) staff.getXPos()+ staff.getLength()/2);
+                fireBall.setY((int)staff.getYPos() - 20); // Adjust the offset as needed
+            } else {
+                moveBall();
+            }
             repaint();
             checkGameOver();
         
@@ -748,6 +758,7 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
             im.put(KeyStroke.getKeyStroke("T"), "activateMagicalStaff");
             im.put(KeyStroke.getKeyStroke("H"), "activateHexSpell");
+            im.put(KeyStroke.getKeyStroke("ENTER"), "startBallMovement");
 
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
@@ -776,6 +787,15 @@ public class RunningMode extends JFrame{
                 }
             });
 
+            am.put("startBallMovement", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (ballSpeedX == 0 && ballSpeedY == 0) {
+                        ballSpeedX = 3;
+                        ballSpeedY = -3;
+                    }
+                }
+            });
                         // Actions for rotation
             am.put("rotateClockwise", new AbstractAction() {
                 @Override
