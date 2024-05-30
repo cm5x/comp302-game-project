@@ -261,7 +261,9 @@ public class RunningMode extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //spell implementation
-                player.incChance(chancePanel, labels, heartimg);
+                if (player.getChances() < 3){
+                    player.incChance(chancePanel, labels, heartimg);
+                }
             }
         });
 
