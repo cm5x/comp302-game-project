@@ -1,15 +1,25 @@
-
+package gameComponents;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import java.awt.Image;
+import java.awt.Rectangle;
 
 public class MagicalStaff implements KeyListener {
-    private double length;
-    private double thickness;
+    private int length;
+    private int thickness;
     private double rotationAngle;
     private double rotationRate;
     private double movementSpeed;
-    private double xPos; // Current x position of the staff
+    private int xPos; // Current x position of the staff
+    private int yPos;
     private boolean expanded;
     private long expansionStartTime;
     private boolean hexActivated;
@@ -18,16 +28,18 @@ public class MagicalStaff implements KeyListener {
     private boolean rotateRight;
     private boolean moveLeft;
     private boolean moveRight;
+    private Image image;
 
     private static final double ROTATION_LIMIT = 45.0;
 
     public MagicalStaff(Dimension screenSize) {
-        this.length = screenSize.getWidth() * 0.1;
-        this.thickness = 20.0;
-        this.rotationAngle = 0.0;
-        this.rotationRate = 45.0;
+        this.length = (int) (screenSize.getWidth() * 0.1);
+        this.thickness = 20;
+        this.rotationAngle = 0;
+        this.rotationRate = 45;
         this.movementSpeed = 5.0; // Adjust movement speed as needed
-        this.xPos = screenSize.getWidth() / 2; // Start at the center of the screen
+        this.xPos = (int) (screenSize.getWidth() / 2); // Start at the center of the screen
+        this.yPos = (int) screenSize.getHeight()-100;
         this.expanded = false;
         this.expansionStartTime = 0;
         this.hexActivated = false;
@@ -36,10 +48,15 @@ public class MagicalStaff implements KeyListener {
         this.rotateRight = false;
         this.moveLeft = false;
         this.moveRight = false;
+        loadImage();
     }
 
-    public double getLength() {
+    public int getLength() {
         return length;
+    }
+
+    public void setLength(int newLength) {
+        this.length = newLength;
     }
 
     public double getThickness() {
@@ -48,6 +65,10 @@ public class MagicalStaff implements KeyListener {
 
     public double getRotationAngle() {
         return rotationAngle;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(xPos, yPos, length, thickness);
     }
 
     public void moveHorizontally() {
@@ -64,6 +85,25 @@ public class MagicalStaff implements KeyListener {
         } else if (rotateRight && rotationAngle < ROTATION_LIMIT) {
             rotationAngle += rotationRate * 0.02;
         }
+    }
+
+    private void loadImage() {
+        try {
+            image = ImageIO.read(getClass().getResource("/assets/images/200Player.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void draw(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        AffineTransform old = g2d.getTransform();
+
+        // Rotate around the center of the staff
+        g2d.rotate(rotationAngle, xPos + length / 2, yPos + thickness / 2);
+        g2d.drawImage(image, xPos, yPos, length, thickness, null);
+
+        g2d.setTransform(old); // Restore original transformation
     }
 
     @Override
@@ -109,4 +149,20 @@ public class MagicalStaff implements KeyListener {
     public double getXPos() {
         return xPos;
     }
+
+    public void setXPos(int num) {
+        xPos = num;
+    }
+
+    public void setYPos(int num) {
+        yPos = num;
+    }
+
+    public void setRotationAngle(double num) {
+        rotationAngle = num;
+    }
+
+    public double getYPos() {
+        return yPos;
+    }    
 }

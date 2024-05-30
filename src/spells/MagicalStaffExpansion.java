@@ -12,12 +12,16 @@ public class MagicalStaffExpansion extends Spell {
 
     @Override
     protected void performAction() {
-        runningMode.expandPaddle();
+        //runningMode.expandPaddle();
+        runningMode.getStaff().setLength(runningMode.getStaff().getLength()*2);
+        runningMode.getMapPanel().repaint();
     }
 
     @Override
     protected void undoAction() {
-        runningMode.resetPaddle();
+        //runningMode.resetPaddle();
+        runningMode.getStaff().setLength(runningMode.getMapPanel().getOriginalPaddleWidth());
+        runningMode.getMapPanel().repaint();
     }
 
     @Override

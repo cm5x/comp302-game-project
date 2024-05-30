@@ -3,7 +3,6 @@ package spells;
 import javax.swing.*;
 
 import view.RunningMode;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

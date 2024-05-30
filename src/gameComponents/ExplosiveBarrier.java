@@ -15,12 +15,14 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     private String imgpath = "assets/images/200iconredgem.png";
     private int x1Coordinate;
     private int y1Coordinate;
+    private int health;
 
     public ExplosiveBarrier(int startX, int startY) {
         this.exploded = false;
         this.coordinates = new int[]{startX, startX + 30, startY, startY + 30}; // Assuming fixed size for explosive barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+        this.health = 1;
 
         // Change appereance of barrier
         try {
@@ -47,16 +49,17 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
 
     @Override
     public int getHealth() {
-        return 1; // Explosive barriers are destroyed immediately upon explosion
+        return health; // Explosive barriers are destroyed immediately upon explosion
     }
 
     @Override
     public boolean isDestroyed() {
-        return exploded;
+        return health<=0;
     }
 
     @Override
     public void hit(int hitDamage) {
+        this.health = health - hitDamage;
         if (!exploded) {
             explode(); // Explode when hit
         }
@@ -124,5 +127,9 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     @Override
     public int getYCoordinate() {
         return y1Coordinate;
+    }
+
+    public boolean isexploded(){
+        return exploded;
     }
 }
