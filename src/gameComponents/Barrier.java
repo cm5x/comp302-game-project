@@ -19,6 +19,7 @@ public interface Barrier {
     public void paintComponent(Graphics g);
     public int getXCoordinate();
     public int getYCoordinate();
-
+    public int getSpellIndex();
+    public int setSpellIndex();
    
 }

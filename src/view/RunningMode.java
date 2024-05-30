@@ -42,6 +42,11 @@ import java.awt.geom.AffineTransform;
 import utilities.*;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
@@ -376,6 +381,8 @@ public class RunningMode extends JFrame{
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
         private boolean remaintouched = false;
+        private boolean spellDropped = false;
+        private int droppedSpellIndex;
         private long currentTime;
         private long startTime;
         
@@ -427,7 +434,7 @@ public class RunningMode extends JFrame{
                 e.printStackTrace();
             }
 
-
+            int rewardingCount = 0;
             for (int[] i : barrierIndexList) {
                 System.out.println(i[2]);
                 switch (i[2]) {
@@ -454,15 +461,25 @@ public class RunningMode extends JFrame{
                     case 4:
                         addBlock(i[0], i[1],"rewarding");
                         RewardingBarrier rewbar = new RewardingBarrier(i[0], i[1]);
+                        
+                        if (rewardingCount<4){
+                            rewbar.setSpellIndex(rewardingCount);
+                        } else{
+                            Random spellRandom = new Random();     
+                            int randomSpellIndex = spellRandom.nextInt(3)+1;
+                            rewbar.setSpellIndex(randomSpellIndex);
+                        }
                         bArrayList.add(rewbar);
+                        rewardingCount+=1;
                         break;
                     default:
                         break;
                 }
 
                 repaint();
-
+                
             }
+            
         }
             private void moveBall() {
                 fireBall.setX(ballSpeedX+fireBall.getX());
@@ -536,7 +553,8 @@ public class RunningMode extends JFrame{
                                 if (barr.isRewarding()){
                                     Rectangle rewblock = new Rectangle(block.rectangle.x + 43, block.rectangle.y+ 23, 20, 20);
                                     blocks.add(new ColoredBlock(rewblock, "rewardbox"));       
-                                      
+                                    spellDropped = true;
+                                    droppedSpellIndex = barr.getSpellIndex();
                                 }
 
                                 if (barr instanceof ExplosiveBarrier){
@@ -546,7 +564,6 @@ public class RunningMode extends JFrame{
                                         remain = new Rectangle(block.rectangle.x + cons , block.rectangle.y + 23 , 10, 20);
                                         blocks.add(new ColoredBlock(remain, "remain"));
                                         remaintouched = false;
-                                        
                                     }
                                 }
                                 
@@ -576,8 +593,9 @@ public class RunningMode extends JFrame{
                         player.decChance(chancePanel, labels);
                     }
 
-                    else{
-                        //burda power up pickleniyor spell seçme yazılabilir
+                    else if (spellDropped){
+                        updateSpellInventory(droppedSpellIndex, "increase");
+                        spellDropped = false;
                     }
 
                     
@@ -731,12 +749,15 @@ public class RunningMode extends JFrame{
 
         private void showGameOverFrame(String message) {
             JFrame gameOverFrame = new JFrame("Game Over");
-            gameOverFrame.setSize(300, 150);
+            gameOverFrame.setSize(300, 300);
             gameOverFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             gameOverFrame.setLocationRelativeTo(null);
         
             JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
             JButton okButton = new JButton("OK");
+            ImageIcon gifIcon = new ImageIcon("assets/gifs/no.gif");
+            JLabel gifLabel = new JLabel(gifIcon);
+
         
             okButton.addActionListener(new ActionListener() {
                 @Override
@@ -746,12 +767,30 @@ public class RunningMode extends JFrame{
             });
         
             JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
-            panel.add(messageLabel, BorderLayout.CENTER);
-            panel.add(okButton, BorderLayout.SOUTH);
-        
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.add(messageLabel);
+            panel.add(gifLabel, BorderLayout.CENTER);
+            panel.add(okButton);
+       
             gameOverFrame.add(panel);
             gameOverFrame.setVisible(true);
+            playAudio("assets/audio/no.wav");
+        }
+        private void playAudio(String audioFilePath) {
+            try {
+                // Load the audio file
+                File audioFile = new File(audioFilePath);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+
+                // Get a sound clip resource
+                Clip clip = AudioSystem.getClip();
+
+                // Open the audio stream and start playing
+                clip.open(audioStream);
+                clip.start();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
         }
         
 
