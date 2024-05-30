@@ -71,7 +71,7 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
-    private JLabel scoreLabel;
+    public JLabel scoreLabel;
     private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
@@ -92,7 +92,7 @@ public class RunningMode extends JFrame{
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
 
-    ArrayList<Barrier> bArrayList = new ArrayList<>();
+    public ArrayList<Barrier> bArrayList = new ArrayList<>();
     // TODO: diğer spelleri ekle Melike
     private MagicalStaffExpansion magicalStaffExpansion;
     private Hex hexSpell;
@@ -103,9 +103,9 @@ public class RunningMode extends JFrame{
     private int chances;
     private Timer timer;
     private MagicalStaff staff;
-    private Player player;
+    public Player player;
     private ArrayList<JLabel> labels;
-    private double score;
+    public double score;
 
     public MagicalStaff getStaff() {
         return staff;
@@ -280,6 +280,7 @@ public class RunningMode extends JFrame{
         //add(mapPanel,BorderLayout.EAST);
         //this.setVisible(true);
         // Fullscreen setup
+        /* 
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice device = env.getDefaultScreenDevice();
         if (device.isFullScreenSupported()) {
@@ -289,6 +290,7 @@ public class RunningMode extends JFrame{
             setSize(1920, 1080);
             setVisible(true);
         }
+        */
 
     }
     
@@ -319,8 +321,8 @@ public class RunningMode extends JFrame{
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
-        private boolean remaintouched = false;
-        private long currentTime;
+        public boolean remaintouched = false;
+        public long currentTime;
         private long startTime;
         
         public int getOriginalPaddleWidth(){
@@ -533,6 +535,10 @@ public class RunningMode extends JFrame{
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
             
             return true;
+        }
+
+        public void addCblock(Rectangle b, String selectedcolor){
+            blocks.add(new ColoredBlock(b, selectedcolor));
         }
 
         @Override

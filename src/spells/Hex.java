@@ -11,6 +11,10 @@ import java.util.TimerTask;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import gameComponents.Barrier;
+import gameComponents.ExplosiveBarrier;
+import gameComponents.ReinforcedBarrier;
+//import view.runningMode.MapPanel.ColoredBlock;
 import view.RunningMode.MapPanel;
 import view.RunningMode;
 
@@ -93,8 +97,49 @@ public class Hex extends Spell {
             while (blockIt.hasNext()) {
                 MapPanel.ColoredBlock block = blockIt.next();
                 if (projectileRect.intersects(block.getRectangle())) {
-                    blockIt.remove();
-                    it.remove();
+                    for (Barrier barr : runningMode.bArrayList){
+                        if (barr.getXCoordinate() == block.getRectangle().x && barr.getYCoordinate() == block.getRectangle().y){
+                            barr.hit(1);
+                            if (barr.isDestroyed()){
+                                it.remove();
+                                blockIt.remove();
+                                if (barr.isRewarding()){
+                                    Rectangle rewblock = new Rectangle(block.getRectangle().x + 43, block.getRectangle().y+ 23, 20, 20);
+                                    runningMode.getMapPanel().addCblock(rewblock, "rewardbox");
+                                    break;       
+                                      
+                                }
+
+                                if (barr instanceof ExplosiveBarrier){
+                                    Rectangle remain;
+                                    for (int i = 0; i < 3; i++) {
+                                        int cons = 30*i;
+                                        remain = new Rectangle(block.getRectangle().x + cons , block.getRectangle().y + 23 , 10, 20);
+                                        runningMode.getMapPanel().addCblock(remain, "remain");
+                                        runningMode.getMapPanel().remaintouched = false;
+                                        
+                                        
+                                    }
+                                }
+
+            
+                                
+                                runningMode.score = runningMode.score + 300 / (double) runningMode.getMapPanel().currentTime;
+                                System.out.println(runningMode.getMapPanel().currentTime);
+                                String scorest = String.format("%.2f", runningMode.score);
+                                runningMode.scoreLabel.setText("Player: " + runningMode.player.getName() + "   Score: " + scorest);
+                                break;
+                                
+                                
+                            }
+                            
+                        }
+                    
+
+                        
+                        
+                    }
+                    
                     break;
                 }
             }
