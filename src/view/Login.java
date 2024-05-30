@@ -66,7 +66,7 @@ public class Login extends JFrame {
 
         // button for creating user
         JButton createUserButton = new JButton("Create User");
-        add(createUserButton);
+        backgroundPanel.add(createUserButton);
 
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
