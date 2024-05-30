@@ -71,6 +71,7 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
+    private JLabel scoreLabel;
     private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
@@ -104,6 +105,7 @@ public class RunningMode extends JFrame{
     private MagicalStaff staff;
     private Player player;
     private ArrayList<JLabel> labels;
+    private double score;
 
     public MagicalStaff getStaff() {
         return staff;
@@ -120,7 +122,7 @@ public class RunningMode extends JFrame{
         this.selectedMap = selectedMap;
         this.player = player;
         chances = player.getChances();
-
+        score = 0;
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
         //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
@@ -298,7 +300,8 @@ public class RunningMode extends JFrame{
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
         private boolean remaintouched = false;
-
+        private long currentTime;
+        private long startTime;
         
         public int getOriginalPaddleWidth(){
             return originalPaddleWidth;
@@ -322,13 +325,19 @@ public class RunningMode extends JFrame{
             fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
             staff = new MagicalStaff(screenSize);
             originalPaddleWidth = staff.getLength();
-
-
-
+            
+            scoreLabel = new JLabel("Player: " + player.getName() + "      Score: " + score);
+            Font font = new Font(Font.SANS_SERIF, Font.BOLD, 24);
+            scoreLabel.setFont(font);
+            scoreLabel.setForeground(Color.WHITE);
+            scoreLabel.setSize(100, 20);
+            this.add(scoreLabel);
+            
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
             timer = new Timer(10, (ActionEvent e) -> updateGame());
             timer.start();
+            startTime = System.currentTimeMillis();
             
             File file = new File(filePath); // File path should be in String data
             
@@ -457,6 +466,11 @@ public class RunningMode extends JFrame{
                                         
                                     }
                                 }
+                                
+                                score = score + 300 / (double) currentTime;
+                                System.out.println(currentTime);
+                                String scorest = String.format("%.2f", score);
+                                scoreLabel.setText("Player: " + player.getName() + "      Score: " + scorest);
                                 bArrayList.remove(barr);
                                 break;
                                 
@@ -688,9 +702,16 @@ public class RunningMode extends JFrame{
         private void updateGame() {
             moveBall();
             movePaddle(); // Method to update paddle position
+            updateTime();
             repaint();
             checkGameOver();
-            
+        
+        }
+
+        private void updateTime(){
+            long currentTime1 = System.currentTimeMillis();
+            currentTime = currentTime1 - startTime - 50;
+            currentTime = currentTime / 500;
         }
 
         private void movePaddle() {
@@ -861,7 +882,7 @@ public class RunningMode extends JFrame{
 
 
     public static void main(String args[]){
-        Player p = new Player("uname", "pass");
+        Player p = new Player("admin", "pass");
         RunningMode run = new RunningMode(1,p);
         run.setVisible(true);
     }
