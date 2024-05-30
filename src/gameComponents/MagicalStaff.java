@@ -39,7 +39,7 @@ public class MagicalStaff implements KeyListener {
         this.rotationRate = 45;
         this.movementSpeed = 5.0; // Adjust movement speed as needed
         this.xPos = (int) (screenSize.getWidth() / 2); // Start at the center of the screen
-        this.yPos = (int) screenSize.getHeight()-200;
+        this.yPos = (int) screenSize.getHeight()-100;
         this.expanded = false;
         this.expansionStartTime = 0;
         this.hexActivated = false;
