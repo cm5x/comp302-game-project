@@ -1,17 +1,27 @@
 package spells;
-import spells.Spell;
 
-public class FelixFelicis implements Spell {
-    
-    public FelixFelicis(){
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import view.RunningMode;
+
+public class FelixFelicis extends Spell {
+
+    public FelixFelicis(RunningMode runningMode) {
+        super("Felix Felicis", new ImageIcon("path/to/icon.png"), runningMode);
     }
 
-    public void deactivate(){
+    @Override
+    protected void performAction() {
+        runningMode.getPlayer().incChance(runningMode.getChancePanel(), runningMode.getLabels(), runningMode.getHeartimg());;
+    }
+
+    @Override
+    protected void undoAction() {
 
     }
 
-    public void activate(){
-        
+    @Override
+    protected int getDuration() {
+        return 0; // permanent
     }
-
 }

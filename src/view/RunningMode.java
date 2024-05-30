@@ -74,6 +74,8 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
+    private ArrayList<JLabel> spellLabels;
+    
     private JLabel scoreLabel;
     private int selectedMap;
     JButton pauseButton;
@@ -99,6 +101,8 @@ public class RunningMode extends JFrame{
     // TODO: diğer spelleri ekle Melike
     private MagicalStaffExpansion magicalStaffExpansion;
     private Hex hexSpell;
+    private FelixFelicis felixFelicis;
+    private OverwhelmingFireBall overwhelmingFireBall;
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
@@ -107,6 +111,23 @@ public class RunningMode extends JFrame{
     private Timer timer;
     private MagicalStaff staff;
     private Player player;
+    
+    public Player getPlayer() {
+        return player;
+    }
+
+    public JPanel getChancePanel() {
+        return chancePanel;
+    }
+
+    public ImageIcon getHeartimg() {
+        return heartimg;
+    }
+
+    public ArrayList<JLabel> getLabels() {
+        return labels;
+    }
+
     private ArrayList<JLabel> labels;
     private double score;
 
@@ -135,6 +156,7 @@ public class RunningMode extends JFrame{
         // Panel on the left that will include the buttons to load, resume, save and load game
         this.blockChooserPanel = new JPanel();
         this.spellJPanel = new JPanel();
+        this.spellLabels = new ArrayList<>();
         this.chancePanel = new JPanel();
         this.blockChooserPanel.setPreferredSize(new Dimension(230, 400));
         this.spellJPanel.setSize(230, 300);
@@ -151,6 +173,8 @@ public class RunningMode extends JFrame{
         //TODO: Initialize the spells
         this.magicalStaffExpansion = new MagicalStaffExpansion(this);
         this.hexSpell = new Hex(this);
+        this.felixFelicis = new FelixFelicis(this);
+        this.overwhelmingFireBall = new OverwhelmingFireBall(this);
 
         this.mapPanel = new MapPanel(this);
         this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));  // Add a black line border
@@ -172,10 +196,10 @@ public class RunningMode extends JFrame{
         OFB.setSize(170,40);
         ffButton.setSize(170, 40);
         MSE.setSize(170,40);
-        hexB.setLocation(10, 50);
-        OFB.setLocation(10, 110);
+        hexB.setLocation(10, 110);
+        OFB.setLocation(10, 230);
         ffButton.setLocation(10, 170);
-        MSE.setLocation(10, 230);
+        MSE.setLocation(10, 50);
         spellJPanel.add(slab);
         spellJPanel.add(hexB);
         spellJPanel.add(OFB);
@@ -241,38 +265,87 @@ public class RunningMode extends JFrame{
         hexB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
+                if (player.getSpellInventory().get(1)>0){
+                    hexSpell.activate();
+                    updateSpellInventory(1, "decrease");
+
+                }
             }
         });
 
         OFB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
+                if (player.getSpellInventory().get(3)>0){
+                    overwhelmingFireBall.activate();
+                    updateSpellInventory(3, "decrease");
+
+                }
             }
         });
 
         ffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
-                player.incChance(chancePanel, labels, heartimg);
+                //spell implementation                
+                if (player.getSpellInventory().get(2)>0){
+                    felixFelicis.activate();
+                    updateSpellInventory(2, "decrease");
+
+                }
             }
         });
 
         MSE.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
+                if (player.getSpellInventory().get(0)>0){
+                    magicalStaffExpansion.activate();
+                    updateSpellInventory(0, "decrease");
+                }
             }
         });
-        
         add(blockChooserPanel, BorderLayout.WEST);
-
+        updateSpellInventoryLabels();
         
         //add(mapPanel,BorderLayout.EAST);
         this.setVisible(true);
 
+    }
+
+    private void updateSpellInventoryLabels(){
+           // Create new labels based on current spell inventory
+        for (JLabel label : spellLabels) {
+            spellJPanel.remove(label);
+            }
+        spellLabels.clear();
+        String[] spellNames = {"Magical Staff Expansion", "Hex", "Felix Felicis", "Overwhelming Fireball"};
+        for (int i = 0; i < spellNames.length; i++) {
+            JLabel spellLabel = new JLabel(player.getSpellInventory().get(i)+" ");
+            spellLabel.setSize(200, 20);
+            spellLabel.setLocation(190, 60 + i * 60);
+            spellLabels.add(spellLabel);
+            spellJPanel.add(spellLabel);
+        }
+
+        spellJPanel.revalidate();
+        spellJPanel.repaint();
+    }
+    // private void updateSpellButtonLabels() {
+    //     this.hexB.setText("Hex (" + player.getSpellInventory().get(1) + ")");
+    //     this.OFB.setText("Overwhelming Fireball (" + player.getSpellInventory().get(3) + ")");
+    //     this.ffButton.setText("Felix Felicis (" + player.getSpellInventory().get(2) + ")");
+    //     this.MSE.setText("Magical Staff Expansion (" + player.getSpellInventory().get(0) + ")");
+    //     this.spellJPanel.hexB
+    // }
+
+    public void updateSpellInventory(int index, String mode) {
+        if (mode=="increase"){
+            player.increaseSpellInventory(index);
+        } else if (mode=="decrease"){
+            player.decreaseSpellInventory(index);
+        }
+        updateSpellInventoryLabels();
     }
     
     
@@ -438,20 +511,26 @@ public class RunningMode extends JFrame{
                     //ALT VX
                     Rectangle intersection = ballRect.intersection(block.rectangle);
                     intersection = fireBall.getBounds().intersection(block.rectangle);
-                    if (intersection.width < intersection.height) {
-                        ballSpeedX = -ballSpeedX;
-                        LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX));
-                    } else {
-                        ballSpeedY = -ballSpeedY;
-                        LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
+                    if (!overwhelmingFireBall.isActive()){
+                    
+                        if (intersection.width < intersection.height) {
+                            ballSpeedX = -ballSpeedX;
+                            LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX));
+                        } else {
+                            ballSpeedY = -ballSpeedY;
+                            LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
+                        }
                     }
                     int xcoor = block.rectangle.x;
                     int ycoor = block.rectangle.y;
                     for (Barrier barr : bArrayList){
                         if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
-                            barr.hit(1);
+                            if (barr instanceof ReinforcedBarrier & overwhelmingFireBall.isActive()){
+                                barr.hit(barr.getHealth());
+                            } else{
+                                barr.hit(1);
+                            }
                             
-
                             if (barr.isDestroyed()){
                                 it.remove();
                                 if (barr.isRewarding()){
@@ -761,8 +840,11 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
             im.put(KeyStroke.getKeyStroke("T"), "activateMagicalStaff");
             im.put(KeyStroke.getKeyStroke("H"), "activateHexSpell");
-            im.put(KeyStroke.getKeyStroke("ENTER"), "startBallMovement");
+            im.put(KeyStroke.getKeyStroke("F"), "activateFelixFelicis");
+            im.put(KeyStroke.getKeyStroke("O"), "activateOverwhelmingFireball");
 
+            im.put(KeyStroke.getKeyStroke("ENTER"), "startBallMovement");
+            
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
             im.put(KeyStroke.getKeyStroke("DOWN"), "rotateCounterClockwise");
@@ -825,15 +907,43 @@ public class RunningMode extends JFrame{
             am.put("activateMagicalStaff", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                   magicalStaffExpansion.activate();
+                    if (player.getSpellInventory().get(0)>0){
+                        magicalStaffExpansion.activate();
+                        updateSpellInventory(0, "decrease");
+
+                    }
                  }
              });
              am.put("activateHexSpell", new AbstractAction() {
                  @Override
                  public void actionPerformed(ActionEvent e) {
-                     hexSpell.activate();
+                    if (player.getSpellInventory().get(1)>0){
+                        hexSpell.activate();
+                        updateSpellInventory(1, "decrease");
+
+                    }   
                  }
              });
+             am.put("activateFelixFelicis", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (player.getSpellInventory().get(2)>0){
+                        felixFelicis.activate();
+                        updateSpellInventory(2, "decrease");
+
+                    }
+                }
+            });
+            am.put("activateOverwhelmingFireball", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (player.getSpellInventory().get(3)>0){
+                        overwhelmingFireBall.activate();
+                        updateSpellInventory(3, "decrease");
+
+                    }
+                }
+            });
              // Action for removing all barriers
             am.put("removeAllBarriers", new AbstractAction() {
                 @Override
@@ -909,12 +1019,12 @@ public class RunningMode extends JFrame{
         mapPanel.repaint();
     }
 
-    public void activateHexCanons() {
-        mapPanel.activateHexCanons();
-    }
-    public void deactivateHexCanons() {
-        mapPanel.deactivateHexCanons();
-    }
+    // public void activateHexCanons() {
+    //     mapPanel.activateHexCanons();
+    // }
+    // public void deactivateHexCanons() {
+    //     mapPanel.deactivateHexCanons();
+    // }
         
     public static void main(String args[]){
         Player p = new Player("admin", "pass");

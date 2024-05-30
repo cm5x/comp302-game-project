@@ -11,11 +11,15 @@ public class Player {
     private int playerChance = 3;
     public String username;
     private String password;
-
+    private ArrayList<Integer> spellInventory; //Index 0: magicalstaffexpansion, 1:hexSpell, 2:FelixFelicis, 3:overWhelmingBall
 
     public Player(String username, String password){
         this.username = username;
         this.password = password;
+        this.spellInventory = new ArrayList<>(4);
+        for (int i = 0; i < 4; i++) {
+            this.spellInventory.add(1);
+        }
     }
 
 public void setChances(int set){
@@ -60,10 +64,28 @@ public void incChance(JPanel chancePanel, ArrayList<JLabel> labels, ImageIcon he
     chancePanel.add(labelnew);
     labels.add(labelnew);
     chancePanel.revalidate();
-    chancePanel.repaint();
-
-            
-    
+    chancePanel.repaint();  
 }   
+
+public ArrayList<Integer> getSpellInventory() {
+    return this.spellInventory;
+}
+
+public void setSpellInventory(int index, int value) {
+    if (index >= 0 && index < this.spellInventory.size()) {
+        this.spellInventory.set(index, value);
+    }
+}
+
+public void increaseSpellInventory(int index){
+    int current_val=this.spellInventory.get(index);
+    this.spellInventory.set(index, current_val+1);
+}
+
+public void decreaseSpellInventory(int index){
+    int current_val=this.spellInventory.get(index);
+    this.spellInventory.set(index, current_val-1);
+}
+
 }
 
