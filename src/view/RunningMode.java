@@ -321,9 +321,9 @@ public class RunningMode extends JFrame{
 
             Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
             staff = new MagicalStaff(screenSize);
-            paddle = new Rectangle((int)screenSize.getWidth()/2,(int) screenSize.getHeight()-200, 150, 20);
-            ballPosition = new Point((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 220);
-            fireBall = new FireBall((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 220);
+            paddle = new Rectangle((int)screenSize.getWidth()/2,(int) screenSize.getHeight()-100, 150, 20);
+            ballPosition = new Point((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 120);
+            fireBall = new FireBall((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 120);
             
             originalPaddleWidth = staff.getLength();
             
@@ -687,7 +687,7 @@ public class RunningMode extends JFrame{
             //fireBall.setY(screenSize.height - 70);
             
             fireBall.setX((int) staff.getXPos() + staff.getLength()/2);
-            fireBall.setY((int) screenSize.getHeight()-220);
+            fireBall.setY((int) screenSize.getHeight()-120);
             // Reset ball speed
             ballSpeedX = 0;
             ballSpeedY = 0;
@@ -709,7 +709,7 @@ public class RunningMode extends JFrame{
             if (ballSpeedX == 0 && ballSpeedY == 0) {
                 // Keep the fireball on top of the staff until Enter is pressed
                 fireBall.setX((int) staff.getXPos()+ staff.getLength()/2);
-                fireBall.setY((int)staff.getYPos() - 20); // Adjust the offset as needed
+                fireBall.setY((int)staff.getYPos() -20); // Adjust the offset as needed
             } else {
                 moveBall();
             }
