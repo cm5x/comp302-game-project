@@ -570,7 +570,7 @@ public class RunningMode extends JFrame{
                     case "remain":
                         g.setColor(Color.RED);
                         g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-                        block.rectangle.y = block.rectangle.y + 2;
+                        block.rectangle.y = block.rectangle.y + 5;
                         break;
                         
                     default:

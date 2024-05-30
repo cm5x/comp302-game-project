@@ -95,7 +95,7 @@ public class Login extends JFrame {
 
         this.add(backgroundPanel);
 
-    }
+    
 
 
 
