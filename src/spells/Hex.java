@@ -106,7 +106,7 @@ public class Hex extends Spell {
                                 if (barr.isRewarding()){
                                     Rectangle rewblock = new Rectangle(block.getRectangle().x + 43, block.getRectangle().y+ 23, 20, 20);
                                     runningMode.getMapPanel().addCblock(rewblock, "rewardbox");
-                                    break;       
+                                          
                                       
                                 }
 
@@ -127,7 +127,9 @@ public class Hex extends Spell {
                                 runningMode.score = runningMode.score + 300 / (double) runningMode.getMapPanel().currentTime;
                                 System.out.println(runningMode.getMapPanel().currentTime);
                                 String scorest = String.format("%.2f", runningMode.score);
-                                runningMode.scoreLabel.setText("Player: " + runningMode.player.getName() + "   Score: " + scorest);
+                                runningMode.scoreLabel.setText("Score: " + scorest);
+                                runningMode.bArrayList.remove(barr);
+                                runningMode.barrcountlabel.setText("Remaining Barriers: " + runningMode.bArrayList.size());
                                 break;
                                 
                                 

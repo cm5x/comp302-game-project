@@ -72,6 +72,8 @@ public class RunningMode extends JFrame{
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
     public JLabel scoreLabel;
+    private JLabel playerlabel;
+    public JLabel barrcountlabel;
     private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
@@ -183,11 +185,17 @@ public class RunningMode extends JFrame{
         JLabel clab = new JLabel("    Remaining Chances:");
         clab.setSize(200, 20);
         //adding chances
-        scoreLabel = new JLabel("Player: " + player.getName() + "   Score: " + score);
+        playerlabel = new JLabel("Player: " + player.getName() + "    ");
+        scoreLabel = new JLabel("   Score: " + score);
+        barrcountlabel = new JLabel("Remaining Barriers: " + bArrayList.size());
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, 16);
+        barrcountlabel.setFont(font);
+        playerlabel.setFont(font);
         scoreLabel.setFont(font);
         scoreLabel.setForeground(Color.BLACK);
         scoreLabel.setSize(100, 20);
+        chancePanel.add(playerlabel);
+        chancePanel.add(barrcountlabel);
         chancePanel.add(scoreLabel);
         chancePanel.add(clab);
         clab.setFont(font);
@@ -488,8 +496,9 @@ public class RunningMode extends JFrame{
                                 score = score + 300 / (double) currentTime;
                                 System.out.println(currentTime);
                                 String scorest = String.format("%.2f", score);
-                                scoreLabel.setText("Player: " + player.getName() + "   Score: " + scorest);
+                                scoreLabel.setText("Score: " + scorest);
                                 bArrayList.remove(barr);
+                                barrcountlabel.setText("Remaining Barriers: " + bArrayList.size());
                                 break;
                                 
                             }
@@ -650,14 +659,15 @@ public class RunningMode extends JFrame{
                 if (player.getChances() > 0) {
                     timer.stop();
                     resetBallAndContinue();
-                } 
+                }
+                 
                 else {
                     timer.stop();
                     showGameOverFrame("Game Over! No chances left.");
                 }
             }
         
-            if (blocks.isEmpty()) {
+            if (bArrayList.size() == 0) {
                 timer.stop();
                 showGameOverFrame("Game Over! All barriers cleared.");
             }
