@@ -758,7 +758,18 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
             im.put(KeyStroke.getKeyStroke("T"), "activateMagicalStaff");
             im.put(KeyStroke.getKeyStroke("H"), "activateHexSpell");
-            im.put(KeyStroke.getKeyStroke("ENTER"), "startBallMovement");
+            im.put(KeyStroke.getKeyStroke("W"), "startBallMovement");
+            
+            // Adding a mouse listener to start the ball movement
+            frame.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Trigger the action on left mouse click
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        am.get("startBallMovement").actionPerformed(null);
+                    }
+                }
+            });
 
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
