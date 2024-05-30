@@ -1,3 +1,4 @@
+package gameComponents;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -33,7 +34,7 @@ public class Ymir {
     }
 
     private void startCoinFlipping() {
-        timer.schedule(new TimerTask() {
+        TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 if (random.nextDouble() < COIN_FLIP_PROBABILITY) {
@@ -44,7 +45,8 @@ public class Ymir {
                     showCoinFlipResult(false);
                 }
             }
-        }, 0, COIN_FLIP_INTERVAL);
+        };
+        timer.scheduleAtFixedRate(task, 0, COIN_FLIP_INTERVAL);
     }
 
     private String getRandomAbility() {
