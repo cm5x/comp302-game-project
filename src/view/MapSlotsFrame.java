@@ -29,7 +29,8 @@ public class MapSlotsFrame extends JFrame {
     private FrameCloseListener listener;
     private int loadMapIndex;
     Player p = new Player("uname", "pass");
-
+    String backgroundpath = "assets/images/200background.png";
+    Image backimg = new ImageIcon(backgroundpath).getImage();
 
     public MapSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {
         

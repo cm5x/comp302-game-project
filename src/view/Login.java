@@ -20,14 +20,15 @@ public class Login extends JFrame{
     //bunu gamecontrollerda defineladım
     //private HashMap<String,String> userPasswordHashMap;
     GameController controller = new GameController();
-
+    String backgroundpath = "assets/images/200background.png";
+    Image backimg = new ImageIcon(backgroundpath).getImage();   
     //Constructor
     public Login(){
 
         //Set the GUI
         setTitle("Login Page");
-        setSize(500,250);
-        setLayout(new GridLayout(3,2));
+        setSize(500,300);
+        setLayout(null);
 
         //Open the frame in the center
         setLocationRelativeTo(null);
@@ -36,25 +37,36 @@ public class Login extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add components
-
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backimg, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        backgroundPanel.setLocation(0, 0);
+        backgroundPanel.setSize(500, 275);
+        backgroundPanel.setLayout(new GridLayout(3,2));
         //Writing Username
         JLabel usernameLabel = new JLabel("Username:");
-        add(usernameLabel);
+        usernameLabel.setForeground(Color.WHITE);
+        backgroundPanel.add(usernameLabel);
 
         //Text field to enter username
         usernameField = new JTextField();
-        add(usernameField);
+        backgroundPanel.add(usernameField);
 
         //Writing Password
         JLabel passwordLabel = new JLabel("Password:");
-        add(passwordLabel);
+        passwordLabel.setForeground(Color.WHITE);
+        backgroundPanel.add(passwordLabel);
         
         //Text field to enter password
         passwordField = new JPasswordField();
-        add(passwordField);
+        backgroundPanel.add(passwordField);
 
         JButton loginButton = new JButton("Login");
-        add(loginButton);
+        backgroundPanel.add(loginButton);
 
         // Add action listener for buttons
         loginButton.addActionListener(new ActionListener() {
@@ -90,9 +102,10 @@ public class Login extends JFrame{
             }
         });
 
-
+        this.add(backgroundPanel);
 
     }
+
 
 
 /*     // Write a method to authenticate the user
