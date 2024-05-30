@@ -10,7 +10,8 @@ public class Homepage extends JFrame {
 
     protected String username;
     private static Homepage instance = null;
-
+    String backgroundpath = "assets/images/200background.png";
+    Image backimg = new ImageIcon(backgroundpath).getImage(); 
 
     public Homepage(String username) {
 
@@ -25,7 +26,13 @@ public class Homepage extends JFrame {
 
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backimg, 0, 0, getWidth(), getHeight(), this);
+            }
+        }; 
         panel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 rows, 1 column
 
         JButton playButton = new JButton("Play Game");
@@ -63,7 +70,7 @@ public class Homepage extends JFrame {
         JButton buildingButton = new JButton("Building Mode");
         buildingButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MapDesigner mapdesigner = new MapDesigner();
+                MapDesigner mapdesigner = new MapDesigner(username);
                 mapdesigner.setVisible(true);
                 
             }

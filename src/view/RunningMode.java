@@ -71,7 +71,9 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
-    private JLabel scoreLabel;
+    public JLabel scoreLabel;
+    private JLabel playerlabel;
+    public JLabel barrcountlabel;
     private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
@@ -92,7 +94,7 @@ public class RunningMode extends JFrame{
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
 
-    ArrayList<Barrier> bArrayList = new ArrayList<>();
+    public ArrayList<Barrier> bArrayList = new ArrayList<>();
     // TODO: diğer spelleri ekle Melike
     private MagicalStaffExpansion magicalStaffExpansion;
     private Hex hexSpell;
@@ -103,9 +105,9 @@ public class RunningMode extends JFrame{
     private int chances;
     private Timer timer;
     private MagicalStaff staff;
-    private Player player;
+    public Player player;
     private ArrayList<JLabel> labels;
-    private double score;
+    public double score;
 
     public MagicalStaff getStaff() {
         return staff;
@@ -137,10 +139,10 @@ public class RunningMode extends JFrame{
         this.spellJPanel.setSize(230, 300);
         this.spellJPanel.setBackground(Color.ORANGE);
         this.spellJPanel.setLayout(null);
-        this.spellJPanel.setLocation(0, 240);
-        this.chancePanel.setSize(230, 540);
+        this.spellJPanel.setLocation(0, 200);
+        this.chancePanel.setSize(230, 200);
         this.chancePanel.setLayout(new FlowLayout());
-        this.chancePanel.setLocation(0, 540);
+        this.chancePanel.setLocation(0, 0);
         this.chancePanel.setBackground(Color.GRAY);
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(null);
@@ -180,9 +182,23 @@ public class RunningMode extends JFrame{
         spellJPanel.add(MSE);
 
         //setting up chance panel
-        JLabel clab = new JLabel("Remaining Chances");
+        JLabel clab = new JLabel("    Remaining Chances:");
         clab.setSize(200, 20);
         //adding chances
+        playerlabel = new JLabel("Player: " + player.getName() + "    ");
+        scoreLabel = new JLabel("   Score: " + score);
+        barrcountlabel = new JLabel("Remaining Barriers: " + bArrayList.size());
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 16);
+        barrcountlabel.setFont(font);
+        playerlabel.setFont(font);
+        scoreLabel.setFont(font);
+        scoreLabel.setForeground(Color.BLACK);
+        scoreLabel.setSize(100, 20);
+        chancePanel.add(playerlabel);
+        chancePanel.add(barrcountlabel);
+        chancePanel.add(scoreLabel);
+        chancePanel.add(clab);
+        clab.setFont(font);
         labels = new ArrayList<>();
         for (int i = 0; i<chances; i++){
             JLabel tempLabel = new JLabel(heartimg);
@@ -190,34 +206,35 @@ public class RunningMode extends JFrame{
             labels.add(tempLabel);
         }
 
-        chancePanel.add(clab);
+        
         
 
         // Create buttons 
         pauseButton = new JButton("Pause");
         saveButton = new JButton("Save");
         loadButton = new JButton("Load");
-        pauseButton.setSize(200, 40);
-        loadButton.setSize(200, 40);
-        saveButton.setSize(200, 40);
-        pauseButton.setLocation(20, 50);
-        loadButton.setLocation(20, 110);
-        saveButton.setLocation(20, 170);
+        pauseButton.setSize(170, 40);
+        loadButton.setSize(170, 40);
+        saveButton.setSize(170, 40);
+        pauseButton.setLocation(10, 540);
+        loadButton.setLocation(10, 600);
+        saveButton.setLocation(10, 660);
 
 
         // Add buttons to the left pannel
+        blockChooserPanel.add(chancePanel);
+        blockChooserPanel.add(spellJPanel);
         blockChooserPanel.add(pauseButton);
         blockChooserPanel.add(saveButton);
         blockChooserPanel.add(loadButton);
-        blockChooserPanel.add(spellJPanel);
-        blockChooserPanel.add(chancePanel);
         //Adding action listeners to buttons
 
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PauseMenu pauseMenu = new PauseMenu();
+                PauseMenu pauseMenu = new PauseMenu(timer);
                 pauseMenu.setVisible(true);
+                timer.stop();
             }
         });
         saveButton.addActionListener(new ActionListener() {
@@ -253,7 +270,9 @@ public class RunningMode extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //spell implementation
-                player.incChance(chancePanel, labels, heartimg);
+                if (player.getChances() < 3){
+                    player.incChance(chancePanel, labels, heartimg);
+                }
             }
         });
 
@@ -268,7 +287,19 @@ public class RunningMode extends JFrame{
 
         
         //add(mapPanel,BorderLayout.EAST);
-        this.setVisible(true);
+        //this.setVisible(true);
+        // Fullscreen setup
+        /* 
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = env.getDefaultScreenDevice();
+        if (device.isFullScreenSupported()) {
+            setUndecorated(true);
+            device.setFullScreenWindow(this);
+        } else {
+            setSize(1920, 1080);
+            setVisible(true);
+        }
+        */
 
     }
     
@@ -299,8 +330,8 @@ public class RunningMode extends JFrame{
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
-        private boolean remaintouched = false;
-        private long currentTime;
+        public boolean remaintouched = false;
+        public long currentTime;
         private long startTime;
         
         public int getOriginalPaddleWidth(){
@@ -327,12 +358,6 @@ public class RunningMode extends JFrame{
             
             originalPaddleWidth = staff.getLength();
             
-            scoreLabel = new JLabel("Player: " + player.getName() + "      Score: " + score);
-            Font font = new Font(Font.SANS_SERIF, Font.BOLD, 24);
-            scoreLabel.setFont(font);
-            scoreLabel.setForeground(Color.WHITE);
-            scoreLabel.setSize(100, 20);
-            this.add(scoreLabel);
             
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
@@ -471,8 +496,9 @@ public class RunningMode extends JFrame{
                                 score = score + 300 / (double) currentTime;
                                 System.out.println(currentTime);
                                 String scorest = String.format("%.2f", score);
-                                scoreLabel.setText("Player: " + player.getName() + "      Score: " + scorest);
+                                scoreLabel.setText("Score: " + scorest);
                                 bArrayList.remove(barr);
+                                barrcountlabel.setText("Remaining Barriers: " + bArrayList.size());
                                 break;
                                 
                             }
@@ -519,6 +545,10 @@ public class RunningMode extends JFrame{
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
             
             return true;
+        }
+
+        public void addCblock(Rectangle b, String selectedcolor){
+            blocks.add(new ColoredBlock(b, selectedcolor));
         }
 
         @Override
@@ -570,7 +600,7 @@ public class RunningMode extends JFrame{
                     case "remain":
                         g.setColor(Color.RED);
                         g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-                        block.rectangle.y = block.rectangle.y + 2;
+                        block.rectangle.y = block.rectangle.y + 5;
                         break;
                         
                     default:
@@ -629,14 +659,15 @@ public class RunningMode extends JFrame{
                 if (player.getChances() > 0) {
                     timer.stop();
                     resetBallAndContinue();
-                } 
+                }
+                 
                 else {
                     timer.stop();
                     showGameOverFrame("Game Over! No chances left.");
                 }
             }
         
-            if (blocks.isEmpty()) {
+            if (bArrayList.size() == 0) {
                 timer.stop();
                 showGameOverFrame("Game Over! All barriers cleared.");
             }
@@ -914,7 +945,7 @@ public class RunningMode extends JFrame{
 
     public static void main(String args[]){
         Player p = new Player("admin", "pass");
-        RunningMode run = new RunningMode(1,p);
+        RunningMode run = new RunningMode(4,p);
         run.setVisible(true);
     }
 

@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 public class PauseMenu extends JFrame {
 
-    public PauseMenu() {
+    public PauseMenu(Timer timer) {
         
         //JFrame properties
         setTitle("Pause Menu");        
@@ -34,6 +34,7 @@ public class PauseMenu extends JFrame {
         resumeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
+                timer.start();
             }
         });
         panel.add(resumeButton);
