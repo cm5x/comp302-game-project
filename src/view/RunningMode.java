@@ -792,29 +792,6 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("S"), "saveGame");
             im.put(KeyStroke.getKeyStroke("Q"), "quitGame");
 
-            am.put("pauseGame", new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    PauseMenu pauseMenu = new PauseMenu(timer);
-                    pauseMenu.setVisible(true);
-                    timer.stop();
-                }
-            });
-
-            am.put("saveGame", new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                }
-            });
-
-            am.put("quitGame", new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    
-                    
-                }
-            });
                 
             am.put("moveLeft", new AbstractAction() {
                 @Override
@@ -888,6 +865,30 @@ public class RunningMode extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     removeAllBarriers();
+                }
+            });
+
+            am.put("pauseGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PauseMenu pauseMenu = new PauseMenu(timer);
+                    pauseMenu.setVisible(true);
+                    timer.stop();
+                }
+            });
+
+            am.put("saveGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                }
+            });
+
+            am.put("quitGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    
                 }
             });
         }
