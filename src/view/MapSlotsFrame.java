@@ -28,7 +28,7 @@ public class MapSlotsFrame extends JFrame {
     private ArrayList<int[]> mapArrayList;
     private FrameCloseListener listener;
     private int loadMapIndex;
-    Player p = new Player("uname", "pass");
+    Player p = new Player("name","pass");
 
 
     public MapSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {

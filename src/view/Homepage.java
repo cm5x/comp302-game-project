@@ -8,7 +8,7 @@ import view.settingsPage;
 
 public class Homepage extends JFrame {
 
-    private String username;
+    protected String username;
     private static Homepage instance = null;
 
 
@@ -32,6 +32,7 @@ public class Homepage extends JFrame {
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MapSlotsFrame run = new MapSlotsFrame();
+                run.p.username = username;
                 run.setVisible(true);
             }
         });
