@@ -305,6 +305,7 @@ import utilities.FrameCloseListener;
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
                         blockPlaced = mapPanel.addBlock(x, y,"rewarding");
+                        mapPanel.getBarrierList().get(mapPanel.getBarrierList().size()-1);
                     }
                     limitcounter++;
                 }
@@ -323,6 +324,10 @@ import utilities.FrameCloseListener;
     class MapPanel extends JPanel implements FrameCloseListener {
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
+        public ArrayList<int[]> getBarrierList() {
+            return barrierList;
+        }
+
         private String selectedColor = "simple";  // Default color
         private static final int BLOCK_WIDTH = 86; // Width of the block
         private static final int BLOCK_HEIGHT = 26; // Height of the block

@@ -18,6 +18,15 @@ public class RewardingBarrier extends JComponent implements Barrier {
     private int x1Coordinate;
     private int y1Coordinate;
     private int health;
+    private int spellIndex;
+    
+    public int getSpellIndex() {
+        return spellIndex;
+    }
+
+    public void setSpellIndex(int spellIndex) {
+        this.spellIndex = spellIndex;
+    }
 
     public RewardingBarrier(int startX, int startY) {
         this.destroyed = false;
