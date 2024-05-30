@@ -117,6 +117,7 @@ public class RunningMode extends JFrame{
         return mapPanel;
     }
 
+
     public RunningMode(int selectedMap, Player player) {
         setTitle("Running Mode");
         setSize(1920,1080);
@@ -807,6 +808,11 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("DOWN"), "rotateCounterClockwise");
             // Secret key combination to remove all barriers
             im.put(KeyStroke.getKeyStroke("control shift D"), "removeAllBarriers");
+
+            im.put(KeyStroke.getKeyStroke("P"), "pauseGame");
+            im.put(KeyStroke.getKeyStroke("S"), "saveGame");
+            im.put(KeyStroke.getKeyStroke("Q"), "quitGame");
+
                 
             am.put("moveLeft", new AbstractAction() {
                 @Override
@@ -832,6 +838,8 @@ public class RunningMode extends JFrame{
             am.put("startBallMovement", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    timer.restart();
+                    startTime = System.currentTimeMillis();
                     if (ballSpeedX == 0 && ballSpeedY == 0) {
                         ballSpeedX = 3;
                         ballSpeedY = -3;
@@ -878,6 +886,30 @@ public class RunningMode extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     removeAllBarriers();
+                }
+            });
+
+            am.put("pauseGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PauseMenu pauseMenu = new PauseMenu(timer);
+                    pauseMenu.setVisible(true);
+                    timer.stop();
+                }
+            });
+
+            am.put("saveGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                }
+            });
+
+            am.put("quitGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    
                 }
             });
         }
