@@ -278,7 +278,17 @@ public class RunningMode extends JFrame{
 
         
         //add(mapPanel,BorderLayout.EAST);
-        this.setVisible(true);
+        //this.setVisible(true);
+        // Fullscreen setup
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = env.getDefaultScreenDevice();
+        if (device.isFullScreenSupported()) {
+            setUndecorated(true);
+            device.setFullScreenWindow(this);
+        } else {
+            setSize(1920, 1080);
+            setVisible(true);
+        }
 
     }
     
