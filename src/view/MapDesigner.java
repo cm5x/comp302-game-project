@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import utilities.FrameCloseListener;
 
 
 
@@ -162,7 +163,10 @@ import java.io.Serializable;
             buttonPanel.add(saveButton);
 
             JButton loadButton = new JButton("Load Map");
-            loadButton.addActionListener(e -> mapPanel.loadMap());
+            loadButton.addActionListener(e -> {
+                MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(mapPanel);
+                mapSlotsFrame.setVisible(true);
+            });
             buttonPanel.add(loadButton);
 
             JButton contButton = new JButton("Continue");
@@ -242,7 +246,7 @@ import java.io.Serializable;
                         
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"simple");
                         
                     }
                     limitcounter++;
@@ -258,7 +262,7 @@ import java.io.Serializable;
                     
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"reinforced");
                     }
                     limitcounter++;
                 }
@@ -273,7 +277,7 @@ import java.io.Serializable;
                     
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"explosive");
                     }
                     limitcounter++;
                 }
@@ -289,7 +293,7 @@ import java.io.Serializable;
                     
                         int x = (int) (Math.random() * 1250); 
                         int y = (int) (Math.random() * 700); 
-                        blockPlaced = mapPanel.addBlock(x, y);
+                        blockPlaced = mapPanel.addBlock(x, y,"rewarding");
                     }
                     limitcounter++;
                 }
@@ -305,7 +309,7 @@ import java.io.Serializable;
     }
 
 
-    class MapPanel extends JPanel {
+    class MapPanel extends JPanel implements FrameCloseListener {
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
         private String selectedColor = "simple";  // Default color
@@ -340,7 +344,7 @@ import java.io.Serializable;
                     if (SwingUtilities.isRightMouseButton(e)) {
                         showContextMenu(e.getX(), e.getY(), e);
                     } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < getHeight() / 1.2) {
-                        if (addBlock(e.getX(), e.getY())) {
+                        if (addBlock(e.getX(), e.getY(),selectedColor)) {
                             frame.appendInfoText("Placed " + selectedColor + " barrier at (" + e.getX() + ", " + e.getY() + ")");
                         } else {
                             frame.appendInfoText("Failed to place barrier at (" + e.getX() + ", " + e.getY() + ") - Overlap");
@@ -373,7 +377,7 @@ import java.io.Serializable;
             this.selectedColor = color;
         }
 
-        public boolean addBlock(int x, int y) {
+        public boolean addBlock(int x, int y, String selectedColor) {
             int gridX = x - (x % BLOCK_WIDTH);
             int gridY = y - (y % BLOCK_HEIGHT);
             
@@ -487,34 +491,56 @@ import java.io.Serializable;
 
         public void saveMap() {
 
-            MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(barrierList);
+            MapSlotsFrame mapSlotsFrame = new MapSlotsFrame(barrierList, this);
             mapSlotsFrame.setVisible(true);
         
         }
     
-        @SuppressWarnings("unchecked")
-        public void loadMap() {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Select a file to load");
-            int userSelection = fileChooser.showOpenDialog(this);
-            if (userSelection == JFileChooser.APPROVE_OPTION) {
-                File fileToLoad = fileChooser.getSelectedFile();
-                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+        public void loadMap(int mapIndex) {
 
-                    ArrayList<int[]> intArray = (ArrayList<int[]>) ois.readObject();
+            this.blocks = new ArrayList<>();
+            this.barrierList = new ArrayList<int[]>();
 
-                    for (int[] i : intArray) {
-                        System.out.println(i[0]);
-                        
+            File fileToLoad = new File("src/gameMapSaves/exampleMap" + mapIndex + ".dat");
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+
+                    barrierList = (ArrayList<int[]>) ois.readObject();
+                    System.out.println(barrierList.get(2)[3]);
+
+                    for (int i = 0; i < barrierList.size(); i++) {
+                        int[] currentBarrier = barrierList.get(i);
+                        switch (barrierList.get(i)[2]) {
+                            case 1:
+                                addBlock(currentBarrier[0], currentBarrier[1],"simple");
+                                break;
+                            case 2:
+                                addBlock(currentBarrier[0], currentBarrier[1],"reinforced");
+                                break;
+                            case 3:
+                                addBlock(currentBarrier[0], currentBarrier[1],"rewarding");
+                                break;
+                            case 4:
+                                addBlock(currentBarrier[0], currentBarrier[1],"explosive");
+                                break;
+
+                            default:
+                                break;
+                        }
                     }
 
-                    blocks = (ArrayList<ColoredBlock>) ois.readObject();
+
                     repaint();
+
                     frame.appendInfoText("Map loaded successfully from " + fileToLoad.getAbsolutePath());
-                } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                     frame.appendInfoText("Error loading map: " + e.getMessage());
                     e.printStackTrace();
-                }
             }
+        }
+
+        @Override
+        public void onFrameClosed(int data) {
+            System.out.println("Received data from SecondaryFrame: " + data);
+            loadMap(data);
         }
     }
