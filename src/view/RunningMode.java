@@ -137,10 +137,10 @@ public class RunningMode extends JFrame{
         this.spellJPanel.setSize(230, 300);
         this.spellJPanel.setBackground(Color.ORANGE);
         this.spellJPanel.setLayout(null);
-        this.spellJPanel.setLocation(0, 240);
-        this.chancePanel.setSize(230, 540);
+        this.spellJPanel.setLocation(0, 200);
+        this.chancePanel.setSize(230, 200);
         this.chancePanel.setLayout(new FlowLayout());
-        this.chancePanel.setLocation(0, 540);
+        this.chancePanel.setLocation(0, 0);
         this.chancePanel.setBackground(Color.GRAY);
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(null);
@@ -180,9 +180,17 @@ public class RunningMode extends JFrame{
         spellJPanel.add(MSE);
 
         //setting up chance panel
-        JLabel clab = new JLabel("Remaining Chances");
+        JLabel clab = new JLabel("    Remaining Chances:");
         clab.setSize(200, 20);
         //adding chances
+        scoreLabel = new JLabel("Player: " + player.getName() + "   Score: " + score);
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 16);
+        scoreLabel.setFont(font);
+        scoreLabel.setForeground(Color.BLACK);
+        scoreLabel.setSize(100, 20);
+        chancePanel.add(scoreLabel);
+        chancePanel.add(clab);
+        clab.setFont(font);
         labels = new ArrayList<>();
         for (int i = 0; i<chances; i++){
             JLabel tempLabel = new JLabel(heartimg);
@@ -190,27 +198,27 @@ public class RunningMode extends JFrame{
             labels.add(tempLabel);
         }
 
-        chancePanel.add(clab);
+        
         
 
         // Create buttons 
         pauseButton = new JButton("Pause");
         saveButton = new JButton("Save");
         loadButton = new JButton("Load");
-        pauseButton.setSize(200, 40);
-        loadButton.setSize(200, 40);
-        saveButton.setSize(200, 40);
-        pauseButton.setLocation(20, 50);
-        loadButton.setLocation(20, 110);
-        saveButton.setLocation(20, 170);
+        pauseButton.setSize(170, 40);
+        loadButton.setSize(170, 40);
+        saveButton.setSize(170, 40);
+        pauseButton.setLocation(10, 540);
+        loadButton.setLocation(10, 600);
+        saveButton.setLocation(10, 660);
 
 
         // Add buttons to the left pannel
+        blockChooserPanel.add(chancePanel);
+        blockChooserPanel.add(spellJPanel);
         blockChooserPanel.add(pauseButton);
         blockChooserPanel.add(saveButton);
         blockChooserPanel.add(loadButton);
-        blockChooserPanel.add(spellJPanel);
-        blockChooserPanel.add(chancePanel);
         //Adding action listeners to buttons
 
         pauseButton.addActionListener(new ActionListener() {
@@ -327,12 +335,6 @@ public class RunningMode extends JFrame{
             
             originalPaddleWidth = staff.getLength();
             
-            scoreLabel = new JLabel("Player: " + player.getName() + "      Score: " + score);
-            Font font = new Font(Font.SANS_SERIF, Font.BOLD, 24);
-            scoreLabel.setFont(font);
-            scoreLabel.setForeground(Color.WHITE);
-            scoreLabel.setSize(100, 20);
-            this.add(scoreLabel);
             
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
@@ -471,7 +473,7 @@ public class RunningMode extends JFrame{
                                 score = score + 300 / (double) currentTime;
                                 System.out.println(currentTime);
                                 String scorest = String.format("%.2f", score);
-                                scoreLabel.setText("Player: " + player.getName() + "      Score: " + scorest);
+                                scoreLabel.setText("Player: " + player.getName() + "   Score: " + scorest);
                                 bArrayList.remove(barr);
                                 break;
                                 
@@ -903,7 +905,7 @@ public class RunningMode extends JFrame{
 
     public static void main(String args[]){
         Player p = new Player("admin", "pass");
-        RunningMode run = new RunningMode(1,p);
+        RunningMode run = new RunningMode(4,p);
         run.setVisible(true);
     }
 
