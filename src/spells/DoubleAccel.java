@@ -7,27 +7,27 @@ import view.RunningMode;
 
 public class DoubleAccel extends Spell{
 
+    private static final ImageIcon icon = new ImageIcon("path/to/icon.png");
+
     public DoubleAccel(String name, RunningMode runningMode) {
-        super(name, new ImageIcon("path/to/icon.png"), runningMode); //add path to icon
-        //TODO Auto-generated constructor stub
+        super(name, icon, runningMode);      
     }
 
     @Override
     protected void performAction() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'performAction'");
+        runningMode.getMapPanel().setBallSpeedX(runningMode.getMapPanel().getBallSpeedX()/2); 
+        runningMode.getMapPanel().setBallSpeedY(runningMode.getMapPanel().getBallSpeedY()/2);
     }
 
     @Override
     protected void undoAction() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'undoAction'");
+        runningMode.getMapPanel().setBallSpeedX(runningMode.getMapPanel().getBallSpeedX()*2); 
+        runningMode.getMapPanel().setBallSpeedY(runningMode.getMapPanel().getBallSpeedY()*2);
     }
 
     @Override
     protected int getDuration() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDuration'");
+        return 15; // Duration in seconds
     }
     
 }
