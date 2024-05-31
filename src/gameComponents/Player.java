@@ -18,7 +18,7 @@ public class Player {
         this.password = password;
         this.spellInventory = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
-            this.spellInventory.add(1);
+            this.spellInventory.add(0);
         }
     }
 

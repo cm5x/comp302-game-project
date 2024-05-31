@@ -784,11 +784,29 @@ public class RunningMode extends JFrame{
                 }
             });
         
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            panel.add(messageLabel);
-            panel.add(gifLabel, BorderLayout.CENTER);
-            panel.add(okButton);
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 1;
+            gbc.gridheight = 1;
+            gbc.weightx = 1.0;
+            gbc.weighty = 0.1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.anchor = GridBagConstraints.CENTER;
+            panel.add(messageLabel, gbc);
+    
+            gbc.gridy = 1;
+            gbc.weighty = 0.8;
+            gbc.fill = GridBagConstraints.BOTH;
+            panel.add(gifLabel, gbc);
+    
+            gbc.gridy = 2;
+            gbc.weighty = 0.1;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.PAGE_END;
+            panel.add(okButton, gbc);
        
             gameOverFrame.add(panel);
             gameOverFrame.setVisible(true);
