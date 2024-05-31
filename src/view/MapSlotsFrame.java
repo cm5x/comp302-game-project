@@ -50,8 +50,8 @@ public class MapSlotsFrame extends JFrame {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                gameSaves.add(index);
-                index++;
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(10)));
+                gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
         } catch (IOException | DirectoryIteratorException e) {
@@ -264,8 +264,8 @@ public class MapSlotsFrame extends JFrame {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                gameSaves.add(index);
-                index++;
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(10)));
+                gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
         } catch (IOException | DirectoryIteratorException e) {
@@ -389,9 +389,8 @@ public class MapSlotsFrame extends JFrame {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                gameSaves.add(index);
-                System.out.println(index);
-                index++;
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(10)));
+                gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
         } catch (IOException | DirectoryIteratorException e) {

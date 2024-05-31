@@ -50,8 +50,8 @@ public class GameSlotsFrame extends JFrame {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                gameSaves.add(index);
-                index++;
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(8)));
+                gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
         } catch (IOException | DirectoryIteratorException e) {
@@ -264,8 +264,8 @@ public class GameSlotsFrame extends JFrame {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                gameSaves.add(index);
-                index++;
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(8)));
+                gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
         } catch (IOException | DirectoryIteratorException e) {
@@ -342,9 +342,7 @@ public class GameSlotsFrame extends JFrame {
             JButton gameSlot4 = new JButton("Empty Slot");
             gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 4);
-                    JOptionPane.showMessageDialog(null, "Game Saved");
-                    dispose();
+                    
                 }
             });
             panel.add(gameSlot4);
@@ -389,9 +387,8 @@ public class GameSlotsFrame extends JFrame {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                gameSaves.add(index);
-                System.out.println(index);
-                index++;
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(8)));
+                gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
         } catch (IOException | DirectoryIteratorException e) {
