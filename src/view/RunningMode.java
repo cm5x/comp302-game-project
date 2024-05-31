@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -434,7 +435,6 @@ public class RunningMode extends JFrame{
                     }
                     int xcoor = block.rectangle.x;
                     int ycoor = block.rectangle.y;
-                    int index = 0;
                     for (Barrier barr : bArrayList){
                         if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
                             barr.hit(1);
@@ -458,10 +458,33 @@ public class RunningMode extends JFrame{
                                     }
                                 }
 
-                                System.out.println(barrierIndexList.remove(index));
+                                int[] targetArray = new int[4];
+
+                                if (barr instanceof SimpleBarrier) {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 1;
+                                    targetArray[3] = 1;
+                                } else if (barr instanceof ReinforcedBarrier) {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 2;
+                                    targetArray[3] = 1;
+                                } else if (barr instanceof ExplosiveBarrier) {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 3;
+                                    targetArray[3] = 1;
+                                } else {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 4;
+                                    targetArray[3] = 1;
+                                }
+
+                                System.out.println(barrierIndexList.removeIf(array -> Arrays.equals(array,targetArray)));
                                 frame.barrierIndexList = this.barrierIndexList;
                                 bArrayList.remove(barr);
-                                index++;
                                 break;
                                 
                             }
@@ -833,12 +856,12 @@ public class RunningMode extends JFrame{
 
         this.blocks = new ArrayList<>();
         this.barrierIndexList = new ArrayList<int[]>();
+        bArrayList.clear();
 
         File fileToLoad = new File("src/gameSaves/gameSave" + gameIndex + ".dat");
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
 
                 barrierIndexList = (ArrayList<int[]>) ois.readObject();
-                System.out.println(barrierIndexList.get(2)[3]);
 
                 for (int i = 0; i < barrierIndexList.size(); i++) {
                     int[] currentBarrier = barrierIndexList.get(i);
@@ -883,7 +906,13 @@ public class RunningMode extends JFrame{
     @Override
         public void onFrameClosed(int data) {
             System.out.println("Received data from SecondaryFrame: " + data);
-            loadGame(data);
+
+            if (data == 0) {
+
+            } else {
+                loadGame(data);
+            }
+            
         }
 
     }
