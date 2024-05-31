@@ -47,6 +47,7 @@ public class Homepage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 PlayGame run = new PlayGame();
                 run.setVisible(true);
+                
             }
         });
         panel.add(playButton);

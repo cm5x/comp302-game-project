@@ -412,6 +412,7 @@ public class MapSlotsFrame extends JFrame {
             mapSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(1,p);
+                    run.startGame();
                     run.setVisible(true);
                     closepanel();
                     
@@ -433,6 +434,7 @@ public class MapSlotsFrame extends JFrame {
             mapSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(2,p);
+                    run.startGame();
                     run.setVisible(true);
                     closepanel();
                     
@@ -454,6 +456,7 @@ public class MapSlotsFrame extends JFrame {
             mapSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(3,p);
+                    run.startGame();
                     run.setVisible(true);
                     closepanel();
                 }
@@ -474,6 +477,7 @@ public class MapSlotsFrame extends JFrame {
             mapSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(4,p);
+                    run.startGame();
                     run.setVisible(true);
                     closepanel();
                 }
@@ -494,6 +498,7 @@ public class MapSlotsFrame extends JFrame {
             mapSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(5,p);
+                    run.startGame();
                     run.setVisible(true);
                     closepanel();
                 }
