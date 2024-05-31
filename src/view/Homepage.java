@@ -45,8 +45,10 @@ public class Homepage extends JFrame {
         playButton.setLocation(50, 20);
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PlayGame run = new PlayGame();
+                MapSlotsFrame run = new MapSlotsFrame();
+                run.p.username = username;
                 run.setVisible(true);
+                closeHome();
             }
         });
         panel.add(playButton);
