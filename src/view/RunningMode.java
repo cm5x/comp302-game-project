@@ -21,6 +21,8 @@ import java.util.Scanner;
 // import org.w3c.dom.events.MouseEvent;
 // import java.util.Timer;
 import javax.swing.*;
+import javax.swing.text.AttributeSet.ColorAttribute;
+
 // import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -571,6 +573,8 @@ public class RunningMode extends JFrame{
                         ballSpeedY = -ballSpeedY;
                         LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
                     }
+                    
+
                     it.remove();
                     LOGGER.log(Level.INFO, MessageFormat.format("Barrier removed at: ({0}, {1})", block.rectangle.x, block.rectangle.y));
                     
@@ -668,20 +672,30 @@ public class RunningMode extends JFrame{
             //For Frozen Barrier
             for (Barrier barrier : bArrayList) {
                 if (barrier.isFrozen()) {
-                    g.drawImage(img6, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
-                } else {
+                    for (ColoredBlock block : blocks){
+                        //System.out.println(block.rectangle.x + " barrier: " + (barrier.getXCoordinate() - (barrier.getXCoordinate() % BLOCK_WIDTH)));
+                        if (block.rectangle.x == (barrier.getXCoordinate() - (barrier.getXCoordinate() % BLOCK_WIDTH))){
+                            g.drawImage(img6, block.rectangle.x, block.rectangle.y, null);
+                            break;
+                        }
+                    }
+                    //g.drawImage(img6, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    
+                } /*else {
                     if (barrier instanceof SimpleBarrier) {
-                        g.drawImage(img1, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                        //g.drawImage(img1, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
                     } else if (barrier instanceof ExplosiveBarrier) {
-                        g.drawImage(img3, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                        //g.drawImage(img3, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
                     } else if (barrier instanceof ReinforcedBarrier) {
-                        g.drawImage(img2, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                        //g.drawImage(img2, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
                     } else if (barrier instanceof RewardingBarrier) {
-                        g.drawImage(img4, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                        //g.drawImage(img4, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
                     } else if (barrier instanceof HollowPurpleBarrier) {
-                        g.drawImage(img5, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                        //g.drawImage(img5, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
                     }
                 }
+                */
+                
             }
             
 

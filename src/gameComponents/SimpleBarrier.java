@@ -145,6 +145,10 @@ public class SimpleBarrier extends JComponent implements Barrier {
     public boolean isFrozen() {
         return frozen;
     }
+
+    public void setHealth(int newH){
+        this.health = newH;
+    }
     
     
 }

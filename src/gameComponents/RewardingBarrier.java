@@ -17,6 +17,7 @@ public class RewardingBarrier extends JComponent implements Barrier {
     private String imgpath = "assets/images/200icongreengem.png";
     private int x1Coordinate;
     private int y1Coordinate;
+    private int health = 1;
 
     private boolean frozen;
 
@@ -53,7 +54,7 @@ public class RewardingBarrier extends JComponent implements Barrier {
     
     @Override
     public int getHealth() {
-        return 1; // Rewarding barriers are destroyed immediately upon hitting
+        return health; // Rewarding barriers are destroyed immediately upon hitting
     }
 
     @Override
@@ -73,6 +74,10 @@ public class RewardingBarrier extends JComponent implements Barrier {
     @Override
     public void explode() {
         // Rewarding barriers do not explode
+    }
+
+    public void setHealth(int newH){
+        this.health = newH;
     }
 
     @Override

@@ -81,6 +81,10 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
         // Reinforced barriers do not explode
     }
 
+    public void setHealth(int newH){
+        hitsNeeded = newH;
+    }
+
     @Override
     public boolean isRewarding() {
         return false; // Reinforced barriers do not drop rewards
@@ -153,4 +157,6 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
     public boolean isFrozen() {
         return frozen;
     }
+
+
 }

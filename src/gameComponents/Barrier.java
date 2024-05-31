@@ -22,6 +22,7 @@ public interface Barrier {
     public void freeze();
     public void unfreeze(); 
     public boolean isFrozen();
+    public void setHealth(int newH);
 
    
 }
