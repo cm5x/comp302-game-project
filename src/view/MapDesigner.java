@@ -546,7 +546,6 @@ import utilities.FrameCloseListener;
                         }
                     }
 
-
                     repaint();
 
                     frame.appendInfoText("Map loaded successfully from " + fileToLoad.getAbsolutePath());
