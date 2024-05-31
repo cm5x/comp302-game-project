@@ -41,6 +41,8 @@ public class HollowPurple extends Spell {
                 y = rand.nextInt(runningMode.mapPanel.getHeight());
                
             }
+            
+            
            
         }
     }

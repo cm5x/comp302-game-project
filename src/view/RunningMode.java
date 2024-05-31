@@ -52,6 +52,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
 import gameComponents.FireBall;
+import gameComponents.HollowPurpleBarrier;
 import gameComponents.MagicalStaff;
 import gameComponents.Player;
 import gameComponents.ReinforcedBarrier;
@@ -600,6 +601,10 @@ public class RunningMode extends JFrame{
                             LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
                         }
                     }
+                    if (block.getColor() == "hollowpurple"){
+                        it.remove();
+                    }
+                
                     int xcoor = block.rectangle.x;
                     int ycoor = block.rectangle.y;
                     for (Barrier barr : bArrayList){
@@ -610,6 +615,8 @@ public class RunningMode extends JFrame{
                             } else{
                                 barr.hit(1);
                             }
+                            
+                            
                             
                             if (barr.isDestroyed()){
                                 
@@ -853,6 +860,10 @@ public class RunningMode extends JFrame{
             }
             public Rectangle getRectangle(){
                 return rectangle;
+            }
+
+            public String getColor(){
+                return this.color;
             }
         }
 
