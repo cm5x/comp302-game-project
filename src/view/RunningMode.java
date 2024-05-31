@@ -85,6 +85,9 @@ public class RunningMode extends JFrame{
     String backgroundpath = "assets/images/200background.png";
     String stpath = "assets/images/200player.png";
     String chancePath = "assets/images/200Heart.png";
+    
+    //for Frozen Barrier
+    String imgpath6 = "assets/images/frozenBarrier.png";
 
     Image img1 = new ImageIcon(imgpath1).getImage();
     Image img2 = new ImageIcon(imgpath2).getImage();
@@ -94,6 +97,9 @@ public class RunningMode extends JFrame{
     Image backimg = new ImageIcon(backgroundpath).getImage();
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
+
+    //for Frozen Barrier
+    Image img6 = new ImageIcon(imgpath6).getImage();
 
     public ArrayList<Barrier> bArrayList = new ArrayList<>();
     // TODO: diğer spelleri ekle Melike
@@ -637,10 +643,16 @@ public class RunningMode extends JFrame{
                         // Default case
                 }
 
+
+                
+
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
                 //g2d.setColor(Color.BLACK);
                 //g2d.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 //g.setColor(Color.BLACK);
+
+
+
                 
 
                 fireBall.draw(g);
@@ -651,6 +663,25 @@ public class RunningMode extends JFrame{
 
                 //g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
 
+            }
+
+            //For Frozen Barrier
+            for (Barrier barrier : bArrayList) {
+                if (barrier.isFrozen()) {
+                    g.drawImage(img6, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                } else {
+                    if (barrier instanceof SimpleBarrier) {
+                        g.drawImage(img1, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof ExplosiveBarrier) {
+                        g.drawImage(img3, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof ReinforcedBarrier) {
+                        g.drawImage(img2, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof RewardingBarrier) {
+                        g.drawImage(img4, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof HollowPurpleBarrier) {
+                        g.drawImage(img5, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    }
+                }
             }
             
 

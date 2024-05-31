@@ -16,11 +16,14 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     private int x1Coordinate;
     private int y1Coordinate;
 
+    private boolean frozen;
+
     public ExplosiveBarrier(int startX, int startY) {
         this.exploded = false;
         this.coordinates = new int[]{startX, startX + 30, startY, startY + 30}; // Assuming fixed size for explosive barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+        this.frozen = false;
 
         // Change appereance of barrier
         try {
@@ -57,8 +60,10 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
 
     @Override
     public void hit(int hitDamage) {
-        if (!exploded) {
-            explode(); // Explode when hit
+        if (!frozen) {
+            if (!exploded) {
+                explode(); // Explode when hit
+            }
         }
     }
 
@@ -128,11 +133,16 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
 
     @Override
     public void freeze() {
-        // add infinite void
+        frozen = true;
     }
 
     @Override
     public void unfreeze() {
-        // add infinite void
+        frozen = false;
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
     }
 }

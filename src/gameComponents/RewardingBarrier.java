@@ -18,11 +18,15 @@ public class RewardingBarrier extends JComponent implements Barrier {
     private int x1Coordinate;
     private int y1Coordinate;
 
+    private boolean frozen;
+
     public RewardingBarrier(int startX, int startY) {
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 20, startY, startY + 20}; // Assuming fixed size for rewarding barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+        this.frozen = false;
+
         // Change appereance of barrier
         try {
             InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/GreenGem.png");
@@ -59,8 +63,10 @@ public class RewardingBarrier extends JComponent implements Barrier {
 
     @Override
     public void hit(int hitDamage) {
-        if (!destroyed) {
-            destroyed = true;
+        if (!frozen) {
+            if (!destroyed) {
+                destroyed = true;
+            }
         }
     }
 
@@ -129,11 +135,16 @@ public class RewardingBarrier extends JComponent implements Barrier {
 
     @Override
     public void freeze() {
-        // add infinite void
+        frozen = true;
     }
 
     @Override
     public void unfreeze() {
-        // add infinite void    
+        frozen = false;   
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
     }
 }

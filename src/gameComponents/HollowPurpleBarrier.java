@@ -19,11 +19,15 @@ public class HollowPurpleBarrier extends JComponent implements Barrier {
     private int x1Coordinate;
     private int y1Coordinate;
 
+    private boolean frozen;
+
     public HollowPurpleBarrier(int startX, int startY) {
         this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 40, startY, startY + 20}; // Assuming fixed size for reinforced barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+
+        this.frozen = false;
 
         // Change appearance of the barrier
         try {
@@ -58,13 +62,16 @@ public class HollowPurpleBarrier extends JComponent implements Barrier {
     }
 
     @Override
-    public void hit(int hitDamage) {
-        if (!destroyed) {
-            hitsNeeded -= hitDamage;
-            if (hitsNeeded <= 0) {
-                destroyed = true;
+    public void hit(int hitDamage) {  
+        if (!frozen) {
+            if (!destroyed) {
+                hitsNeeded -= hitDamage;
+                if (hitsNeeded <= 0) {
+                    destroyed = true;
+                }
             }
         }
+
     }
 
     @Override
@@ -129,12 +136,17 @@ public class HollowPurpleBarrier extends JComponent implements Barrier {
 
     @Override
     public void freeze() {
-        // Hollow purple barriers do not freeze
+        frozen = true;
     }
 
     @Override
     public void unfreeze() {
-        // Hollow purple barriers do not freeze
+        frozen = false;
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
     }
 
 }

@@ -20,6 +20,8 @@ public class SimpleBarrier extends JComponent implements Barrier {
     private String imgpath = "assets/images/200iconbluegem.png";
     private static final Random random = new Random();
 
+    private boolean frozen;
+
     public SimpleBarrier(int startX, int startY) {
        
         this.health = 1; // Simple barriers can be destroyed in one hit
@@ -29,26 +31,12 @@ public class SimpleBarrier extends JComponent implements Barrier {
         // Determine if the barrier will be moving
         double probability = 0.8; // 80% chance of being stationary
         isMoving = random.nextDouble() >= probability;
+        
+        //determine if the barrier is frozen
+        this.frozen = false;
 
         // Set initial movement direction
-        this.direction = isMoving ? 1 : 0; // 1 for right, -1 for left (if moving)
-
-        // Setting barrier view
-        /* 
-        try {
-            InputStream inputStream = getClass().getResourceAsStream("BlueGem.png");
-            if (inputStream != null) {
-                barrierImage = ImageIO.read(inputStream);
-                inputStream.close();
-            } else {
-                throw new IOException("Resource not found.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle image loading error
-        }
-        */
-        
+        this.direction = isMoving ? 1 : 0; // 1 for right, -1 for left (if moving)        
         
 
     }
@@ -73,7 +61,9 @@ public class SimpleBarrier extends JComponent implements Barrier {
 
     @Override
     public void hit(int hitDamage) {
-        health -= hitDamage;
+        if (!frozen) {
+            health -= hitDamage;
+        }
     }
 
     @Override
@@ -143,14 +133,18 @@ public class SimpleBarrier extends JComponent implements Barrier {
 
     @Override
     public void freeze() {
-        // add infinite void
+        frozen = true;
     }
 
     @Override
     public void unfreeze() {
-        // add  infinite void
+        frozen = false;
     }
 
+    @Override
+    public boolean isFrozen() {
+        return frozen;
+    }
     
     
 }

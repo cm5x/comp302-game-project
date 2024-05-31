@@ -21,6 +21,7 @@ public interface Barrier {
     public int getYCoordinate();
     public void freeze();
     public void unfreeze(); 
+    public boolean isFrozen();
 
    
 }

@@ -19,6 +19,8 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
     int y1Coordinate;
     private String imgpath = "assets/images/200iconfirm.png";
 
+    private boolean frozen;
+
 
     public ReinforcedBarrier(int hitsNeeded, int startX, int startY) {
         this.hitsNeeded = hitsNeeded;
@@ -26,6 +28,7 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
         this.coordinates = new int[]{startX, startX + 40, startY, startY + 20}; // Assuming fixed size for reinforced barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+        this.frozen = false;
 
         // Change appereance of barrier
         try {
@@ -63,10 +66,12 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
 
     @Override
     public void hit(int hitDamage) {
-        if (!destroyed) {
-            hitsNeeded -= hitDamage;
-            if (hitsNeeded <= 0) {
-                destroyed = true;
+        if (!frozen) {
+            if (!destroyed) {
+                hitsNeeded -= hitDamage;
+                if (hitsNeeded <= 0) {
+                    destroyed = true;
+                }
             }
         }
     }
@@ -136,11 +141,16 @@ public class ReinforcedBarrier extends JComponent implements Barrier {
 
     @Override
     public void freeze() {
-    //add infinite void  
+        frozen = true;  
     }
 
     @Override
     public void unfreeze() {
-    // add infinite void
+        frozen = false;
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
     }
 }
