@@ -11,7 +11,11 @@ public class Homepage extends JFrame {
     protected String username;
     private static Homepage instance = null;
     String backgroundpath = "assets/images/200background.png";
-    Image backimg = new ImageIcon(backgroundpath).getImage(); 
+    Image backimg = new ImageIcon(backgroundpath).getImage();
+    
+    public void closeHome(){
+        this.dispose();
+    }
 
     public Homepage(String username) {
 
@@ -41,6 +45,7 @@ public class Homepage extends JFrame {
                 MapSlotsFrame run = new MapSlotsFrame();
                 run.p.username = username;
                 run.setVisible(true);
+                closeHome();
             }
         });
         panel.add(playButton);
@@ -72,6 +77,7 @@ public class Homepage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 MapDesigner mapdesigner = new MapDesigner(username);
                 mapdesigner.setVisible(true);
+                
                 
             }
         });

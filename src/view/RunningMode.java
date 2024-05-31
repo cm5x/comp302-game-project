@@ -118,6 +118,7 @@ public class RunningMode extends JFrame{
     private Timer timer;
     private MagicalStaff staff;
     public Player player;
+    public JButton backB;
     
     public Player getPlayer() {
         return player;
@@ -144,6 +145,11 @@ public class RunningMode extends JFrame{
     
     public MapPanel getMapPanel() {
         return mapPanel;
+    }
+
+    public void openHome(){
+        this.dispose();
+        Homepage hm = new Homepage(player.getName());
     }
 
 
@@ -777,6 +783,15 @@ public class RunningMode extends JFrame{
             JButton okButton = new JButton("OK");
             ImageIcon gifIcon = new ImageIcon("assets/gifs/no.gif");
             JLabel gifLabel = new JLabel(gifIcon);
+            backB = new JButton("Return to home page");
+            backB.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameOverFrame.dispose();
+                    openHome();
+                }
+            });
+            
 
         
             okButton.addActionListener(new ActionListener() {
@@ -809,7 +824,13 @@ public class RunningMode extends JFrame{
             gbc.fill = GridBagConstraints.NONE;
             gbc.anchor = GridBagConstraints.PAGE_END;
             panel.add(okButton, gbc);
-       
+
+            gbc.gridy = 1;
+            gbc.weighty = 0.2;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.PAGE_END;
+            panel.add(backB, gbc);
+            
             gameOverFrame.add(panel);
             gameOverFrame.setVisible(true);
             playAudio("assets/audio/no.wav");
