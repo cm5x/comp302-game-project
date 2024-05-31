@@ -250,8 +250,6 @@ public class RunningMode extends JFrame{
             labels.add(tempLabel);
         }
 
-        
-        
 
         // Create buttons 
         pauseButton = new JButton("Pause");
@@ -272,11 +270,10 @@ public class RunningMode extends JFrame{
         blockChooserPanel.add(saveButton);
         blockChooserPanel.add(loadButton);
         //Adding action listeners to buttons
-
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PauseMenu pauseMenu = new PauseMenu(timer);
+                PauseMenu pauseMenu = new PauseMenu(timer,barrierIndexList,mapPanel, player.getSpellInventory(), score, player.getChances());
                 pauseMenu.setVisible(true);
                 timer.stop();
             }
@@ -1107,7 +1104,7 @@ public class RunningMode extends JFrame{
             am.put("pauseGame", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    PauseMenu pauseMenu = new PauseMenu(timer);
+                    PauseMenu pauseMenu = new PauseMenu(timer,barrierIndexList,mapPanel, player.getSpellInventory(), score, player.getChances());
                     pauseMenu.setVisible(true);
                     timer.stop();
                 }
