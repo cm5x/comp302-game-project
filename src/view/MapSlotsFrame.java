@@ -76,6 +76,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 1);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -113,6 +114,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 2);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -150,6 +152,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 3);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -187,6 +190,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 4);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -224,6 +228,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 5);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
