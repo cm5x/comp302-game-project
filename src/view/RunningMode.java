@@ -57,6 +57,7 @@ import gameComponents.Player;
 import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
+import gameComponents.Ymir;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -75,7 +76,7 @@ import spells.Hex.Projectile;
 public class RunningMode extends JFrame{
 
     private ArrayList<ArrayList<Barrier>> barriers; // list that will store all barriers
-    private final MapPanel mapPanel;
+    public final MapPanel mapPanel;
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
@@ -85,7 +86,7 @@ public class RunningMode extends JFrame{
     public JLabel scoreLabel;
     private JLabel playerlabel;
     public JLabel barrcountlabel;
-    private int selectedMap;
+    public int selectedMap;
     JButton pauseButton;
     JButton saveButton;
     JButton loadButton;
@@ -96,6 +97,8 @@ public class RunningMode extends JFrame{
     String backgroundpath = "assets/images/200background.png";
     String stpath = "assets/images/200player.png";
     String chancePath = "assets/images/200Heart.png";
+    String imgpath5 = "assets/images/200iconHollowPurple.png";
+    String imgpath6 = "assets/images/frozenBarrier.png";
 
     Image img1 = new ImageIcon(imgpath1).getImage();
     Image img2 = new ImageIcon(imgpath2).getImage();
@@ -104,7 +107,8 @@ public class RunningMode extends JFrame{
     Image backimg = new ImageIcon(backgroundpath).getImage();
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
-
+    Image img5 = new ImageIcon(imgpath5).getImage();
+    Image img6 = new ImageIcon(imgpath6).getImage();
     public ArrayList<Barrier> bArrayList = new ArrayList<>();
     // TODO: diğer spelleri ekle Melike
     private MagicalStaffExpansion magicalStaffExpansion;
@@ -120,6 +124,7 @@ public class RunningMode extends JFrame{
     private MagicalStaff staff;
     public Player player;
     public JButton backB;
+    private Ymir ymir;
     
     public Player getPlayer() {
         return player;
@@ -166,6 +171,8 @@ public class RunningMode extends JFrame{
         this.player = player;
         chances = player.getChances();
         score = 0;
+        this.ymir = new Ymir(this, bArrayList, fireBall);
+
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
         //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
@@ -397,8 +404,8 @@ public class RunningMode extends JFrame{
         private ArrayList<int[]> barrierIndexList;
         private String selectedColor = "simple";  // Default color
 
-        private static final int BLOCK_WIDTH = 86; // Width of the block
-        private static final int BLOCK_HEIGHT = 26; // Height of the block
+        public static final int BLOCK_WIDTH = 86; // Width of the block
+        public static final int BLOCK_HEIGHT = 26; // Height of the block
         private final RunningMode frame;
         private String filePath = "src/gameMapSaves/exampleMap" + selectedMap + ".dat";
         
@@ -416,6 +423,22 @@ public class RunningMode extends JFrame{
         public int droppedSpellIndex;
         public long currentTime;
         private long startTime;
+
+        public int getBallSpeedX() {
+            return ballSpeedX;
+        }
+
+        public void setBallSpeedX(int ballSpeedX) {
+            this.ballSpeedX = ballSpeedX;
+        }
+
+        public int getBallSpeedY() {
+            return ballSpeedY;
+        }
+
+        public void setBallSpeedY(int ballSpeedY) {
+            this.ballSpeedY = ballSpeedY;
+        }
         
         public int getOriginalPaddleWidth(){
             return originalPaddleWidth;
@@ -506,6 +529,18 @@ public class RunningMode extends JFrame{
             }
             
         }
+        public void removeBlock(int x, int y) {
+            Iterator<ColoredBlock> it = blocks.iterator();
+            while (it.hasNext()) {
+                ColoredBlock block = it.next();
+                if (block.rectangle.x == x && block.rectangle.y == y) {
+                    it.remove();
+                    break;
+                }
+            }
+            repaint();
+        }
+
             private void moveBall() {
                 fireBall.setX(ballSpeedX+fireBall.getX());
                 fireBall.setY(ballSpeedY+fireBall.getY());
@@ -713,6 +748,7 @@ public class RunningMode extends JFrame{
                                 
                             }
                             
+                            
                         }
                         break;
                     case "explosive":
@@ -733,6 +769,9 @@ public class RunningMode extends JFrame{
                         g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
                         block.rectangle.y = block.rectangle.y + 5;
                         break;
+                    case "hollowpurple":
+                        g.drawImage(img5, block.rectangle.x, block.rectangle.y, null);
+                        break;
                         
                     default:
                         break;
@@ -742,6 +781,35 @@ public class RunningMode extends JFrame{
                 staff.draw(g2d);
                 
             }
+            for (Barrier barrier : bArrayList) {
+                if (barrier.isFrozen()) {
+                    for (ColoredBlock block : blocks){
+                        //System.out.println(block.rectangle.x + " barrier: " + (barrier.getXCoordinate() - (barrier.getXCoordinate() % BLOCK_WIDTH)));
+                        if (block.rectangle.x == (barrier.getXCoordinate() - (barrier.getXCoordinate() % BLOCK_WIDTH))){
+                            g.drawImage(img6, block.rectangle.x, block.rectangle.y, null);
+                            break;
+                        }
+                    }
+                    //g.drawImage(img6, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    
+                } /*else {
+                    if (barrier instanceof SimpleBarrier) {
+                        //g.drawImage(img1, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof ExplosiveBarrier) {
+                        //g.drawImage(img3, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof ReinforcedBarrier) {
+                        //g.drawImage(img2, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof RewardingBarrier) {
+                        //g.drawImage(img4, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    } else if (barrier instanceof HollowPurpleBarrier) {
+                        //g.drawImage(img5, barrier.getXCoordinate(), barrier.getYCoordinate(), null);
+                    }
+                }
+                */
+                
+            }
+
+            
             
 
             //Below is related to rotating function.
@@ -1287,11 +1355,16 @@ public class RunningMode extends JFrame{
     // public void deactivateHexCanons() {
     //     mapPanel.deactivateHexCanons();
     // }
+
+    public void startGame() {
+        ymir.startCoinFlipping();
+    }
         
     public static void main(String args[]){
         Player p = new Player("admin", "pass");
         RunningMode run = new RunningMode(5,p);
         run.setVisible(true);
+        run.startGame();
     }
 
 }

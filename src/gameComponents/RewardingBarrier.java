@@ -19,6 +19,7 @@ public class RewardingBarrier extends JComponent implements Barrier {
     private int y1Coordinate;
     private int health;
     private int spellIndex;
+    private boolean frozen;
     
     public int getSpellIndex() {
         return spellIndex;
@@ -34,6 +35,7 @@ public class RewardingBarrier extends JComponent implements Barrier {
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
         this.health = 1;
+        this.frozen = false;
         // Change appereance of barrier
         try {
             InputStream inputStream = getClass().getResourceAsStream("/assets/GameResources/GreenGem.png");
@@ -71,14 +73,20 @@ public class RewardingBarrier extends JComponent implements Barrier {
     @Override
     public void hit(int hitDamage) {
         this.health = health - hitDamage;
-        if (!destroyed) {
-            destroyed = true;
+        if (!frozen) {
+            if (!destroyed) {
+                destroyed = true;
+            }
         }
     }
 
     @Override
     public void explode() {
         // Rewarding barriers do not explode
+    }
+
+    public void setHealth(int newH){
+        this.health = newH;
     }
 
     @Override
@@ -137,5 +145,26 @@ public class RewardingBarrier extends JComponent implements Barrier {
     @Override
     public int getYCoordinate() {
         return y1Coordinate;
+    }
+
+    @Override
+    public int setSpellIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSpellIndex'");
+    }
+
+    @Override
+    public void freeze() {
+        frozen = true;
+    }
+
+    @Override
+    public void unfreeze() {
+        frozen = false;   
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
     }
 }

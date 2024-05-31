@@ -17,6 +17,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
     private int y1Coordinate;
     private int direction;
     private boolean isMoving;
+    private boolean frozen;
     //private BufferedImage barrierImage;
     private String imgpath = "assets/images/200iconbluegem.png";
     private static final Random random = new Random();
@@ -30,7 +31,7 @@ public class SimpleBarrier extends JComponent implements Barrier {
         // Determine if the barrier will be moving
         double probability = 0.8; // 80% chance of being stationary
         isMoving = random.nextDouble() >= probability;
-
+        this.frozen = false;
         // Set initial movement direction
         this.direction = isMoving ? 1 : 0; // 1 for right, -1 for left (if moving)
 
@@ -74,7 +75,9 @@ public class SimpleBarrier extends JComponent implements Barrier {
 
     @Override
     public void hit(int hitDamage) {
-        health -= hitDamage;
+        if (!frozen) {
+            health -= hitDamage;
+        }
     }
 
     @Override
@@ -140,6 +143,37 @@ public class SimpleBarrier extends JComponent implements Barrier {
     public JPanel getJPanel(){
         BarrierPanel panel = new BarrierPanel(imgpath,x1Coordinate,y1Coordinate);
         return panel;
+    }
+
+    @Override
+    public int getSpellIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSpellIndex'");
+    }
+
+    @Override
+    public int setSpellIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSpellIndex'");
+    }
+
+    @Override
+    public void freeze() {
+        frozen = true;
+    }
+
+    @Override
+    public void unfreeze() {
+        frozen = false;
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public void setHealth(int newH){
+        this.health = newH;
     }
 
     
