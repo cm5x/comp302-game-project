@@ -96,6 +96,9 @@ public class Hex extends Spell {
             Iterator<MapPanel.ColoredBlock> blockIt = runningMode.getMapPanel().getBlocks().iterator();
             while (blockIt.hasNext()) {
                 MapPanel.ColoredBlock block = blockIt.next();
+                if (block.getColor() == "hollowpurple"){
+                    blockIt.remove();
+                }
                 if (projectileRect.intersects(block.getRectangle())) {
                     for (Barrier barr : runningMode.bArrayList){
                         if (barr.getXCoordinate() == block.getRectangle().x && barr.getYCoordinate() == block.getRectangle().y){
