@@ -516,7 +516,9 @@ public class RunningMode extends JFrame{
                 if (fireBall.getBounds().intersects(staff.getBounds())){
                     ballSpeedY = -ballSpeedY;
                     if (staff.getRotationAngle() > 0.087){
-                        ballSpeedX = -ballSpeedX;
+                        if (ballSpeedX<0){
+                            ballSpeedX = -ballSpeedX;
+                        }
                     }
                     ballPosition.y = (int) staff.getYPos()/2-1;
                 }
