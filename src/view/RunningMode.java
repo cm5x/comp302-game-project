@@ -612,7 +612,10 @@ public class RunningMode extends JFrame{
                             }
                             
                             if (barr.isDestroyed()){
+                                
                                 it.remove();
+                                
+                                
                                 if (barr.isRewarding()){
                                     Rectangle rewblock = new Rectangle(block.rectangle.x + 43, block.rectangle.y+ 23, 20, 20);
                                     blocks.add(new ColoredBlock(rewblock, "rewardbox"));       
@@ -787,6 +790,7 @@ public class RunningMode extends JFrame{
                         //System.out.println(block.rectangle.x + " barrier: " + (barrier.getXCoordinate() - (barrier.getXCoordinate() % BLOCK_WIDTH)));
                         if (block.rectangle.x == (barrier.getXCoordinate() - (barrier.getXCoordinate() % BLOCK_WIDTH))){
                             g.drawImage(img6, block.rectangle.x, block.rectangle.y, null);
+                            barrier.setHealth(99);
                             break;
                         }
                     }
@@ -1362,7 +1366,7 @@ public class RunningMode extends JFrame{
         
     public static void main(String args[]){
         Player p = new Player("admin", "pass");
-        RunningMode run = new RunningMode(5,p);
+        RunningMode run = new RunningMode(1,p);
         run.setVisible(true);
         run.startGame();
     }

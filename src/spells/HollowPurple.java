@@ -22,7 +22,6 @@ public class HollowPurple extends Spell {
     @Override
     protected void performAction() {
         Random rand = new Random();
-
         for (int i = 0; i < NUM_BARRIERS; i++) {
             int x = rand.nextInt(runningMode.mapPanel.getWidth());
             int y = rand.nextInt(runningMode.mapPanel.getHeight() - 200);

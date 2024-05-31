@@ -32,8 +32,8 @@ public class Ymir {
 
         abilities = new ArrayList<>();
         abilities.add(new InfiniteVoid("InfiniteVoid", runningMode));
-        //abilities.add(new DoubleAccel("DoubleAccel", runningMode));
-        //abilities.add(new HollowPurple("HollowPurple", runningMode));
+        abilities.add(new DoubleAccel("DoubleAccel", runningMode));
+        abilities.add(new HollowPurple("HollowPurple", runningMode));
 
         lastTwoAbilities = new ArrayList<>();
         random = new Random();

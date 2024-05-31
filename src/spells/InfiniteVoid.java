@@ -40,12 +40,13 @@ public class InfiniteVoid extends Spell {
         for (Barrier barrier : barriers) {
             if (barrier.isFrozen()) {
                 barrier.unfreeze();
+                barrier.setHealth(1);
             }
         }
     }
 
     @Override
     protected int getDuration() {
-        return 15; // Duration in seconds
+        return 30; // Duration in seconds
     }
 }

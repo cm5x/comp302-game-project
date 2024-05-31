@@ -11,8 +11,7 @@ import javax.swing.JPanel;
 
 public class HollowPurpleBarrier extends JComponent implements Barrier {
 
-    private int hitsNeeded = 1; // Number of hits required to destroy the barrier
-    private boolean destroyed; // Indicates if the barrier is destroyed
+    private int health = 1; // Number of hits required to destroy the barrier
     private int[] coordinates; // Coordinates of the barrier
     private BufferedImage barrierImage;
     private String imgpath = "assets/images/iconHollowPurple.png"; // Assuming the image path is correct
@@ -22,10 +21,10 @@ public class HollowPurpleBarrier extends JComponent implements Barrier {
     private boolean frozen;
 
     public HollowPurpleBarrier(int startX, int startY) {
-        this.destroyed = false;
         this.coordinates = new int[]{startX, startX + 40, startY, startY + 20}; // Assuming fixed size for reinforced barriers
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
+        
 
         this.frozen = false;
 
@@ -53,23 +52,18 @@ public class HollowPurpleBarrier extends JComponent implements Barrier {
 
     @Override
     public int getHealth() {
-        return hitsNeeded; // Barriers are destroyed immediately upon hit
+        return health; // Barriers are destroyed immediately upon hit
     }
 
     @Override
     public boolean isDestroyed() {
-        return destroyed;
+        return health<=0;
     }
 
     @Override
     public void hit(int hitDamage) {  
-        if (!frozen) {
-            if (!destroyed) {
-                hitsNeeded -= hitDamage;
-                if (hitsNeeded <= 0) {
-                    destroyed = true;
-                }
-            }
+        if (!frozen) { 
+            health = health - hitDamage;
         }
 
     }
