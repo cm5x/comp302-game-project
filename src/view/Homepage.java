@@ -43,7 +43,6 @@ public class Homepage extends JFrame {
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PlayGame run = new PlayGame();
-                run.p.username = username;
                 run.setVisible(true);
             }
         });
