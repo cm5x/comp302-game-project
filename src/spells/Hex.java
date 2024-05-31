@@ -106,7 +106,8 @@ public class Hex extends Spell {
                                 if (barr.isRewarding()){
                                     Rectangle rewblock = new Rectangle(block.getRectangle().x + 43, block.getRectangle().y+ 23, 20, 20);
                                     runningMode.getMapPanel().addCblock(rewblock, "rewardbox");
-                                          
+                                    runningMode.getMapPanel().spellDropped = true;
+                                    runningMode.getMapPanel().droppedSpellIndex = barr.getSpellIndex();      
                                       
                                 }
 

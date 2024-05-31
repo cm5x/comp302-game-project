@@ -405,8 +405,8 @@ public class RunningMode extends JFrame{
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
         public boolean remaintouched = false;
-        private boolean spellDropped = false;
-        private int droppedSpellIndex;
+        public boolean spellDropped = false;
+        public int droppedSpellIndex;
         public long currentTime;
         private long startTime;
         
