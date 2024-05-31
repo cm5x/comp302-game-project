@@ -1168,7 +1168,7 @@ public class RunningMode extends JFrame{
         
     public static void main(String args[]){
         Player p = new Player("admin", "pass");
-        RunningMode run = new RunningMode(4,p);
+        RunningMode run = new RunningMode(5,p);
         run.setVisible(true);
     }
 

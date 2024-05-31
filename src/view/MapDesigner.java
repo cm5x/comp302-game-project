@@ -256,7 +256,7 @@ import utilities.FrameCloseListener;
                     while (!blockPlaced) {
                         
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"simple");
                         
                     }
@@ -272,7 +272,7 @@ import utilities.FrameCloseListener;
                         
                     
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"reinforced");
                     }
                     limitcounter++;
@@ -287,7 +287,7 @@ import utilities.FrameCloseListener;
                         
                     
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"explosive");
                     }
                     limitcounter++;
@@ -303,7 +303,7 @@ import utilities.FrameCloseListener;
                         
                     
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"rewarding");
                         mapPanel.getBarrierList().get(mapPanel.getBarrierList().size()-1);
                     }
@@ -359,7 +359,8 @@ import utilities.FrameCloseListener;
                     // }
                     if (SwingUtilities.isRightMouseButton(e)) {
                         showContextMenu(e.getX(), e.getY(), e);
-                    } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < getHeight() / 1.2) {
+                        //old value getHeight() / 1.2 
+                    } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < 650) {
                         if (addBlock(e.getX(), e.getY(),selectedColor)) {
                             frame.appendInfoText("Placed " + selectedColor + " barrier at (" + e.getX() + ", " + e.getY() + ")");
                         } else {
@@ -466,7 +467,8 @@ import utilities.FrameCloseListener;
               
             }
             // Draw a line indicating the maximum Y value for placing blocks
-            int maxY = (int)(getHeight() / 1.2);
+            //old value getHeight() / 1.2
+            int maxY = (int)(650);
             g.setColor(Color.GRAY); // Set line color
             g.drawLine(0, maxY, getWidth(), maxY); // Draw line from the left to the right side of the panel
 
