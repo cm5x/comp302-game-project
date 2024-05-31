@@ -22,6 +22,11 @@ import java.util.Scanner;
 import spells.MagicalStaffExpansion;
 import spells.Hex;
 
+//ADD
+
+import gameMechanics.Client;
+import gameMechanics.Server;
+
 // import org.w3c.dom.events.MouseEvent;
 // import java.util.Timer;
 import javax.swing.*;
@@ -79,6 +84,16 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
+
+
+    private JLabel playerScoreLabel;
+    private JLabel opponentScoreLabel;
+    private int playerScore;
+    private int opponentScore;
+
+
+    private Server server;
+    private Client client;
 
     private ArrayList<int[]> barrierIndexList;
     private ArrayList<JLabel> spellLabels;
@@ -166,6 +181,9 @@ public class RunningMode extends JFrame{
         this.player = player;
         chances = player.getChances();
         score = 0;
+
+
+        // server = serverSide;
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
         //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
@@ -349,6 +367,30 @@ public class RunningMode extends JFrame{
 
     }
 
+    //for multiplayer
+    // Method to update the score labels
+    public void updateScores(int playerScore, int opponentScore) {
+        this.playerScore = playerScore;
+        this.opponentScore = opponentScore;
+        SwingUtilities.invokeLater(() -> {
+            scoreLabel.setText("Score: " + playerScore);
+            opponentScoreLabel.setText("Opponent's Score: " + opponentScore);
+        });
+    }
+
+    //for multiplayer
+    // Method to set the player's score
+    public void setScore(int score) {
+        this.playerScore = score;
+        scoreLabel.setText("Score: " + playerScore);
+        // Update the server or client with the new score
+        if (server != null) {
+            server.updateScore(true, playerScore); // Assuming server.updateScore is modified to accept playerScore and opponentScore
+        } else if (client != null) {
+            client.sendScore(playerScore); // Assuming client.sendScore is modified to send playerScore
+        }
+    }
+
     private void updateSpellInventoryLabels(){
            // Create new labels based on current spell inventory
         for (JLabel label : spellLabels) {
@@ -505,6 +547,27 @@ public class RunningMode extends JFrame{
                 
             }
             
+            // if (server == null) {
+            //     timer = new Timer(2000, (ActionEvent e) -> {
+            //         try {
+            //             client.refreshInfo(barrierIndexList);
+            //         } catch (IOException e1) {
+            //             // TODO Auto-generated catch block
+            //             e1.printStackTrace();
+            //         }
+            //     });
+            //     timer.start();
+            // } else {
+            //     timer = new Timer(2000, (ActionEvent e) -> {
+            //         try {
+            //             server.refreshInfo(barrierIndexList);
+            //         } catch (IOException e1) {
+            //             // TODO Auto-generated catch block
+            //             e1.printStackTrace();
+            //         }
+            //     });
+            //     timer.start();
+            // }
         }
             private void moveBall() {
                 fireBall.setX(ballSpeedX+fireBall.getX());
