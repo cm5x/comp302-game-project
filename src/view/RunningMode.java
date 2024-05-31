@@ -125,6 +125,10 @@ public class RunningMode extends JFrame{
         return player;
     }
 
+    public ArrayList<Integer> getInventory() {
+        return player.getSpellInventory();
+    }
+
     public JPanel getChancePanel() {
         return chancePanel;
     }
@@ -280,13 +284,15 @@ public class RunningMode extends JFrame{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveGame(barrierIndexList);
+                saveGame(barrierIndexList,getInventory());
+                timer.stop();
             }
         });
 
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                timer.stop();
                 loadGame();
             }
         });
@@ -1155,6 +1161,17 @@ public class RunningMode extends JFrame{
         this.barrierIndexList = new ArrayList<int[]>();
         bArrayList.clear();
 
+        File inventoryFile = new File("src/inventorySaves/inventorySave" + gameIndex + ".dat");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inventoryFile))) {
+
+                ArrayList<Integer> newInventory = (ArrayList<Integer>) ois.readObject();
+                player.setSpellInventory(newInventory);
+                updateSpellInventoryLabels();
+
+        } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+        }
+
         File fileToLoad = new File("src/gameSaves/gameSave" + gameIndex + ".dat");
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
 
@@ -1214,16 +1231,16 @@ public class RunningMode extends JFrame{
 
     }
   
-    public void saveGame(ArrayList<int[]> barrierList) {
+    public void saveGame(ArrayList<int[]> barrierList, ArrayList<Integer> playerInventory) {
 
-        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(barrierList,mapPanel);
+        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(barrierList,mapPanel,timer, playerInventory);
         gameSlotsFrame.setVisible(true);
     
     }
 
     public void loadGame() {
 
-        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(mapPanel);
+        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(mapPanel, timer);
         gameSlotsFrame.setVisible(true);
     
     }

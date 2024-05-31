@@ -31,7 +31,7 @@ public class GameSlotsFrame extends JFrame {
     Player p = new Player("uname", "pass");
 
 
-    public GameSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {
+    public GameSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener, Timer timer, ArrayList<Integer> playerInventory) {
         
         setTitle("Game Slots");
         setSize(500,600);
@@ -72,8 +72,10 @@ public class GameSlotsFrame extends JFrame {
                         System.out.println("You chose: " + options[choice]);
 
                         if (choice == 0) {
-                            saveGame(mapArrayList, 1);
+                            saveGame(mapArrayList, 1, playerInventory);
                             JOptionPane.showMessageDialog(null, "Game Saved");
+                            dispose();
+                            timer.start();
                         } else {
                         }
 
@@ -87,9 +89,10 @@ public class GameSlotsFrame extends JFrame {
             JButton gameSlot1 = new JButton("Empty Slot");
             gameSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 1);
+                    saveGame(mapArrayList, 1, playerInventory);
                     JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
+                    timer.start();
                 }
             });
             panel.add(gameSlot1);
@@ -109,8 +112,10 @@ public class GameSlotsFrame extends JFrame {
                         System.out.println("You chose: " + options[choice]);
 
                         if (choice == 0) {
-                            saveGame(mapArrayList, 2);
+                            saveGame(mapArrayList, 2, playerInventory);
                             JOptionPane.showMessageDialog(null, "Game Saved");
+                            dispose();
+                            timer.start();
                         } else {
                         }
 
@@ -124,9 +129,10 @@ public class GameSlotsFrame extends JFrame {
             JButton gameSlot2 = new JButton("Empty Slot");
             gameSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 2);
+                    saveGame(mapArrayList, 2, playerInventory);
                     JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
+                    timer.start();
                 }
             });
             panel.add(gameSlot2);
@@ -146,8 +152,10 @@ public class GameSlotsFrame extends JFrame {
                         System.out.println("You chose: " + options[choice]);
 
                         if (choice == 0) {
-                            saveGame(mapArrayList, 3);
+                            saveGame(mapArrayList, 3, playerInventory);
                             JOptionPane.showMessageDialog(null, "Game Saved");
+                            dispose();
+                            timer.start();
                         } else {
                         }
 
@@ -161,9 +169,10 @@ public class GameSlotsFrame extends JFrame {
             JButton gameSlot3 = new JButton("Empty Slot");
             gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 3);
+                    saveGame(mapArrayList, 3, playerInventory);
                     JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
+                    timer.start();
                 }
             });
             panel.add(gameSlot3);
@@ -183,8 +192,10 @@ public class GameSlotsFrame extends JFrame {
                         System.out.println("You chose: " + options[choice]);
 
                         if (choice == 0) {
-                            saveGame(mapArrayList, 4);
+                            saveGame(mapArrayList, 4, playerInventory);
                             JOptionPane.showMessageDialog(null, "Game Saved");
+                            dispose();
+                            timer.start();
                         } else {
                         }
 
@@ -198,9 +209,10 @@ public class GameSlotsFrame extends JFrame {
             JButton gameSlot4 = new JButton("Empty Slot");
             gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 4);
+                    saveGame(mapArrayList, 4, playerInventory);
                     JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
+                    timer.start();
                 }
             });
             panel.add(gameSlot4);
@@ -220,8 +232,10 @@ public class GameSlotsFrame extends JFrame {
                         System.out.println("You chose: " + options[choice]);
 
                         if (choice == 0) {
-                            saveGame(mapArrayList, 5);
+                            saveGame(mapArrayList, 5, playerInventory);
                             JOptionPane.showMessageDialog(null, "Game Saved");
+                            dispose();
+                            timer.start();
                         } else {
                         }
 
@@ -235,9 +249,10 @@ public class GameSlotsFrame extends JFrame {
             JButton gameSlot5 = new JButton("Empty Slot");
             gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 5);
+                    saveGame(mapArrayList, 5, playerInventory);
                     JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
+                    timer.start();
                 }
             });
             panel.add(gameSlot5);
@@ -247,7 +262,7 @@ public class GameSlotsFrame extends JFrame {
         setVisible(true);
     }
 
-    public GameSlotsFrame(FrameCloseListener listener) {
+    public GameSlotsFrame(FrameCloseListener listener, Timer timer) {
         
         setTitle("Game Slots");
         setSize(500,600);
@@ -278,6 +293,7 @@ public class GameSlotsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     loadGameIndex = 1;
                     dispose();
+                    timer.start();
                 }
             });
             panel.add(gameSlot1);
@@ -494,15 +510,23 @@ public class GameSlotsFrame extends JFrame {
         setVisible(true);
     }
 
-    public void saveGame(ArrayList<int[]> barrierList, int mapSlot) {
+    public void saveGame(ArrayList<int[]> barrierList, int mapSlot, ArrayList<Integer> playerInventory) {
         File fileToSave = new File("src/gameSaves/gameSave" + mapSlot + ".dat");
+        File inventoryFileToSave = new File("src/inventorySaves/inventorySave" + mapSlot + ".dat");
             
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                oos.writeObject(barrierList);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
+            oos.writeObject(barrierList);
                 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(inventoryFileToSave))) {
+            oos.writeObject(playerInventory);
+                
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -77,6 +77,10 @@ public void setSpellInventory(int index, int value) {
     }
 }
 
+public void setSpellInventory(ArrayList<Integer> newSpellInventory) {
+    this.spellInventory = newSpellInventory;
+}
+
 public void increaseSpellInventory(int index){
     int current_val=this.spellInventory.get(index);
     this.spellInventory.set(index, current_val+1);
