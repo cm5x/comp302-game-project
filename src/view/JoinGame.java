@@ -40,25 +40,22 @@ public class JoinGame extends JFrame {
         JButton joinButton = new JButton("Join");
         add(joinButton);
 
-        String ipAddress = ipAddressField.getText();
-        int port = Integer.parseInt(portField.getText());
-
-        Client multiplayerClient = new Client(ipAddress, port);
-
         joinButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+                String ipAddress = ipAddressField.getText();
+                int port = Integer.parseInt(portField.getText());
+
+                Client multiplayerClient = new Client(ipAddress, port, JoinGame.this);
                 multiplayerClient.connectToServer();
             }
         });
 
         setVisible(true);
-
-        if (multiplayerClient.getConnected() == true);
-            setVisible(false); 
     }
 
-
+    public void onConnectionSuccess() {
+        dispose();  // Close the JoinGame window
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(JoinGame::new);
