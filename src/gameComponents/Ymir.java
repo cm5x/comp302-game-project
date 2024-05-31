@@ -33,7 +33,7 @@ public class Ymir {
 
         abilities = new ArrayList<>();
         abilities.add(new InfiniteVoid("InfiniteVoid", runningMode));
-        //abilities.add(new DoubleAccel(null, runningMode, fireball));
+        abilities.add(new InfiniteVoid("DoubleAccel", runningMode));
         abilities.add(new HollowPurple("HollowPurple", runningMode));
 
         lastTwoAbilities = new ArrayList<>();

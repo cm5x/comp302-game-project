@@ -313,6 +313,24 @@ public class RunningMode extends JFrame{
         private int originalPaddleWidth;
 
         
+        //to edit the ball speed
+        public int getBallSpeedX() {
+            return ballSpeedX;
+        }
+
+        public void setBallSpeedX(int ballSpeedX) {
+            this.ballSpeedX = ballSpeedX;
+        }
+
+        public int getBallSpeedY() {
+            return ballSpeedY;
+        }
+
+        public void setBallSpeedY(int ballSpeedY) {
+            this.ballSpeedY = ballSpeedY;
+        }
+
+
         public int getOriginalPaddleWidth(){
             return originalPaddleWidth;
         }
