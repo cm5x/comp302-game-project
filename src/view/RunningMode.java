@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -56,7 +57,6 @@ import gameComponents.Player;
 import gameComponents.ReinforcedBarrier;
 import gameComponents.RewardingBarrier;
 import gameComponents.SimpleBarrier;
-import utilities.BarrierReader;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -79,8 +79,9 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
+
+    private ArrayList<int[]> barrierIndexList;
     private ArrayList<JLabel> spellLabels;
-    
     public JLabel scoreLabel;
     private JLabel playerlabel;
     public JLabel barrcountlabel;
@@ -279,14 +280,14 @@ public class RunningMode extends JFrame{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveMap();
+                saveGame(barrierIndexList);
             }
         });
 
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loadMap();
+                loadGame();
             }
         });
 
@@ -379,7 +380,7 @@ public class RunningMode extends JFrame{
     
     
     
-    public class MapPanel extends JPanel implements KeyListener {
+    public class MapPanel extends JPanel implements KeyListener, FrameCloseListener {
         // Initialize Magic staff 
         private ArrayList<ColoredBlock> blocks;
 
@@ -446,7 +447,7 @@ public class RunningMode extends JFrame{
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 
                 barrierIndexList = (ArrayList<int[]>) ois.readObject(); //get the barrierList from saved map file
-                
+                frame.barrierIndexList = this.barrierIndexList;
                 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -562,6 +563,7 @@ public class RunningMode extends JFrame{
                     int ycoor = block.rectangle.y;
                     for (Barrier barr : bArrayList){
                         if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
+
                             if (barr instanceof ReinforcedBarrier & overwhelmingFireBall.isActive()){
                                 barr.hit(barr.getHealth());
                             } else{
@@ -586,7 +588,35 @@ public class RunningMode extends JFrame{
                                         remaintouched = false;
                                     }
                                 }
-                                
+                              
+                                int[] targetArray = new int[4];
+
+                                if (barr instanceof SimpleBarrier) {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 1;
+                                    targetArray[3] = 1;
+                                } else if (barr instanceof ReinforcedBarrier) {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 2;
+                                    targetArray[3] = 1;
+                                } else if (barr instanceof ExplosiveBarrier) {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 3;
+                                    targetArray[3] = 1;
+                                } else {
+                                    targetArray[0] = xcoor;
+                                    targetArray[1] = ycoor;
+                                    targetArray[2] = 4;
+                                    targetArray[3] = 1;
+                                }
+
+                                System.out.println(barrierIndexList.removeIf(array -> Arrays.equals(array,targetArray)));
+                                frame.barrierIndexList = this.barrierIndexList;
+                              
+                              
                                 score = score + 300 / (double) currentTime;
                                 System.out.println(currentTime);
                                 String scorest = String.format("%.2f", score);
@@ -1116,40 +1146,88 @@ public class RunningMode extends JFrame{
             // This method can be left empty if not used
         }
 
-    }
+         // Load map and save map for the game
+    
 
-// Load map and save map for the game
-    public void saveMap() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Specify a file to save");
-        int userSelection = fileChooser.showSaveDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
-                oos.writeObject(barriers);
-            } catch (IOException e) {
+    public void loadGame(int gameIndex) {
+
+        this.blocks = new ArrayList<>();
+        this.barrierIndexList = new ArrayList<int[]>();
+        bArrayList.clear();
+
+        File fileToLoad = new File("src/gameSaves/gameSave" + gameIndex + ".dat");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
+
+                barrierIndexList = (ArrayList<int[]>) ois.readObject();
+
+                for (int i = 0; i < barrierIndexList.size(); i++) {
+                    int[] currentBarrier = barrierIndexList.get(i);
+                    switch (currentBarrier[2]) {
+                        case 1:
+                            //addBlock(i[0], i[1],"red");
+    
+                            addBlock(currentBarrier[0], currentBarrier[1],"simple");
+                            SimpleBarrier sbar = new SimpleBarrier(currentBarrier[0], currentBarrier[1]);
+                            bArrayList.add(sbar);
+                            break;
+                        case 2:
+                            addBlock(currentBarrier[0], currentBarrier[1],"reinforced");
+                            Random random = new Random();     
+                            int hitnum = random.nextInt(3) + 1;
+                            ReinforcedBarrier rbar = new ReinforcedBarrier(hitnum, currentBarrier[0], currentBarrier[1]);
+                            bArrayList.add(rbar);
+                            break;
+                        case 3:
+                            addBlock(currentBarrier[0], currentBarrier[1],"explosive");
+                            ExplosiveBarrier ebar = new ExplosiveBarrier(currentBarrier[0], currentBarrier[1]);
+                            bArrayList.add(ebar);
+                            break;
+                        case 4:
+                            addBlock(currentBarrier[0], currentBarrier[1],"rewarding");
+                            RewardingBarrier rewbar = new RewardingBarrier(currentBarrier[0], currentBarrier[1]);
+                            bArrayList.add(rewbar);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+
+                repaint();
+
+        } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-            }
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public void loadMap() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select a file to load");
-        int userSelection = fileChooser.showOpenDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToLoad = fileChooser.getSelectedFile();
-            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileToLoad))) {
-                String file = fileToLoad.getAbsolutePath();
-                BarrierReader reader = new BarrierReader();
-                barriers = reader.readBarriers(file);
-            } catch (IOException e) {
-                e.printStackTrace();
+    @Override
+        public void onFrameClosed(int data) {
+            System.out.println("Received data from SecondaryFrame: " + data);
+
+            if (data == 0) {
+
+            } else {
+                loadGame(data);
             }
+            
         }
+
+    }
+  
+    public void saveGame(ArrayList<int[]> barrierList) {
+
+        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(barrierList,mapPanel);
+        gameSlotsFrame.setVisible(true);
+    
     }
 
+    public void loadGame() {
+
+        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(mapPanel);
+        gameSlotsFrame.setVisible(true);
+    
+    }
+  
     public void expandPaddle() {
         mapPanel.paddle.width *= 2;
         mapPanel.repaint();

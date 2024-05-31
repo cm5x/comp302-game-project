@@ -16,29 +16,24 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import utilities.FrameCloseListener;
 
-public class MapSlotsFrame extends JFrame {
+public class GameSlotsFrame extends JFrame {
     
     private ArrayList<Integer> gameSaves = new ArrayList<Integer>();
     private int index = 1;
-    private JButton mapSlot1;
-    private JButton mapSlot2;
-    private JButton mapSlot3;
-    private JButton mapSlot4;
-    private JButton mapSlot5;
+    private JButton gameSlot1;
+    private JButton gameSlot2;
+    private JButton gameSlot3;
+    private JButton gameSlot4;
+    private JButton gameSlot5;
     private ArrayList<int[]> mapArrayList;
     private FrameCloseListener listener;
-    private int loadMapIndex;
-
-    Player p = new Player("name","pass");
-    
-    public void closepanel(){
-        this.dispose();
-    }
+    private int loadGameIndex;
+    Player p = new Player("uname", "pass");
 
 
-    public MapSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {
+    public GameSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {
         
-        setTitle("Map Slots");
+        setTitle("Game Slots");
         setSize(500,600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -49,13 +44,13 @@ public class MapSlotsFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 10)); // 5 rows, 1 column
 
-        Path directory = Paths.get("src/gameMapSaves");
+        Path directory = Paths.get("src/gameSaves");
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(10)));
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(8)));
                 gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
@@ -64,12 +59,12 @@ public class MapSlotsFrame extends JFrame {
         }
 
         if (gameSaves.contains(1)) {
-            JButton mapSlot1 = new JButton("Map 1");
-            mapSlot1.addActionListener(new ActionListener() {
+            JButton gameSlot1 = new JButton("Game 1");
+            gameSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String[] options = {"Override", "Cancel"};
                     int defaultOptionIndex = 0; // Index of the default button
-                    int choice = JOptionPane.showOptionDialog(null, "The selected map will be overwritten. Do you want to continue?", "Override Map",
+                    int choice = JOptionPane.showOptionDialog(null, "The selected game will be overwritten. Do you want to continue?", "Override Game",
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[defaultOptionIndex]);
 
                     // Handle the user's choice
@@ -78,8 +73,7 @@ public class MapSlotsFrame extends JFrame {
 
                         if (choice == 0) {
                             saveGame(mapArrayList, 1);
-                            JOptionPane.showMessageDialog(null, "Map Saved");
-                            dispose();
+                            JOptionPane.showMessageDialog(null, "Game Saved");
                         } else {
                         }
 
@@ -88,26 +82,26 @@ public class MapSlotsFrame extends JFrame {
                     }
                 }
             });
-            panel.add(mapSlot1);
+            panel.add(gameSlot1);
         } else {
-            JButton mapSlot1 = new JButton("Empty Slot");
-            mapSlot1.addActionListener(new ActionListener() {
+            JButton gameSlot1 = new JButton("Empty Slot");
+            gameSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     saveGame(mapArrayList, 1);
-                    JOptionPane.showMessageDialog(null, "Map Saved");
+                    JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
                 }
             });
-            panel.add(mapSlot1);
+            panel.add(gameSlot1);
         }
 
         if (gameSaves.contains(2)) {
-            JButton mapSlot2 = new JButton("Map 2");
-            mapSlot2.addActionListener(new ActionListener() {
+            JButton gameSlot2 = new JButton("Game 2");
+            gameSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String[] options = {"Override", "Cancel"};
                     int defaultOptionIndex = 0; // Index of the default button
-                    int choice = JOptionPane.showOptionDialog(null, "The selected map will be overwritten. Do you want to continue?", "Override Map",
+                    int choice = JOptionPane.showOptionDialog(null, "The selected game will be overwritten. Do you want to continue?", "Override Game",
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[defaultOptionIndex]);
 
                     // Handle the user's choice
@@ -116,8 +110,7 @@ public class MapSlotsFrame extends JFrame {
 
                         if (choice == 0) {
                             saveGame(mapArrayList, 2);
-                            JOptionPane.showMessageDialog(null, "Map Saved");
-                            dispose();
+                            JOptionPane.showMessageDialog(null, "Game Saved");
                         } else {
                         }
 
@@ -126,26 +119,26 @@ public class MapSlotsFrame extends JFrame {
                     }
                 }
             });
-            panel.add(mapSlot2);
+            panel.add(gameSlot2);
         } else {
-            JButton mapSlot2 = new JButton("Empty Slot");
-            mapSlot2.addActionListener(new ActionListener() {
+            JButton gameSlot2 = new JButton("Empty Slot");
+            gameSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     saveGame(mapArrayList, 2);
-                    JOptionPane.showMessageDialog(null, "Map Saved");
+                    JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
                 }
             });
-            panel.add(mapSlot2);
+            panel.add(gameSlot2);
         }
 
         if (gameSaves.contains(3)) {
-            JButton mapSlot3 = new JButton("Map 3");
-            mapSlot3.addActionListener(new ActionListener() {
+            JButton gameSlot3 = new JButton("Game 3");
+            gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String[] options = {"Override", "Cancel"};
                     int defaultOptionIndex = 0; // Index of the default button
-                    int choice = JOptionPane.showOptionDialog(null, "The selected map will be overwritten. Do you want to continue?", "Override Map",
+                    int choice = JOptionPane.showOptionDialog(null, "The selected game will be overwritten. Do you want to continue?", "Override Game",
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[defaultOptionIndex]);
 
                     // Handle the user's choice
@@ -154,8 +147,7 @@ public class MapSlotsFrame extends JFrame {
 
                         if (choice == 0) {
                             saveGame(mapArrayList, 3);
-                            JOptionPane.showMessageDialog(null, "Map Saved");
-                            dispose();
+                            JOptionPane.showMessageDialog(null, "Game Saved");
                         } else {
                         }
 
@@ -164,26 +156,26 @@ public class MapSlotsFrame extends JFrame {
                     }
                 }
             });
-            panel.add(mapSlot3);
+            panel.add(gameSlot3);
         } else {
-            JButton mapSlot3 = new JButton("Empty Slot");
-            mapSlot3.addActionListener(new ActionListener() {
+            JButton gameSlot3 = new JButton("Empty Slot");
+            gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     saveGame(mapArrayList, 3);
-                    JOptionPane.showMessageDialog(null, "Map Saved");
+                    JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
                 }
             });
-            panel.add(mapSlot3);
+            panel.add(gameSlot3);
         }
 
         if (gameSaves.contains(4)) {
-            JButton mapSlot4 = new JButton("Map 4");
-            mapSlot4.addActionListener(new ActionListener() {
+            JButton gameSlot4 = new JButton("Game 4");
+            gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String[] options = {"Override", "Cancel"};
                     int defaultOptionIndex = 0; // Index of the default button
-                    int choice = JOptionPane.showOptionDialog(null, "The selected map will be overwritten. Do you want to continue?", "Override Map",
+                    int choice = JOptionPane.showOptionDialog(null, "The selected game will be overwritten. Do you want to continue?", "Override Game",
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[defaultOptionIndex]);
 
                     // Handle the user's choice
@@ -192,8 +184,7 @@ public class MapSlotsFrame extends JFrame {
 
                         if (choice == 0) {
                             saveGame(mapArrayList, 4);
-                            JOptionPane.showMessageDialog(null, "Map Saved");
-                            dispose();
+                            JOptionPane.showMessageDialog(null, "Game Saved");
                         } else {
                         }
 
@@ -202,26 +193,26 @@ public class MapSlotsFrame extends JFrame {
                     }
                 }
             });
-            panel.add(mapSlot4);
+            panel.add(gameSlot4);
         } else {
-            JButton mapSlot4 = new JButton("Empty Slot");
-            mapSlot4.addActionListener(new ActionListener() {
+            JButton gameSlot4 = new JButton("Empty Slot");
+            gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     saveGame(mapArrayList, 4);
-                    JOptionPane.showMessageDialog(null, "Map Saved");
+                    JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
                 }
             });
-            panel.add(mapSlot4);
+            panel.add(gameSlot4);
         }
         
         if (gameSaves.contains(5)) {
-            JButton mapSlot5 = new JButton("Map 5");
-            mapSlot5.addActionListener(new ActionListener() {
+            JButton gameSlot5 = new JButton("Game 5");
+            gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String[] options = {"Override", "Cancel"};
                     int defaultOptionIndex = 0; // Index of the default button
-                    int choice = JOptionPane.showOptionDialog(null, "The selected map will be overwritten. Do you want to continue?", "Override Map",
+                    int choice = JOptionPane.showOptionDialog(null, "The selected game will be overwritten. Do you want to continue?", "Override Game",
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[defaultOptionIndex]);
 
                     // Handle the user's choice
@@ -230,8 +221,7 @@ public class MapSlotsFrame extends JFrame {
 
                         if (choice == 0) {
                             saveGame(mapArrayList, 5);
-                            JOptionPane.showMessageDialog(null, "Map Saved");
-                            dispose();
+                            JOptionPane.showMessageDialog(null, "Game Saved");
                         } else {
                         }
 
@@ -240,26 +230,26 @@ public class MapSlotsFrame extends JFrame {
                     }
                 }
             });
-            panel.add(mapSlot5);
+            panel.add(gameSlot5);
         } else {
-            JButton mapSlot5 = new JButton("Empty Slot");
-            mapSlot5.addActionListener(new ActionListener() {
+            JButton gameSlot5 = new JButton("Empty Slot");
+            gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     saveGame(mapArrayList, 5);
-                    JOptionPane.showMessageDialog(null, "Map Saved");
+                    JOptionPane.showMessageDialog(null, "Game Saved");
                     dispose();
                 }
             });
-            panel.add(mapSlot5);
+            panel.add(gameSlot5);
         }
         
         add(panel);
         setVisible(true);
     }
 
-    public MapSlotsFrame(FrameCloseListener listener) {
+    public GameSlotsFrame(FrameCloseListener listener) {
         
-        setTitle("Map Slots");
+        setTitle("Game Slots");
         setSize(500,600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -268,13 +258,13 @@ public class MapSlotsFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 10)); // 5 rows, 1 column
 
-        Path directory = Paths.get("src/gameMapSaves");
+        Path directory = Paths.get("src/gameSaves");
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(10)));
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(8)));
                 gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
@@ -283,109 +273,107 @@ public class MapSlotsFrame extends JFrame {
         }
 
         if (gameSaves.contains(1)) {
-            JButton mapSlot1 = new JButton("Map 1");
-            mapSlot1.addActionListener(new ActionListener() {
+            JButton gameSlot1 = new JButton("Game 1");
+            gameSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    loadMapIndex = 1;
+                    loadGameIndex = 1;
                     dispose();
                 }
             });
-            panel.add(mapSlot1);
+            panel.add(gameSlot1);
         } else {
-            JButton mapSlot1 = new JButton("Empty Slot");
-            mapSlot1.addActionListener(new ActionListener() {
+            JButton gameSlot1 = new JButton("Empty Slot");
+            gameSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     
                 }
             });
-            panel.add(mapSlot1);
+            panel.add(gameSlot1);
         }
 
         if (gameSaves.contains(2)) {
-            JButton mapSlot2 = new JButton("Map 2");
-            mapSlot2.addActionListener(new ActionListener() {
+            JButton gameSlot2 = new JButton("Game 2");
+            gameSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    loadMapIndex = 2;
+                    loadGameIndex = 2;
                     dispose();
                 }
             });
-            panel.add(mapSlot2);
+            panel.add(gameSlot2);
         } else {
-            JButton mapSlot2 = new JButton("Empty Slot");
-            mapSlot2.addActionListener(new ActionListener() {
+            JButton gameSlot2 = new JButton("Empty Slot");
+            gameSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     
                 }
             });
-            panel.add(mapSlot2);
+            panel.add(gameSlot2);
         }
 
         if (gameSaves.contains(3)) {
-            JButton mapSlot3 = new JButton("Map 3");
-            mapSlot3.addActionListener(new ActionListener() {
+            JButton gameSlot3 = new JButton("Game 3");
+            gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    loadMapIndex = 3;
+                    loadGameIndex = 3;
                     dispose();
                 }
             });
-            panel.add(mapSlot3);
+            panel.add(gameSlot3);
         } else {
-            JButton mapSlot3 = new JButton("Empty Slot");
-            mapSlot3.addActionListener(new ActionListener() {
+            JButton gameSlot3 = new JButton("Empty Slot");
+            gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     
                 }
             });
-            panel.add(mapSlot3);
+            panel.add(gameSlot3);
         }
 
         if (gameSaves.contains(4)) {
-            JButton mapSlot4 = new JButton("Map 4");
-            mapSlot4.addActionListener(new ActionListener() {
+            JButton gameSlot4 = new JButton("Game 4");
+            gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    loadMapIndex = 4;
+                    loadGameIndex = 4;
                     dispose();
                 }
             });
-            panel.add(mapSlot4);
+            panel.add(gameSlot4);
         } else {
-            JButton mapSlot4 = new JButton("Empty Slot");
-            mapSlot4.addActionListener(new ActionListener() {
+            JButton gameSlot4 = new JButton("Empty Slot");
+            gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    saveGame(mapArrayList, 4);
-                    JOptionPane.showMessageDialog(null, "Map Saved");
-                    dispose();
+                    
                 }
             });
-            panel.add(mapSlot4);
+            panel.add(gameSlot4);
         }
         
         if (gameSaves.contains(5)) {
-            JButton mapSlot5 = new JButton("Map 5");
-            mapSlot5.addActionListener(new ActionListener() {
+            JButton gameSlot5 = new JButton("Game 5");
+            gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    loadMapIndex = 5;
+                    loadGameIndex = 5;
                     dispose();
                 }
             });
-            panel.add(mapSlot5);
+            panel.add(gameSlot5);
         } else {
-            JButton mapSlot5 = new JButton("Empty Slot");
-            mapSlot5.addActionListener(new ActionListener() {
+            JButton gameSlot5 = new JButton("Empty Slot");
+            gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                         
                 }
             });
-            panel.add(mapSlot5);
+            panel.add(gameSlot5);
         }
         
         add(panel);
         setVisible(true);
     }
 
-    public MapSlotsFrame() {
+    public GameSlotsFrame() {
         
-        setTitle("Map Slots");
+        setTitle("Game Slots");
         setSize(500,600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -393,13 +381,13 @@ public class MapSlotsFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 10)); // 5 rows, 1 column
 
-        Path directory = Paths.get("src/gameMapSaves");
+        Path directory = Paths.get("src/gameSaves");
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             // Iterate over the files and subdirectories in the directory
             for (Path file : stream) {
                 
-                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(10)));
+                int fileName = Integer.parseInt(Character.toString(file.getFileName().toString().charAt(8)));
                 gameSaves.add(fileName);
                 // Perform operations on the file, such as reading its contents or processing it
             }
@@ -408,105 +396,98 @@ public class MapSlotsFrame extends JFrame {
         }
 
         if (gameSaves.contains(1)) {
-            JButton mapSlot1 = new JButton("Map 1");
-            mapSlot1.addActionListener(new ActionListener() {
+            JButton gameSlot1 = new JButton("Game 1");
+            gameSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(1,p);
                     run.setVisible(true);
-                    closepanel();
+                }
+            });
+            panel.add(gameSlot1);
+        } else {
+            JButton gameSlot1 = new JButton("Empty Slot");
+            gameSlot1.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                     
                 }
             });
-            panel.add(mapSlot1);
-        } else {
-            JButton mapSlot1 = new JButton("Empty Slot");
-            mapSlot1.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    closepanel();
-                }
-            });
-            panel.add(mapSlot1);
+            panel.add(gameSlot1);
         }
 
         if (gameSaves.contains(2)) {
-            JButton mapSlot2 = new JButton("Map 2");
-            mapSlot2.addActionListener(new ActionListener() {
+            JButton gameSlot2 = new JButton("Game 2");
+            gameSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(2,p);
                     run.setVisible(true);
-                    closepanel();
+                }
+            });
+            panel.add(gameSlot2);
+        } else {
+            JButton gameSlot2 = new JButton("Empty Slot");
+            gameSlot2.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                     
                 }
             });
-            panel.add(mapSlot2);
-        } else {
-            JButton mapSlot2 = new JButton("Empty Slot");
-            mapSlot2.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    closepanel();
-                }
-            });
-            panel.add(mapSlot2);
+            panel.add(gameSlot2);
         }
 
         if (gameSaves.contains(3)) {
-            JButton mapSlot3 = new JButton("Map 3");
-            mapSlot3.addActionListener(new ActionListener() {
+            JButton gameSlot3 = new JButton("Game 3");
+            gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(3,p);
                     run.setVisible(true);
-                    closepanel();
                 }
             });
-            panel.add(mapSlot3);
+            panel.add(gameSlot3);
         } else {
-            JButton mapSlot3 = new JButton("Empty Slot");
-            mapSlot3.addActionListener(new ActionListener() {
+            JButton gameSlot3 = new JButton("Empty Slot");
+            gameSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    closepanel();
+                    
                 }
             });
-            panel.add(mapSlot3);
+            panel.add(gameSlot3);
         }
 
         if (gameSaves.contains(4)) {
-            JButton mapSlot4 = new JButton("Map 4");
-            mapSlot4.addActionListener(new ActionListener() {
+            JButton gameSlot4 = new JButton("Game 4");
+            gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(4,p);
                     run.setVisible(true);
-                    closepanel();
                 }
             });
-            panel.add(mapSlot4);
+            panel.add(gameSlot4);
         } else {
-            JButton mapSlot4 = new JButton("Empty Slot");
-            mapSlot4.addActionListener(new ActionListener() {
+            JButton gameSlot4 = new JButton("Empty Slot");
+            gameSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    closepanel();
+                    
                 }
             });
-            panel.add(mapSlot4);
+            panel.add(gameSlot4);
         }
         
         if (gameSaves.contains(5)) {
-            JButton mapSlot5 = new JButton("Map 5");
-            mapSlot5.addActionListener(new ActionListener() {
+            JButton gameSlot5 = new JButton("Game 5");
+            gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(5,p);
                     run.setVisible(true);
-                    closepanel();
                 }
             });
-            panel.add(mapSlot5);
+            panel.add(gameSlot5);
         } else {
-            JButton mapSlot5 = new JButton("Empty Slot");
-            mapSlot5.addActionListener(new ActionListener() {
+            JButton gameSlot5 = new JButton("Empty Slot");
+            gameSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    closepanel();
+                    
                 }
             });
-            panel.add(mapSlot5);
+            panel.add(gameSlot5);
         }
         
         add(panel);
@@ -514,7 +495,7 @@ public class MapSlotsFrame extends JFrame {
     }
 
     public void saveGame(ArrayList<int[]> barrierList, int mapSlot) {
-        File fileToSave = new File("src/gameMapSaves/exampleMap" + mapSlot + ".dat");
+        File fileToSave = new File("src/gameSaves/gameSave" + mapSlot + ".dat");
             
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileToSave))) {
                 oos.writeObject(barrierList);
@@ -528,12 +509,12 @@ public class MapSlotsFrame extends JFrame {
     public void dispose() {
         super.dispose();
         // Send data back to MainFrame
-        listener.onFrameClosed(loadMapIndex);
+        listener.onFrameClosed(loadGameIndex);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            MapSlotsFrame frame = new MapSlotsFrame();
+            GameSlotsFrame frame = new GameSlotsFrame();
             frame.setVisible(true);
         });
     }
