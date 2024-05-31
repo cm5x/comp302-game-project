@@ -1164,9 +1164,35 @@ public class RunningMode extends JFrame{
         File inventoryFile = new File("src/inventorySaves/inventorySave" + gameIndex + ".dat");
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(inventoryFile))) {
 
-                ArrayList<Integer> newInventory = (ArrayList<Integer>) ois.readObject();
+                ArrayList<Integer> playerMetricsArray = (ArrayList<Integer>) ois.readObject();
+                ArrayList<Integer> newInventory = new ArrayList<Integer>();
+
+                newInventory.add(playerMetricsArray.get(0));
+                newInventory.add(playerMetricsArray.get(1));
+                newInventory.add(playerMetricsArray.get(2));
+                newInventory.add(playerMetricsArray.get(3));
+
                 player.setSpellInventory(newInventory);
                 updateSpellInventoryLabels();
+
+                scoreLabel.setText("Score: " + playerMetricsArray.get(4));
+                score = playerMetricsArray.get(4);
+
+                int newChance = playerMetricsArray.get(5);
+                int chanceBefore = player.getChances();
+
+                System.out.println(newChance);
+                System.out.println(chanceBefore);
+                
+                if (chanceBefore < newChance) {
+                    for (int i = chanceBefore; i < newChance; i++) {
+                        player.incChance(chancePanel, labels, heartimg);
+                    }
+                } else {
+                    for (int i = newChance; i < chanceBefore; i++) {
+                        player.decChance(chancePanel, labels);
+                    }
+                }
 
         } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -1209,6 +1235,7 @@ public class RunningMode extends JFrame{
                     }
                 }
 
+                barrcountlabel.setText("Remaining Barriers: " + bArrayList.size());
 
                 repaint();
 
@@ -1232,8 +1259,8 @@ public class RunningMode extends JFrame{
     }
   
     public void saveGame(ArrayList<int[]> barrierList, ArrayList<Integer> playerInventory) {
-
-        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(barrierList,mapPanel,timer, playerInventory);
+        
+        GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(barrierList,mapPanel,timer, playerInventory, score, player.getChances());
         gameSlotsFrame.setVisible(true);
     
     }
