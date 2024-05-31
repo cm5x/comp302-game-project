@@ -535,10 +535,10 @@ import utilities.FrameCloseListener;
                                 addBlock(currentBarrier[0], currentBarrier[1],"reinforced");
                                 break;
                             case 3:
-                                addBlock(currentBarrier[0], currentBarrier[1],"rewarding");
+                                addBlock(currentBarrier[0], currentBarrier[1],"explosive");
                                 break;
                             case 4:
-                                addBlock(currentBarrier[0], currentBarrier[1],"explosive");
+                                addBlock(currentBarrier[0], currentBarrier[1],"rewarding");
                                 break;
 
                             default:
@@ -559,6 +559,12 @@ import utilities.FrameCloseListener;
         @Override
         public void onFrameClosed(int data) {
             System.out.println("Received data from SecondaryFrame: " + data);
-            loadMap(data);
+
+            if (data == 0) {
+
+            } else {
+                loadMap(data);
+            }
+            
         }
     }
