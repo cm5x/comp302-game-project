@@ -12,6 +12,7 @@ public class Homepage extends JFrame {
     private static Homepage instance = null;
     String backgroundpath = "assets/images/200background.png";
     Image backimg = new ImageIcon(backgroundpath).getImage();
+    JButton backButton;
     
     public void closeHome(){
         this.dispose();
@@ -37,9 +38,11 @@ public class Homepage extends JFrame {
                 g.drawImage(backimg, 0, 0, getWidth(), getHeight(), this);
             }
         }; 
-        panel.setLayout(new GridLayout(4, 1, 10, 10)); // 4 rows, 1 column
+        panel.setLayout(null); // 4 rows, 1 column
 
         JButton playButton = new JButton("Play Game");
+        playButton.setSize(400, 100);
+        playButton.setLocation(50, 20);
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MapSlotsFrame run = new MapSlotsFrame();
@@ -51,6 +54,8 @@ public class Homepage extends JFrame {
         panel.add(playButton);
 
         JButton settingsButton = new JButton("Settings");
+        settingsButton.setSize(400,100);
+        settingsButton.setLocation(50, 140);
         settingsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Code to handle settings button action
@@ -60,6 +65,8 @@ public class Homepage extends JFrame {
         panel.add(settingsButton);
         
         JButton helpButton = new JButton("Help Page");
+        helpButton.setSize(400,100);
+        helpButton.setLocation(50, 260);
         helpButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Code to handle help button action
@@ -70,9 +77,12 @@ public class Homepage extends JFrame {
             }
         });
         panel.add(helpButton);
+
         
         // Add path to build mode
         JButton buildingButton = new JButton("Building Mode");
+        buildingButton.setSize(400,100);
+        buildingButton.setLocation(50, 380);
         buildingButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MapDesigner mapdesigner = new MapDesigner(username);
@@ -83,7 +93,18 @@ public class Homepage extends JFrame {
         });
         
         panel.add(buildingButton);
-        
+        backButton = new JButton("Sign out");
+        backButton.setSize(100, 20);
+        backButton.setLocation(200, 500);
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                Login login = new Login();
+                login.setVisible(true);
+                closeHome();
+            }
+            
+        });
+        add(backButton);
         add(panel);
         setVisible(true);
 
