@@ -1,8 +1,16 @@
 package view;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
 import gameMechanics.GameController;
 
 public class Login extends JFrame {
@@ -76,13 +84,14 @@ public class Login extends JFrame {
                 // check if it is admin
                 if (username.matches("admin") && password.matches("admin")) {
                     JOptionPane.showMessageDialog(Login.this, "Login Successful");
-
+                    playAudio("assets/audio/welcome.wav");
                     Homepage homepage = new Homepage(username);
                     homepage.setVisible(true);
 
                     dispose();
                 } else if (controller.verifyPlayer(username, password)) {
                     JOptionPane.showMessageDialog(Login.this, "Login Successful");
+                    playAudio("assets/audio/welcome.wav");
                     Homepage homepage = new Homepage(username);
                     homepage.setVisible(true);
                     
@@ -117,5 +126,15 @@ public class Login extends JFrame {
             }
         });
     }
-
+    // Method to play audio
+    private void playAudio(String audioFilePath) {
+        try {
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(audioFilePath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
 }

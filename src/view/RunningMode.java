@@ -758,22 +758,22 @@ public class RunningMode extends JFrame{
                  
                 else {
                     timer.stop();
-                    showGameOverFrame("Game Over! No chances left.");
+                    showGameOverFrame("Game Over! No chances left.","assets/gifs/no.gif", "assets/audio/no.wav");
                 }
             }
         
             if (bArrayList.size() == 0) {
                 timer.stop();
-                showGameOverFrame("Game Over! All barriers cleared.");
+                showGameOverFrame("Game Over! All barriers cleared.","assets/gifs/dance.gif", "assets/audio/dance.wav");
             }
         
             if (player.getChances() == 0) {
                 timer.stop();
-                showGameOverFrame("Game Over! No chances left.");
+                showGameOverFrame("Game Over! No chances left.","assets/gifs/no.gif", "assets/audio/no.wav");
             }
         }
 
-        private void showGameOverFrame(String message) {
+        private void showGameOverFrame(String message, String gifpath, String audioPath) {
             JFrame gameOverFrame = new JFrame("Game Over");
             gameOverFrame.setSize(300, 300);
             gameOverFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -781,7 +781,7 @@ public class RunningMode extends JFrame{
         
             JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
             JButton okButton = new JButton("OK");
-            ImageIcon gifIcon = new ImageIcon("assets/gifs/no.gif");
+            ImageIcon gifIcon = new ImageIcon(gifpath);
             JLabel gifLabel = new JLabel(gifIcon);
             backB = new JButton("Return to home page");
             backB.addActionListener(new ActionListener() {
@@ -833,7 +833,7 @@ public class RunningMode extends JFrame{
             
             gameOverFrame.add(panel);
             gameOverFrame.setVisible(true);
-            playAudio("assets/audio/no.wav");
+            playAudio(audioPath);
         }
         private void playAudio(String audioFilePath) {
             try {
