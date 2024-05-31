@@ -6,17 +6,35 @@ import java.util.ArrayList;
 import gameComponents.Player;
 import view.RunningMode;
 import view.MultiplayerWaitingScreen;
+import view.PlayGame;
+import view.JoinGame;   
 
 public class Client {
     private String serverAddress;
     private int port;
     private Socket socket;
     private ArrayList<int[]> barrierList;
+    private boolean connected;
+
+    public boolean getConnected() {
+        return connected;
+    }
+
+
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+
 
     public Client(String serverAddress, int port) {
         this.serverAddress = serverAddress;
         this.port = port;
+        this.connected = false;
     }
+
+    
 
     public void connectToServer() {
         try {
@@ -24,15 +42,17 @@ public class Client {
             socket = new Socket(serverAddress, port);
             System.out.println("Connected to " + socket.getRemoteSocketAddress());
 
+
+            this.connected = true;
             receiveMap();
 
             Player player = new Player("uname", "pass");
-            RunningMode runningMode = new RunningMode(1, player, barrierList, this);
+            RunningMode runningMode = new RunningMode(1, player);
             runningMode.setVisible(true);
 
             MultiplayerWaitingScreen waitingScreen = MultiplayerWaitingScreen.getInstance();
             if (waitingScreen != null) {
-                waitingScreen.close();
+                waitingScreen.setVisible(false);
             }
         } catch (IOException e) {
             e.printStackTrace();
