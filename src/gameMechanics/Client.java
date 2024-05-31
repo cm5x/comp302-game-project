@@ -15,6 +15,11 @@ public class Client {
     private Socket socket;
     private ArrayList<int[]> barrierList;
     private boolean connected;
+    private JoinGame joinGame;
+
+    private RunningMode runningMode;
+    private DataInputStream in;
+    private DataOutputStream out;
 
     public boolean getConnected() {
         return connected;
@@ -27,11 +32,12 @@ public class Client {
     }
 
 
-
-    public Client(String serverAddress, int port) {
+    public Client(String serverAddress, int port, JoinGame joinGame) {
         this.serverAddress = serverAddress;
         this.port = port;
         this.connected = false;
+        this.joinGame = joinGame;
+
     }
 
     
@@ -44,16 +50,24 @@ public class Client {
 
 
             this.connected = true;
+
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+
             receiveMap();
 
             Player player = new Player("uname", "pass");
             RunningMode runningMode = new RunningMode(1, player);
             runningMode.setVisible(true);
 
+            new Thread(new ScoreUpdater()).start();
+
             MultiplayerWaitingScreen waitingScreen = MultiplayerWaitingScreen.getInstance();
             if (waitingScreen != null) {
                 waitingScreen.setVisible(false);
             }
+            joinGame.onConnectionSuccess();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,4 +86,28 @@ public class Client {
             barrierList.add(array);
         }
     }
+
+    public void sendScore(int score) {
+        try {
+            out.writeInt(score);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class ScoreUpdater implements Runnable {
+        public void run() {
+            try {
+                while (true) {
+                    int hostScore = in.readInt();
+                    int clientScore = in.readInt();
+                    runningMode.updateScores(hostScore, clientScore);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    
 }
