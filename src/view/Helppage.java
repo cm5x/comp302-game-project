@@ -2,7 +2,6 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class Helppage extends JFrame {
     String backgroundpath = "assets/images/200background.png";
@@ -42,11 +41,42 @@ public class Helppage extends JFrame {
                 + "Hex\n"
                 + "This ability equips the Magical Staff with two magical cannons on both of its ends. The cannons should point upwards and they rotate as the Magical Staff rotates. They can fire magical hexes that can hit the barriers. A hex hit has the same effect as the hit of a Fire Ball. It does not activate immediately, but can be activated by pressing H or pressing its icon on the screen. Once activated it remains active for only 30 seconds and then disappears afterwards.\n"
                 + "Overwhelming Fire Ball\n"
-                + "This ability upgrades the Fire Ball and makes it much more powerful, such that if it hits any barriers, it destroys it and passes through it regardless of its type (even for the firm barriers). This upgrade only lasts 30 seconds after it is activated.\n";
+                + "This ability upgrades the Fire Ball and makes it much more powerful, such that if it hits any barriers, it destroys it and passes through it regardless of its type (even for the firm barriers). This upgrade only lasts 30 seconds after it is activated.\n\n"
+                + "Phase 2: Multiplayer Mode\n"
+                + "In phase 2, the game introduces a two-player mode through networking. Each player controls their own Magical Staff and Fire Ball, competing to be the first to reach the Lance of Fate. Players can use both benevolent and malevolent spells to aid themselves or hinder their opponent. Benevolent spells enhance the player's abilities, while malevolent spells can disrupt the opponent's progress. Communication between players occurs in real-time, adding a new layer of strategy and competition to the game.\n\n"
+                + "The two-player mode can be accessed by choosing the multiplayer option from the main menu. Once selected, the game will establish a network connection between the two players. The players can then choose their warrior characters and begin the race to reach the Lance of Fate. During gameplay, each player will see their own game view but can also see a representation of the opponent's progress and the spells they are accumulating.\n\n"
+                + "In multiplayer mode, the players have to be careful of both the barriers and the spells deployed by the opponent. Malevolent spells can hinder the opponent's movement, for example, by rotating their Magical Staff in an unpredictable manner or causing their Fire Ball to slow down. On the other hand, benevolent spells can give advantages such as speeding up the Fire Ball, or enhancing the Magical Staff’s deflection capabilities.\n\n"
+                + "The winner is the player who successfully reaches the Lance of Fate first, breaking through all the barriers and overcoming the challenges posed by the opponent. In the event that one player is deemed unworthy (loses all their chances), the other player automatically wins the game.\n\n"
+                + "In summary, the multiplayer mode adds depth and challenge to the game by introducing real-time competition and interaction between two players. It brings a new layer of strategy as players can use spells to directly affect their opponent’s progress and race to be the first to achieve victory.";
+
+
+
         textArea.setText(instructions);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        add(scrollPane);
         
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        add(scrollPane, BorderLayout.CENTER);
+        
+        JPanel imagePanel = new JPanel();
+        imagePanel.setLayout(new FlowLayout());
+
+        // Adding images
+        String imagePath1 = "assets\\\\images\\\\GameIntro.jpg";
+     
+
+        // Resize images
+        ImageIcon originalIcon1 = new ImageIcon(imagePath1);
+       
+        
+        Image resizedImage1 = originalIcon1.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        
+        
+        JLabel imageLabel1 = new JLabel(new ImageIcon(resizedImage1));
+        
+        
+        imagePanel.add(imageLabel1);
+      
+        
+        add(imagePanel, BorderLayout.NORTH);
     }
 
     public static void main(String[] args) {
@@ -57,5 +87,4 @@ public class Helppage extends JFrame {
             }
         });
     }
-
 }
