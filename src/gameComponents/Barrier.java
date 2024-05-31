@@ -21,5 +21,9 @@ public interface Barrier {
     public int getYCoordinate();
     public int getSpellIndex();
     public int setSpellIndex();
+    public void freeze();
+    public void unfreeze(); 
+    public boolean isFrozen();
+    public void setHealth(int newH);
    
 }

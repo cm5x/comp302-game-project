@@ -1,4 +1,5 @@
 package gameComponents;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,20 +8,32 @@ import java.util.TimerTask;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import spells.DoubleAccel;
+import spells.*;
+import spells.Spell;
+import view.RunningMode;
+
 public class Ymir {
     private static final int COIN_FLIP_INTERVAL = 30000; // 30 seconds
     private static final double COIN_FLIP_PROBABILITY = 0.5;
 
-    private List<String> abilities;
-    private List<String> lastTwoAbilities;
+    private List<Spell> abilities;
+    private List<Spell> lastTwoAbilities;
     private Random random;
     private Timer timer;
+    private RunningMode runningMode;
+    private ArrayList<Barrier> barriers;
+    private FireBall fireball;
 
-    public Ymir() {
+    public Ymir(RunningMode runningMode, List<Barrier> barriers, FireBall fireball) {
+        this.runningMode = runningMode;
+        this.barriers = runningMode.bArrayList;
+        this.fireball = fireball;
+
         abilities = new ArrayList<>();
-        abilities.add("Infinite Void");
-        abilities.add("Double Accel");
-        abilities.add("Hollow Purple");
+        abilities.add(new InfiniteVoid("InfiniteVoid", runningMode));
+        abilities.add(new DoubleAccel("DoubleAccel", runningMode));
+        abilities.add(new HollowPurple("HollowPurple", runningMode));
 
         lastTwoAbilities = new ArrayList<>();
         random = new Random();
@@ -29,76 +42,46 @@ public class Ymir {
         // Initialize last two abilities with random abilities
         lastTwoAbilities.add(getRandomAbility());
         lastTwoAbilities.add(getRandomAbility());
-
-        startCoinFlipping();
     }
 
-    private void startCoinFlipping() {
-        TimerTask task = new TimerTask() {
+    public void startCoinFlipping() {
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (random.nextDouble() < COIN_FLIP_PROBABILITY) {
                     showCoinFlipResult(true);
-                    String ability = chooseAbility();
-                    applyAbility(ability);
+                    Spell ability = chooseAbility();
+                    ability.activate();
+                    updateLastTwoAbilities(ability);
                 } else {
                     showCoinFlipResult(false);
                 }
             }
-        };
-        timer.scheduleAtFixedRate(task, 0, COIN_FLIP_INTERVAL);
+        }, 0, COIN_FLIP_INTERVAL);
     }
 
-    private String getRandomAbility() {
+    private Spell getRandomAbility() {
         return abilities.get(random.nextInt(abilities.size()));
     }
 
-    private String chooseAbility() {
-        String chosenAbility;
+    private Spell chooseAbility() {
+        Spell chosenAbility;
         do {
             chosenAbility = getRandomAbility();
         } while (isRepeatedThrice(chosenAbility));
-        updateLastTwoAbilities(chosenAbility);
         return chosenAbility;
     }
 
-    private boolean isRepeatedThrice(String ability) {
+
+    private boolean isRepeatedThrice(Spell ability) {
         return lastTwoAbilities.size() >= 2 && lastTwoAbilities.get(0).equals(lastTwoAbilities.get(1)) && lastTwoAbilities.get(0).equals(ability);
     }
 
-    private void updateLastTwoAbilities(String ability) {
+    private void updateLastTwoAbilities(Spell ability) {
         if (lastTwoAbilities.size() >= 2) {
             lastTwoAbilities.remove(0);
         }
         lastTwoAbilities.add(ability);
-    }
-
-    private void applyAbility(String ability) {
-        System.out.println("Ymir activates: " + ability);
-        // Apply the effects of the ability here
-        switch (ability) {
-            case "Infinite Void":
-                applyInfiniteVoid();
-                break;
-            case "Double Accel":
-                applyDoubleAccel();
-                break;
-            case "Hollow Purple":
-                applyHollowPurple();
-                break;
-        }
-    }
-
-    private void applyInfiniteVoid() {
-        // Implement the Infinite Void
-    }
-
-    private void applyDoubleAccel() {
-        // Implement the Double Accel
-    }
-
-    private void applyHollowPurple() {
-        // Implement the Hollow Purple
     }
 
     private void showCoinFlipResult(boolean success) {
@@ -122,7 +105,5 @@ public class Ymir {
         timer.cancel();
     }
 
-    public static void main(String[] args) {
-        Ymir ymir = new Ymir();
-    }
+    
 }

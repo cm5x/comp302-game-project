@@ -16,6 +16,7 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     private int x1Coordinate;
     private int y1Coordinate;
     private int health;
+    private boolean frozen;
 
     public ExplosiveBarrier(int startX, int startY) {
         this.exploded = false;
@@ -23,6 +24,7 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
         this.x1Coordinate = startX;
         this.y1Coordinate = startY;
         this.health = 1;
+        this.frozen = false;
 
         // Change appereance of barrier
         try {
@@ -60,8 +62,10 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
     @Override
     public void hit(int hitDamage) {
         this.health = health - hitDamage;
-        if (!exploded) {
-            explode(); // Explode when hit
+        if (!frozen) {
+            if (!exploded) {
+                explode(); // Explode when hit
+            }
         }
     }
 
@@ -131,5 +135,38 @@ public class ExplosiveBarrier extends JComponent implements Barrier {
 
     public boolean isexploded(){
         return exploded;
+    }
+
+    @Override
+    public int getSpellIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getSpellIndex'");
+    }
+
+    @Override
+    public int setSpellIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSpellIndex'");
+    }
+
+    @Override
+    public void freeze() {
+        frozen = true;
+    }
+
+    @Override
+    public void unfreeze() {
+        frozen = false;
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    @Override
+    public void setHealth(int newH) {
+        this.health = newH;
+        
     }
 }
