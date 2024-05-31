@@ -45,10 +45,12 @@ import utilities.FrameCloseListener;
         JLabel rewlab;
         JPanel randomPanel;
         int limitcounter;
+        String username;
 
-        public MapDesigner() {
+        public MapDesigner(String username) {
             super("Map Designer");
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            this.username = username;
             this.setLayout(new BorderLayout());
             this.setSize(1920, 1080);
             limitcounter = 0;
@@ -174,6 +176,14 @@ import utilities.FrameCloseListener;
             //bunun içine de yazabilirsin actionperformed kısmına da 
             buttonPanel.add(contButton);
 
+            JButton backb = new JButton("Back");
+            backb.addActionListener(e-> {
+                Homepage hm = new Homepage(username);
+                this.dispose();
+            });
+            buttonPanel.add(backb);
+
+
             blockChooserPanel.add(buttonPanel, BorderLayout.NORTH);
 
 
@@ -184,7 +194,8 @@ import utilities.FrameCloseListener;
         }
 
         public static void main(String[] args) {
-            SwingUtilities.invokeLater(MapDesigner::new);
+            //SwingUtilities.invokeLater(MapDesigner::new);
+            MapDesigner mapDesigner = new MapDesigner("username");
         }
 
         @Override
@@ -245,7 +256,7 @@ import utilities.FrameCloseListener;
                     while (!blockPlaced) {
                         
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"simple");
                         
                     }
@@ -261,7 +272,7 @@ import utilities.FrameCloseListener;
                         
                     
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"reinforced");
                     }
                     limitcounter++;
@@ -276,7 +287,7 @@ import utilities.FrameCloseListener;
                         
                     
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"explosive");
                     }
                     limitcounter++;
@@ -292,8 +303,9 @@ import utilities.FrameCloseListener;
                         
                     
                         int x = (int) (Math.random() * 1250); 
-                        int y = (int) (Math.random() * 700); 
+                        int y = (int) (Math.random() * 650); 
                         blockPlaced = mapPanel.addBlock(x, y,"rewarding");
+                        mapPanel.getBarrierList().get(mapPanel.getBarrierList().size()-1);
                     }
                     limitcounter++;
                 }
@@ -312,6 +324,10 @@ import utilities.FrameCloseListener;
     class MapPanel extends JPanel implements FrameCloseListener {
         private ArrayList<ColoredBlock> blocks;
         private ArrayList<int[]> barrierList;
+        public ArrayList<int[]> getBarrierList() {
+            return barrierList;
+        }
+
         private String selectedColor = "simple";  // Default color
         private static final int BLOCK_WIDTH = 86; // Width of the block
         private static final int BLOCK_HEIGHT = 26; // Height of the block
@@ -343,7 +359,8 @@ import utilities.FrameCloseListener;
                     // }
                     if (SwingUtilities.isRightMouseButton(e)) {
                         showContextMenu(e.getX(), e.getY(), e);
-                    } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < getHeight() / 1.2) {
+                        //old value getHeight() / 1.2 
+                    } else if (SwingUtilities.isLeftMouseButton(e) && e.getY() < 650) {
                         if (addBlock(e.getX(), e.getY(),selectedColor)) {
                             frame.appendInfoText("Placed " + selectedColor + " barrier at (" + e.getX() + ", " + e.getY() + ")");
                         } else {
@@ -450,7 +467,8 @@ import utilities.FrameCloseListener;
               
             }
             // Draw a line indicating the maximum Y value for placing blocks
-            int maxY = (int)(getHeight() / 1.2);
+            //old value getHeight() / 1.2
+            int maxY = (int)(650);
             g.setColor(Color.GRAY); // Set line color
             g.drawLine(0, maxY, getWidth(), maxY); // Draw line from the left to the right side of the panel
 

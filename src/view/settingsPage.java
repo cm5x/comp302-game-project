@@ -6,10 +6,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,8 +36,18 @@ public class settingsPage extends JFrame implements ActionListener{
     JLabel changename;
     JButton submitpass;
     JLabel passwordchanger;
+    String backgroundpath = "assets/images/200background.png";
+    Image backimg = new ImageIcon(backgroundpath).getImage(); 
     GameController gc = new GameController();
     settingsPage(){
+
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backimg, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
 
         back = new JButton("BACK");
         back.addActionListener(this);
@@ -91,9 +104,13 @@ public class settingsPage extends JFrame implements ActionListener{
 
 
 
-        this.add(textpanel);
-        this.add(passchange);
-
+        backgroundPanel.add(textpanel);
+        backgroundPanel.add(passchange);
+        backgroundPanel.add(back);
+        backgroundPanel.setSize(500,600);
+        backgroundPanel.setLocation(0, 0);
+        backgroundPanel.setLayout(null);
+        this.add(backgroundPanel);
         this.setTitle("Settings");
         this.setSize(500,600);
         this.setLayout(null);
@@ -102,7 +119,7 @@ public class settingsPage extends JFrame implements ActionListener{
 
 
 
-        this.add(back);
+        this.setResizable(false);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);

@@ -28,7 +28,12 @@ public class MapSlotsFrame extends JFrame {
     private ArrayList<int[]> mapArrayList;
     private FrameCloseListener listener;
     private int loadMapIndex;
-    Player p = new Player("uname", "pass");
+
+    Player p = new Player("name","pass");
+    
+    public void closepanel(){
+        this.dispose();
+    }
 
 
     public MapSlotsFrame(ArrayList<int[]> mapArrayList, FrameCloseListener listener) {
@@ -74,6 +79,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 1);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -111,6 +117,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 2);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -148,6 +155,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 3);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -185,6 +193,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 4);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -222,6 +231,7 @@ public class MapSlotsFrame extends JFrame {
                         if (choice == 0) {
                             saveGame(mapArrayList, 5);
                             JOptionPane.showMessageDialog(null, "Map Saved");
+                            dispose();
                         } else {
                         }
 
@@ -403,6 +413,8 @@ public class MapSlotsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(1,p);
                     run.setVisible(true);
+                    closepanel();
+                    
                 }
             });
             panel.add(mapSlot1);
@@ -410,7 +422,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot1 = new JButton("Empty Slot");
             mapSlot1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    
+                    closepanel();
                 }
             });
             panel.add(mapSlot1);
@@ -422,6 +434,8 @@ public class MapSlotsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(2,p);
                     run.setVisible(true);
+                    closepanel();
+                    
                 }
             });
             panel.add(mapSlot2);
@@ -429,7 +443,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot2 = new JButton("Empty Slot");
             mapSlot2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    
+                    closepanel();
                 }
             });
             panel.add(mapSlot2);
@@ -441,6 +455,7 @@ public class MapSlotsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(3,p);
                     run.setVisible(true);
+                    closepanel();
                 }
             });
             panel.add(mapSlot3);
@@ -448,7 +463,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot3 = new JButton("Empty Slot");
             mapSlot3.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    
+                    closepanel();
                 }
             });
             panel.add(mapSlot3);
@@ -460,6 +475,7 @@ public class MapSlotsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(4,p);
                     run.setVisible(true);
+                    closepanel();
                 }
             });
             panel.add(mapSlot4);
@@ -467,7 +483,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot4 = new JButton("Empty Slot");
             mapSlot4.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    
+                    closepanel();
                 }
             });
             panel.add(mapSlot4);
@@ -479,6 +495,7 @@ public class MapSlotsFrame extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     RunningMode run = new RunningMode(5,p);
                     run.setVisible(true);
+                    closepanel();
                 }
             });
             panel.add(mapSlot5);
@@ -486,7 +503,7 @@ public class MapSlotsFrame extends JFrame {
             JButton mapSlot5 = new JButton("Empty Slot");
             mapSlot5.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    
+                    closepanel();
                 }
             });
             panel.add(mapSlot5);

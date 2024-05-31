@@ -1,19 +1,27 @@
 package spells;
-import spells.Spell;
-import gameComponents.*;
 
-public class OverwhelmingFireBall implements Spell{
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import view.RunningMode;
 
-    public OverwhelmingFireBall(){
+public class OverwhelmingFireBall extends Spell {
 
+    public OverwhelmingFireBall(RunningMode runningMode) {
+        super("OverwhelmingFireBall", new ImageIcon("path/to/icon.png"), runningMode);
     }
 
-    public void activate(){
+    @Override
+    protected void performAction() {
         
     }
 
-    public void deactivate(){
+    @Override
+    protected void undoAction() {
 
     }
 
+    @Override
+    protected int getDuration() {
+        return 30; // permanent
+    }
 }

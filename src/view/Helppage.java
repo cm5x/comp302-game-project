@@ -1,11 +1,13 @@
 package view;
 
-import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class Helppage extends JFrame {
+    String backgroundpath = "assets/images/200background.png";
+    Image backimg = new ImageIcon(backgroundpath).getImage();   
+
     public Helppage() {
         setTitle("Help Page");
         setSize(500, 600);
@@ -42,9 +44,18 @@ public class Helppage extends JFrame {
                 + "Overwhelming Fire Ball\n"
                 + "This ability upgrades the Fire Ball and makes it much more powerful, such that if it hits any barriers, it destroys it and passes through it regardless of its type (even for the firm barriers). This upgrade only lasts 30 seconds after it is activated.\n";
         textArea.setText(instructions);
-        
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane);
+        
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Helppage helpPage = new Helppage();
+                helpPage.setVisible(true);
+            }
+        });
     }
 
 }

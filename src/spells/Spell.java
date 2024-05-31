@@ -43,16 +43,18 @@ public abstract class Spell {
     }
 
     public void activate() {
-        isActive = true;
-        performAction();
-        Timer timer = new Timer(getDuration() * 1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deactivate();
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
+        if (!isActive){
+            isActive = true;
+            performAction();
+            Timer timer = new Timer(getDuration() * 1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    deactivate();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+    }
     }
     public void deactivate() {
         isActive = false;

@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import spells.MagicalStaffExpansion;
+import spells.Hex;
+
 // import org.w3c.dom.events.MouseEvent;
 // import java.util.Timer;
 import javax.swing.*;
@@ -40,6 +43,11 @@ import java.awt.geom.AffineTransform;
 import utilities.*;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import gameComponents.Barrier;
 import gameComponents.ExplosiveBarrier;
@@ -71,7 +79,12 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
+
     private ArrayList<int[]> barrierIndexList;
+    private ArrayList<JLabel> spellLabels;
+    public JLabel scoreLabel;
+    private JLabel playerlabel;
+    public JLabel barrcountlabel;
     private int selectedMap;
     JButton pauseButton;
     JButton saveButton;
@@ -92,10 +105,12 @@ public class RunningMode extends JFrame{
     Image stff = new ImageIcon(stpath).getImage();
     ImageIcon heartimg = new ImageIcon(chancePath);
 
-    ArrayList<Barrier> bArrayList = new ArrayList<>();
+    public ArrayList<Barrier> bArrayList = new ArrayList<>();
     // TODO: diğer spelleri ekle Melike
     private MagicalStaffExpansion magicalStaffExpansion;
     private Hex hexSpell;
+    private FelixFelicis felixFelicis;
+    private OverwhelmingFireBall overwhelmingFireBall;
 
     private static final Logger LOGGER = Logger.getLogger(RunningMode.class.getName());
 
@@ -103,8 +118,27 @@ public class RunningMode extends JFrame{
     private int chances;
     private Timer timer;
     private MagicalStaff staff;
-    private Player player;
+    public Player player;
+    public JButton backB;
+    
+    public Player getPlayer() {
+        return player;
+    }
+
+    public JPanel getChancePanel() {
+        return chancePanel;
+    }
+
+    public ImageIcon getHeartimg() {
+        return heartimg;
+    }
+
+    public ArrayList<JLabel> getLabels() {
+        return labels;
+    }
+
     private ArrayList<JLabel> labels;
+    public double score;
 
     public MagicalStaff getStaff() {
         return staff;
@@ -114,6 +148,12 @@ public class RunningMode extends JFrame{
         return mapPanel;
     }
 
+    public void openHome(){
+        this.dispose();
+        Homepage hm = new Homepage(player.getName());
+    }
+
+
     public RunningMode(int selectedMap, Player player) {
         setTitle("Running Mode");
         setSize(1920,1080);
@@ -121,7 +161,7 @@ public class RunningMode extends JFrame{
         this.selectedMap = selectedMap;
         this.player = player;
         chances = player.getChances();
-
+        score = 0;
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
         //this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4   ));  // Add a black line border
@@ -131,15 +171,16 @@ public class RunningMode extends JFrame{
         // Panel on the left that will include the buttons to load, resume, save and load game
         this.blockChooserPanel = new JPanel();
         this.spellJPanel = new JPanel();
+        this.spellLabels = new ArrayList<>();
         this.chancePanel = new JPanel();
         this.blockChooserPanel.setPreferredSize(new Dimension(230, 400));
         this.spellJPanel.setSize(230, 300);
         this.spellJPanel.setBackground(Color.ORANGE);
         this.spellJPanel.setLayout(null);
-        this.spellJPanel.setLocation(0, 240);
-        this.chancePanel.setSize(230, 540);
+        this.spellJPanel.setLocation(0, 200);
+        this.chancePanel.setSize(230, 200);
         this.chancePanel.setLayout(new FlowLayout());
-        this.chancePanel.setLocation(0, 540);
+        this.chancePanel.setLocation(0, 0);
         this.chancePanel.setBackground(Color.GRAY);
         this.blockChooserPanel.setBackground(Color.LIGHT_GRAY);  // Differentiate by color
         this.blockChooserPanel.setLayout(null);
@@ -147,6 +188,8 @@ public class RunningMode extends JFrame{
         //TODO: Initialize the spells
         this.magicalStaffExpansion = new MagicalStaffExpansion(this);
         this.hexSpell = new Hex(this);
+        this.felixFelicis = new FelixFelicis(this);
+        this.overwhelmingFireBall = new OverwhelmingFireBall(this);
 
         this.mapPanel = new MapPanel(this);
         this.mapPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));  // Add a black line border
@@ -168,10 +211,10 @@ public class RunningMode extends JFrame{
         OFB.setSize(170,40);
         ffButton.setSize(170, 40);
         MSE.setSize(170,40);
-        hexB.setLocation(10, 50);
-        OFB.setLocation(10, 110);
+        hexB.setLocation(10, 110);
+        OFB.setLocation(10, 230);
         ffButton.setLocation(10, 170);
-        MSE.setLocation(10, 230);
+        MSE.setLocation(10, 50);
         spellJPanel.add(slab);
         spellJPanel.add(hexB);
         spellJPanel.add(OFB);
@@ -179,9 +222,23 @@ public class RunningMode extends JFrame{
         spellJPanel.add(MSE);
 
         //setting up chance panel
-        JLabel clab = new JLabel("Remaining Chances");
+        JLabel clab = new JLabel("    Remaining Chances:");
         clab.setSize(200, 20);
         //adding chances
+        playerlabel = new JLabel("Player: " + player.getName() + "    ");
+        scoreLabel = new JLabel("   Score: " + score);
+        barrcountlabel = new JLabel("Remaining Barriers: " + bArrayList.size());
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 16);
+        barrcountlabel.setFont(font);
+        playerlabel.setFont(font);
+        scoreLabel.setFont(font);
+        scoreLabel.setForeground(Color.BLACK);
+        scoreLabel.setSize(100, 20);
+        chancePanel.add(playerlabel);
+        chancePanel.add(barrcountlabel);
+        chancePanel.add(scoreLabel);
+        chancePanel.add(clab);
+        clab.setFont(font);
         labels = new ArrayList<>();
         for (int i = 0; i<chances; i++){
             JLabel tempLabel = new JLabel(heartimg);
@@ -189,34 +246,35 @@ public class RunningMode extends JFrame{
             labels.add(tempLabel);
         }
 
-        chancePanel.add(clab);
+        
         
 
         // Create buttons 
         pauseButton = new JButton("Pause");
         saveButton = new JButton("Save");
         loadButton = new JButton("Load");
-        pauseButton.setSize(200, 40);
-        loadButton.setSize(200, 40);
-        saveButton.setSize(200, 40);
-        pauseButton.setLocation(20, 50);
-        loadButton.setLocation(20, 110);
-        saveButton.setLocation(20, 170);
+        pauseButton.setSize(170, 40);
+        loadButton.setSize(170, 40);
+        saveButton.setSize(170, 40);
+        pauseButton.setLocation(10, 540);
+        loadButton.setLocation(10, 600);
+        saveButton.setLocation(10, 660);
 
 
         // Add buttons to the left pannel
+        blockChooserPanel.add(chancePanel);
+        blockChooserPanel.add(spellJPanel);
         blockChooserPanel.add(pauseButton);
         blockChooserPanel.add(saveButton);
         blockChooserPanel.add(loadButton);
-        blockChooserPanel.add(spellJPanel);
-        blockChooserPanel.add(chancePanel);
         //Adding action listeners to buttons
 
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PauseMenu pauseMenu = new PauseMenu();
+                PauseMenu pauseMenu = new PauseMenu(timer);
                 pauseMenu.setVisible(true);
+                timer.stop();
             }
         });
         saveButton.addActionListener(new ActionListener() {
@@ -237,38 +295,87 @@ public class RunningMode extends JFrame{
         hexB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
+                if (player.getSpellInventory().get(1)>0){
+                    hexSpell.activate();
+                    updateSpellInventory(1, "decrease");
+
+                }
             }
         });
 
         OFB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
+                if (player.getSpellInventory().get(3)>0){
+                    overwhelmingFireBall.activate();
+                    updateSpellInventory(3, "decrease");
+
+                }
             }
         });
 
         ffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
-                player.incChance(chancePanel, labels, heartimg);
+                //spell implementation                
+                if (player.getSpellInventory().get(2)>0){
+                    felixFelicis.activate();
+                    updateSpellInventory(2, "decrease");
+
+                }
             }
         });
 
         MSE.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //spell implementation
+                if (player.getSpellInventory().get(0)>0){
+                    magicalStaffExpansion.activate();
+                    updateSpellInventory(0, "decrease");
+                }
             }
         });
-        
         add(blockChooserPanel, BorderLayout.WEST);
-
+        updateSpellInventoryLabels();
         
         //add(mapPanel,BorderLayout.EAST);
-        this.setVisible(true);
+        //this.setVisible(true);
 
+    }
+
+    private void updateSpellInventoryLabels(){
+           // Create new labels based on current spell inventory
+        for (JLabel label : spellLabels) {
+            spellJPanel.remove(label);
+            }
+        spellLabels.clear();
+        String[] spellNames = {"Magical Staff Expansion", "Hex", "Felix Felicis", "Overwhelming Fireball"};
+        for (int i = 0; i < spellNames.length; i++) {
+            JLabel spellLabel = new JLabel(player.getSpellInventory().get(i)+" ");
+            spellLabel.setSize(200, 20);
+            spellLabel.setLocation(190, 60 + i * 60);
+            spellLabels.add(spellLabel);
+            spellJPanel.add(spellLabel);
+        }
+
+        spellJPanel.revalidate();
+        spellJPanel.repaint();
+    }
+    // private void updateSpellButtonLabels() {
+    //     this.hexB.setText("Hex (" + player.getSpellInventory().get(1) + ")");
+    //     this.OFB.setText("Overwhelming Fireball (" + player.getSpellInventory().get(3) + ")");
+    //     this.ffButton.setText("Felix Felicis (" + player.getSpellInventory().get(2) + ")");
+    //     this.MSE.setText("Magical Staff Expansion (" + player.getSpellInventory().get(0) + ")");
+    //     this.spellJPanel.hexB
+    // }
+
+    public void updateSpellInventory(int index, String mode) {
+        if (mode=="increase"){
+            player.increaseSpellInventory(index);
+        } else if (mode=="decrease"){
+            player.decreaseSpellInventory(index);
+        }
+        updateSpellInventoryLabels();
     }
     
     
@@ -291,15 +398,18 @@ public class RunningMode extends JFrame{
         
         private Rectangle paddle;
         private Point ballPosition;
-        private int ballSpeedX = 3;
-        private int ballSpeedY = 3;
+        private int ballSpeedX = 0;
+        private int ballSpeedY = 0;
         private int paddleSpeed = 10; // Speed of paddle movement
         private int paddleMoveDirection = 0; // 0 = no movement, -1 = left, 1 = right
         private double paddleAngle = 0; // Paddle's rotation angle in degrees
         private boolean isMagicalStaffActive = false;
         private int originalPaddleWidth;
-        private boolean remaintouched = false;
-
+        public boolean remaintouched = false;
+        public boolean spellDropped = false;
+        public int droppedSpellIndex;
+        public long currentTime;
+        private long startTime;
         
         public int getOriginalPaddleWidth(){
             return originalPaddleWidth;
@@ -318,18 +428,19 @@ public class RunningMode extends JFrame{
             //ballPosition = new Point(650, 940);
 
             Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
-            paddle = new Rectangle(screenSize.width/2,screenSize.height-60, 150, 20);
-            ballPosition = new Point(screenSize.width/2, screenSize.height-70);
-            fireBall = new FireBall(screenSize.width/2, screenSize.height-70);
             staff = new MagicalStaff(screenSize);
+            paddle = new Rectangle((int)screenSize.getWidth()/2,(int) screenSize.getHeight()-100, 150, 20);
+            ballPosition = new Point((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 120);
+            fireBall = new FireBall((int) staff.getXPos() + staff.getLength()/2, (int) screenSize.getHeight() - 120);
+            
             originalPaddleWidth = staff.getLength();
-
-
-
+            
+            
             // timer = new Timer(10, e -> updateGame());
             // timer.start();
             timer = new Timer(10, (ActionEvent e) -> updateGame());
             timer.start();
+            startTime = System.currentTimeMillis();
             
             File file = new File(filePath); // File path should be in String data
             
@@ -342,7 +453,7 @@ public class RunningMode extends JFrame{
                 e.printStackTrace();
             }
 
-
+            int rewardingCount = 0;
             for (int[] i : barrierIndexList) {
                 System.out.println(i[2]);
                 switch (i[2]) {
@@ -369,15 +480,25 @@ public class RunningMode extends JFrame{
                     case 4:
                         addBlock(i[0], i[1],"rewarding");
                         RewardingBarrier rewbar = new RewardingBarrier(i[0], i[1]);
+                        
+                        if (rewardingCount<4){
+                            rewbar.setSpellIndex(rewardingCount);
+                        } else{
+                            Random spellRandom = new Random();     
+                            int randomSpellIndex = spellRandom.nextInt(3)+1;
+                            rewbar.setSpellIndex(randomSpellIndex);
+                        }
                         bArrayList.add(rewbar);
+                        rewardingCount+=1;
                         break;
                     default:
                         break;
                 }
 
                 repaint();
-
+                
             }
+            
         }
             private void moveBall() {
                 fireBall.setX(ballSpeedX+fireBall.getX());
@@ -391,7 +512,7 @@ public class RunningMode extends JFrame{
                 }
                 if (ballSpeedX == 0 && ballSpeedY == 0) {
                     ballSpeedX = 3;
-                    ballSpeedY = -3;
+                    ballSpeedY = 3;
                 }
 
                 // if (ballPosition.y > getHeight()) { // Ball goes below the paddle
@@ -401,8 +522,10 @@ public class RunningMode extends JFrame{
 
                 if (fireBall.getBounds().intersects(staff.getBounds())){
                     ballSpeedY = -ballSpeedY;
-                    if (staff.getRotationAngle() > 0){
-                        ballSpeedX = -ballSpeedX;
+                    if (staff.getRotationAngle() > 0.087){
+                        if (ballSpeedX<0){
+                            ballSpeedX = -ballSpeedX;
+                        }
                     }
                     ballPosition.y = (int) staff.getYPos()/2-1;
                 }
@@ -426,25 +549,34 @@ public class RunningMode extends JFrame{
                     //ALT VX
                     Rectangle intersection = ballRect.intersection(block.rectangle);
                     intersection = fireBall.getBounds().intersection(block.rectangle);
-                    if (intersection.width < intersection.height) {
-                        ballSpeedX = -ballSpeedX;
-                        LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX));
-                    } else {
-                        ballSpeedY = -ballSpeedY;
-                        LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
+                    if (!overwhelmingFireBall.isActive()){
+                    
+                        if (intersection.width < intersection.height) {
+                            ballSpeedX = -ballSpeedX;
+                            LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from the side. New ball speedX: {0}", ballSpeedX));
+                        } else {
+                            ballSpeedY = -ballSpeedY;
+                            LOGGER.log(Level.INFO, MessageFormat.format("Ball hit a barrier from top/bottom. New ball speedY: {0}", ballSpeedY));
+                        }
                     }
                     int xcoor = block.rectangle.x;
                     int ycoor = block.rectangle.y;
                     for (Barrier barr : bArrayList){
                         if (barr.getXCoordinate() == xcoor && barr.getYCoordinate() == ycoor){
-                            barr.hit(1);
 
+                            if (barr instanceof ReinforcedBarrier & overwhelmingFireBall.isActive()){
+                                barr.hit(barr.getHealth());
+                            } else{
+                                barr.hit(1);
+                            }
+                            
                             if (barr.isDestroyed()){
                                 it.remove();
                                 if (barr.isRewarding()){
                                     Rectangle rewblock = new Rectangle(block.rectangle.x + 43, block.rectangle.y+ 23, 20, 20);
                                     blocks.add(new ColoredBlock(rewblock, "rewardbox"));       
-                                      
+                                    spellDropped = true;
+                                    droppedSpellIndex = barr.getSpellIndex();
                                 }
 
                                 if (barr instanceof ExplosiveBarrier){
@@ -454,10 +586,9 @@ public class RunningMode extends JFrame{
                                         remain = new Rectangle(block.rectangle.x + cons , block.rectangle.y + 23 , 10, 20);
                                         blocks.add(new ColoredBlock(remain, "remain"));
                                         remaintouched = false;
-                                        
                                     }
                                 }
-
+                              
                                 int[] targetArray = new int[4];
 
                                 if (barr instanceof SimpleBarrier) {
@@ -484,7 +615,14 @@ public class RunningMode extends JFrame{
 
                                 System.out.println(barrierIndexList.removeIf(array -> Arrays.equals(array,targetArray)));
                                 frame.barrierIndexList = this.barrierIndexList;
+                              
+                              
+                                score = score + 300 / (double) currentTime;
+                                System.out.println(currentTime);
+                                String scorest = String.format("%.2f", score);
+                                scoreLabel.setText("Score: " + scorest);
                                 bArrayList.remove(barr);
+                                barrcountlabel.setText("Remaining Barriers: " + bArrayList.size());
                                 break;
                                 
                             }
@@ -506,8 +644,9 @@ public class RunningMode extends JFrame{
                         player.decChance(chancePanel, labels);
                     }
 
-                    else{
-                        //burda power up pickleniyor spell seçme yazılabilir
+                    else if (spellDropped){
+                        updateSpellInventory(droppedSpellIndex, "increase");
+                        spellDropped = false;
                     }
 
                     
@@ -531,6 +670,10 @@ public class RunningMode extends JFrame{
             blocks.add(new ColoredBlock(new Rectangle(gridX, gridY, BLOCK_WIDTH, BLOCK_HEIGHT), selectedColor));
             
             return true;
+        }
+
+        public void addCblock(Rectangle b, String selectedcolor){
+            blocks.add(new ColoredBlock(b, selectedcolor));
         }
 
         @Override
@@ -582,7 +725,7 @@ public class RunningMode extends JFrame{
                     case "remain":
                         g.setColor(Color.RED);
                         g.fillRect(block.rectangle.x, block.rectangle.y, block.rectangle.width, block.rectangle.height);
-                        block.rectangle.y = block.rectangle.y + 2;
+                        block.rectangle.y = block.rectangle.y + 5;
                         break;
                         
                     default:
@@ -641,32 +784,45 @@ public class RunningMode extends JFrame{
                 if (player.getChances() > 0) {
                     timer.stop();
                     resetBallAndContinue();
-                } 
+                }
+                 
                 else {
                     timer.stop();
-                    showGameOverFrame("Game Over! No chances left.");
+                    showGameOverFrame("Game Over! No chances left.","assets/gifs/no.gif", "assets/audio/no.wav");
                 }
             }
         
-            if (blocks.isEmpty()) {
+            if (bArrayList.size() == 0) {
                 timer.stop();
-                showGameOverFrame("Game Over! All barriers cleared.");
+                showGameOverFrame("Game Over! All barriers cleared.","assets/gifs/dance.gif", "assets/audio/dance.wav");
             }
         
             if (player.getChances() == 0) {
                 timer.stop();
-                showGameOverFrame("Game Over! No chances left.");
+                showGameOverFrame("Game Over! No chances left.","assets/gifs/no.gif", "assets/audio/no.wav");
             }
         }
 
-        private void showGameOverFrame(String message) {
+        private void showGameOverFrame(String message, String gifpath, String audioPath) {
             JFrame gameOverFrame = new JFrame("Game Over");
-            gameOverFrame.setSize(300, 150);
+            gameOverFrame.setSize(300, 300);
             gameOverFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             gameOverFrame.setLocationRelativeTo(null);
         
             JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
             JButton okButton = new JButton("OK");
+            ImageIcon gifIcon = new ImageIcon(gifpath);
+            JLabel gifLabel = new JLabel(gifIcon);
+            backB = new JButton("Return to home page");
+            backB.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameOverFrame.dispose();
+                    openHome();
+                }
+            });
+            
+
         
             okButton.addActionListener(new ActionListener() {
                 @Override
@@ -675,13 +831,55 @@ public class RunningMode extends JFrame{
                 }
             });
         
-            JPanel panel = new JPanel();
-            panel.setLayout(new BorderLayout());
-            panel.add(messageLabel, BorderLayout.CENTER);
-            panel.add(okButton, BorderLayout.SOUTH);
-        
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.gridwidth = 1;
+            gbc.gridheight = 1;
+            gbc.weightx = 1.0;
+            gbc.weighty = 0.1;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.anchor = GridBagConstraints.CENTER;
+            panel.add(messageLabel, gbc);
+    
+            gbc.gridy = 1;
+            gbc.weighty = 0.8;
+            gbc.fill = GridBagConstraints.BOTH;
+            panel.add(gifLabel, gbc);
+    
+            gbc.gridy = 2;
+            gbc.weighty = 0.1;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.PAGE_END;
+            panel.add(okButton, gbc);
+
+            gbc.gridy = 1;
+            gbc.weighty = 0.2;
+            gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.PAGE_END;
+            panel.add(backB, gbc);
+            
             gameOverFrame.add(panel);
             gameOverFrame.setVisible(true);
+            playAudio(audioPath);
+        }
+        private void playAudio(String audioFilePath) {
+            try {
+                // Load the audio file
+                File audioFile = new File(audioFilePath);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+
+                // Get a sound clip resource
+                Clip clip = AudioSystem.getClip();
+
+                // Open the audio stream and start playing
+                clip.open(audioStream);
+                clip.start();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
         }
         
 
@@ -698,11 +896,11 @@ public class RunningMode extends JFrame{
             //fireBall.setX(screenSize.width / 2);
             //fireBall.setY(screenSize.height - 70);
             
-            fireBall.setX(screenSize.width/2 - 40);
-            fireBall.setY(0);
+            fireBall.setX((int) staff.getXPos() + staff.getLength()/2);
+            fireBall.setY((int) screenSize.getHeight()-120);
             // Reset ball speed
-            ballSpeedX = 3;
-            ballSpeedY = -3;
+            ballSpeedX = 0;
+            ballSpeedY = 0;
         
             // Update the chances display
             // Assuming you have a JLabel or some component to display remaining chances
@@ -713,11 +911,27 @@ public class RunningMode extends JFrame{
         }
 
         private void updateGame() {
-            moveBall();
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            //moveBall();
             movePaddle(); // Method to update paddle position
+            updateTime();
+
+            if (ballSpeedX == 0 && ballSpeedY == 0) {
+                // Keep the fireball on top of the staff until Enter is pressed
+                fireBall.setX((int) staff.getXPos()+ staff.getLength()/2);
+                fireBall.setY((int)staff.getYPos() -20); // Adjust the offset as needed
+            } else {
+                moveBall();
+            }
             repaint();
             checkGameOver();
-            
+        
+        }
+
+        private void updateTime(){
+            long currentTime1 = System.currentTimeMillis();
+            currentTime = currentTime1 - startTime - 50;
+            currentTime = currentTime / 500;
         }
 
         private void movePaddle() {
@@ -754,12 +968,32 @@ public class RunningMode extends JFrame{
             im.put(KeyStroke.getKeyStroke("released RIGHT"), "stopMoving");
             im.put(KeyStroke.getKeyStroke("T"), "activateMagicalStaff");
             im.put(KeyStroke.getKeyStroke("H"), "activateHexSpell");
+            im.put(KeyStroke.getKeyStroke("F"), "activateFelixFelicis");
+            im.put(KeyStroke.getKeyStroke("O"), "activateOverwhelmingFireball");
 
+            im.put(KeyStroke.getKeyStroke("W"), "startBallMovement");
+            
+            // Adding a mouse listener to start the ball movement
+            frame.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Trigger the action on left mouse click
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        am.get("startBallMovement").actionPerformed(null);
+                    }
+                }
+            });
+            
                         // New bindings for rotation
             im.put(KeyStroke.getKeyStroke("UP"), "rotateClockwise");
             im.put(KeyStroke.getKeyStroke("DOWN"), "rotateCounterClockwise");
             // Secret key combination to remove all barriers
             im.put(KeyStroke.getKeyStroke("control shift D"), "removeAllBarriers");
+
+            im.put(KeyStroke.getKeyStroke("P"), "pauseGame");
+            im.put(KeyStroke.getKeyStroke("S"), "saveGame");
+            im.put(KeyStroke.getKeyStroke("Q"), "quitGame");
+
                 
             am.put("moveLeft", new AbstractAction() {
                 @Override
@@ -782,6 +1016,17 @@ public class RunningMode extends JFrame{
                 }
             });
 
+            am.put("startBallMovement", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timer.restart();
+                    startTime = System.currentTimeMillis();
+                    if (ballSpeedX == 0 && ballSpeedY == 0) {
+                        ballSpeedX = 3;
+                        ballSpeedY = -3;
+                    }
+                }
+            });
                         // Actions for rotation
             am.put("rotateClockwise", new AbstractAction() {
                 @Override
@@ -808,20 +1053,72 @@ public class RunningMode extends JFrame{
             am.put("activateMagicalStaff", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                   magicalStaffExpansion.activate();
+                    if (player.getSpellInventory().get(0)>0){
+                        magicalStaffExpansion.activate();
+                        updateSpellInventory(0, "decrease");
+
+                    }
                  }
              });
              am.put("activateHexSpell", new AbstractAction() {
                  @Override
                  public void actionPerformed(ActionEvent e) {
-                     hexSpell.activate();
+                    if (player.getSpellInventory().get(1)>0){
+                        hexSpell.activate();
+                        updateSpellInventory(1, "decrease");
+
+                    }   
                  }
              });
+             am.put("activateFelixFelicis", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (player.getSpellInventory().get(2)>0){
+                        felixFelicis.activate();
+                        updateSpellInventory(2, "decrease");
+
+                    }
+                }
+            });
+            am.put("activateOverwhelmingFireball", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (player.getSpellInventory().get(3)>0){
+                        overwhelmingFireBall.activate();
+                        updateSpellInventory(3, "decrease");
+
+                    }
+                }
+            });
              // Action for removing all barriers
             am.put("removeAllBarriers", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     removeAllBarriers();
+                }
+            });
+
+            am.put("pauseGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    PauseMenu pauseMenu = new PauseMenu(timer);
+                    pauseMenu.setVisible(true);
+                    timer.stop();
+                }
+            });
+
+            am.put("saveGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                }
+            });
+
+            am.put("quitGame", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    
+                    
                 }
             });
         }
@@ -916,7 +1213,7 @@ public class RunningMode extends JFrame{
         }
 
     }
-
+  
     public void saveGame(ArrayList<int[]> barrierList) {
 
         GameSlotsFrame gameSlotsFrame = new GameSlotsFrame(barrierList,mapPanel);
@@ -930,13 +1227,26 @@ public class RunningMode extends JFrame{
         gameSlotsFrame.setVisible(true);
     
     }
-    
+  
+    public void expandPaddle() {
+        mapPanel.paddle.width *= 2;
+        mapPanel.repaint();
+    }
+    public void resetPaddle() {
+        mapPanel.paddle.width = mapPanel.originalPaddleWidth;
+        mapPanel.repaint();
+    }
 
-
-
+    // public void activateHexCanons() {
+    //     mapPanel.activateHexCanons();
+    // }
+    // public void deactivateHexCanons() {
+    //     mapPanel.deactivateHexCanons();
+    // }
+        
     public static void main(String args[]){
-        Player p = new Player("uname", "pass");
-        RunningMode run = new RunningMode(1,p);
+        Player p = new Player("admin", "pass");
+        RunningMode run = new RunningMode(5,p);
         run.setVisible(true);
     }
 
