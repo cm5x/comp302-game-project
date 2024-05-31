@@ -22,6 +22,11 @@ import java.util.Scanner;
 import spells.MagicalStaffExpansion;
 import spells.Hex;
 
+//ADD
+
+import gameMechanics.Client;
+import gameMechanics.Server;
+
 // import org.w3c.dom.events.MouseEvent;
 // import java.util.Timer;
 import javax.swing.*;
@@ -81,6 +86,16 @@ public class RunningMode extends JFrame{
     private final JPanel blockChooserPanel;
     private final JPanel spellJPanel;
     private final JPanel chancePanel;
+
+
+    private JLabel playerScoreLabel;
+    private JLabel opponentScoreLabel;
+    private int playerScore;
+    private int opponentScore;
+
+
+    private Server server;
+    private Client client;
 
     private ArrayList<int[]> barrierIndexList;
     private ArrayList<JLabel> spellLabels;
@@ -172,7 +187,13 @@ public class RunningMode extends JFrame{
         this.player = player;
         chances = player.getChances();
         score = 0;
+
         this.ymir = new Ymir(this, bArrayList, fireBall);
+
+
+
+
+        // server = serverSide;
 
         // Creating the map panel where game objects will interact
         //this.mapPanel = new MapPanel();
@@ -258,8 +279,6 @@ public class RunningMode extends JFrame{
             labels.add(tempLabel);
         }
 
-        
-        
 
         // Create buttons 
         pauseButton = new JButton("Pause");
@@ -280,11 +299,10 @@ public class RunningMode extends JFrame{
         blockChooserPanel.add(saveButton);
         blockChooserPanel.add(loadButton);
         //Adding action listeners to buttons
-
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PauseMenu pauseMenu = new PauseMenu(timer);
+                PauseMenu pauseMenu = new PauseMenu(timer,barrierIndexList,mapPanel, player.getSpellInventory(), score, player.getChances());
                 pauseMenu.setVisible(true);
                 timer.stop();
             }
@@ -355,6 +373,30 @@ public class RunningMode extends JFrame{
         //add(mapPanel,BorderLayout.EAST);
         //this.setVisible(true);
 
+    }
+
+    //for multiplayer
+    // Method to update the score labels
+    public void updateScores(int playerScore, int opponentScore) {
+        this.playerScore = playerScore;
+        this.opponentScore = opponentScore;
+        SwingUtilities.invokeLater(() -> {
+            scoreLabel.setText("Score: " + playerScore);
+            opponentScoreLabel.setText("Opponent's Score: " + opponentScore);
+        });
+    }
+
+    //for multiplayer
+    // Method to set the player's score
+    public void setScore(int score) {
+        this.playerScore = score;
+        scoreLabel.setText("Score: " + playerScore);
+        // Update the server or client with the new score
+        if (server != null) {
+            server.updateScore(true, playerScore); // Assuming server.updateScore is modified to accept playerScore and opponentScore
+        } else if (client != null) {
+            client.sendScore(playerScore); // Assuming client.sendScore is modified to send playerScore
+        }
     }
 
     private void updateSpellInventoryLabels(){
@@ -529,6 +571,27 @@ public class RunningMode extends JFrame{
                 
             }
             
+            // if (server == null) {
+            //     timer = new Timer(2000, (ActionEvent e) -> {
+            //         try {
+            //             client.refreshInfo(barrierIndexList);
+            //         } catch (IOException e1) {
+            //             // TODO Auto-generated catch block
+            //             e1.printStackTrace();
+            //         }
+            //     });
+            //     timer.start();
+            // } else {
+            //     timer = new Timer(2000, (ActionEvent e) -> {
+            //         try {
+            //             server.refreshInfo(barrierIndexList);
+            //         } catch (IOException e1) {
+            //             // TODO Auto-generated catch block
+            //             e1.printStackTrace();
+            //         }
+            //     });
+            //     timer.start();
+            // }
         }
         public void removeBlock(int x, int y) {
             Iterator<ColoredBlock> it = blocks.iterator();
@@ -1190,7 +1253,7 @@ public class RunningMode extends JFrame{
             am.put("pauseGame", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    PauseMenu pauseMenu = new PauseMenu(timer);
+                    PauseMenu pauseMenu = new PauseMenu(timer,barrierIndexList,mapPanel, player.getSpellInventory(), score, player.getChances());
                     pauseMenu.setVisible(true);
                     timer.stop();
                 }
