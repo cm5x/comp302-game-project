@@ -26,6 +26,7 @@ public class HostJoinPage extends JFrame {
                 startServer();
                 MultiplayerWaitingScreen waitingScreen = MultiplayerWaitingScreen.getInstance();
                 waitingScreen.setVisible(true);
+                
             }
         });
         panel.add(hostButton);
@@ -49,6 +50,8 @@ public class HostJoinPage extends JFrame {
             try {
                 server = new Server(port);
                 server.start();
+                
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
