@@ -104,6 +104,7 @@ public class Homepage extends JFrame {
             }
             
         });
+        
         add(backButton);
         add(panel);
         setVisible(true);
