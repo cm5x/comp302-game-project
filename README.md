@@ -1,5 +1,5 @@
-# comp302-group-blue
-COMP302 Spring 24 Project Group Blue
+This is a class project of comp302-group-blue group in COMP302 class of Koc University in Spring24 term.
+
 
 # Lance of Destiny 
 
