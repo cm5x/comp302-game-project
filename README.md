@@ -75,5 +75,32 @@ Lasts 15 seconds.
 ![Ekran görüntüsü 2024-06-01 174120](https://github.com/KocUniversity/comp302-group-blue/assets/91802400/015a9a66-c5c9-44c3-84d7-171952334c1b)
 
 
+Barriers:
+
+There are 4 different barriers in the game. All the barriers have different attributes.
+
+Simple Barrier:
+Can be destroyed by one hit. A simple barrier.
+
+Reinforced Barrier:
+Has a random health between (1,3). 
+
+Explosive Barrier:
+Explodes when it is hit. If the remains touch the staff, player loses a chance
+
+Rewarding Barrier:
+Drops a box when it is hit. Gives player a random good spell.
+
+
+
+Building Mode:
+This mode is used to create layouts for game. At least 75 simple barriers, 15 reinforced
+barriers, 5 explosive barriers and 10 rewarding barriers should be in the map for gameplay.
+These barriers can be placed randomly by using the random button. Also barriers can be inserted
+manually by mouse clicks.
+
+Running Mode:
+This is the mode where the gameplay exists. Players can use key inputs or mouse inputs
+to control the staff and the spells. 
 
 
