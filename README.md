@@ -1,10 +1,10 @@
 # comp302-group-blue
 COMP302 Spring 24 Project Group Blue
 
-Lance of Destiny
+# Lance of Destiny 
 
 
-Game Description:
+<ins> Game Description: </ins> 
 Lance of Destiny is an fun and competitive game to play. 
 It can be played singleplayer or multiplayer. There are several types of barriers 
 that the player needs to break in order to win the game. Benelovent and Good spells exists
@@ -17,14 +17,14 @@ to hit the ball from different angles. The Fireball is the object that is sent a
 destroy barriers, but it is affected by gravity, and uses simple physics for collisions. 
 
 
-Game Rules:
+<ins> Game Rules: </ins> 
 If the Fire Ball falls below the Magical Staff, the warrior loses a chance. Each
 warrior has 3 chances only. Once the warrior runs out of chances, the game is over.
 In multiplayer, two players play the game synchronously while seeing their opponent's
 barrier count and score. When both games end, the player with higher score wins the game.
 
 
-Good Spells:
+<ins> Good Spells: </ins> 
 
 Felix Felicis: 
 Rewards the player with an extra live. 
@@ -41,7 +41,7 @@ Magical Staff Expansion:
 Doubles the length of the staff. 
 Lasts 30 seconds.
 
-Benelovent (Evil) Spells:
+<ins> Benelovent (Evil) Spells: </ins> 
 
 These spells are determined by ymir, by a result of a coin flip per 30 seconds.
 If coinflip comes true, an evil spell is activated. Additionally, in multiplayer players 
@@ -53,6 +53,11 @@ Adds 8 random purple barriers to the game. These barriers do not contribute to s
 Infinite Void:
 Freezes random 8 barriers so they can’t get destroyed. Only overwhelming fireball can do normal
 damage to the barriers. Lasts 15 seconds.
+
+Double Accel:
+Changes the spped of the fireball to make the game more challenging.
+Lasts 15 seconds.
+ 
 
 # In-Game Photos
 ![Ekran görüntüsü 2024-06-01 173920](https://github.com/KocUniversity/comp302-group-blue/assets/91802400/d331a43e-035f-4094-a551-4fd40c8842b2)
@@ -72,7 +77,3 @@ damage to the barriers. Lasts 15 seconds.
 
 
 
-Double Accel:
-Changes the spped of the fireball to make the game more challenging.
-Lasts 15 seconds.
- 
