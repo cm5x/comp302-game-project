@@ -1,7 +1,7 @@
 # comp302-group-blue
 COMP302 Spring 24 Project Group Blue
 
-
+#In-Game Photos
 ![Ekran görüntüsü 2024-06-01 173920](https://github.com/KocUniversity/comp302-group-blue/assets/91802400/d331a43e-035f-4094-a551-4fd40c8842b2)
 ![Ekran görüntüsü 2024-06-01 173837](https://github.com/KocUniversity/comp302-group-blue/assets/91802400/6076483f-2471-4fab-80d0-bca7d7b443d2)
 ![Ekran görüntüsü 2024-06-01 174004](https://github.com/KocUniversity/comp302-group-blue/assets/91802400/d7d1631d-8691-4461-b203-04b62804677b)
