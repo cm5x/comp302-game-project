@@ -109,13 +109,13 @@ Contributors:
 </ins> 
 
 
-Cem Mentes / Koc University
-Beste Kalaycı / Koc University
-Emre Dumanlı / Koc University
-İbrahim Deniz Alan / Koc University
-Melike Şahin / Koc University
-Yunus Nin Polatoğlu / Koc University
-Umut Acar / Koc University
+Cem Mentes / Koc University <br />
+Beste Kalaycı / Koc University <br />
+Emre Dumanlı / Koc University <br />
+İbrahim Deniz Alan / Koc University <br />
+Melike Şahin / Koc University <br />
+Yunus Nin Polatoğlu / Koc University <br />
+Umut Acar / Koc University <br />
 
 
 
