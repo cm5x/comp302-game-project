@@ -104,5 +104,18 @@ to control the staff and the spells.
 ![Ekran görüntüsü 2024-06-01 174120](https://github.com/KocUniversity/comp302-group-blue/assets/91802400/015a9a66-c5c9-44c3-84d7-171952334c1b)
 
 
+<ins>
+Contributors: 
+</ins> 
+
+
+Cem Mentes / Koc University
+Beste Kalaycı / Koc University
+Emre Dumanlı / Koc University
+İbrahim Deniz Alan / Koc University
+Melike Şahin / Koc University
+Yunus Nin Polatoğlu / Koc University
+Umut Acar / Koc University
+
 
 
